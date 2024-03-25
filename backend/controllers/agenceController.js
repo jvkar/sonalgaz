@@ -14,6 +14,7 @@ const createToken = (_id) => {
   return jwt.sign({_id}, process.env.SECRET, { expiresIn: '3d' })
 }
 
+
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
       cb(null, path.join(__dirname, '..', '/filesAgences'));

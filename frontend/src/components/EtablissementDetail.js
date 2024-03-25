@@ -12,14 +12,20 @@ import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
 import TableHead from "@mui/material/TableHead";
-
+import { BsArrowRightCircle } from "react-icons/bs";
+import { BsArrowRightCircleFill } from "react-icons/bs";
 import '../index.css'
 import Paper from "@mui/material/Paper";
 import { Button } from '@mui/material';
 import { LuPencilLine } from "react-icons/lu";
 import { Margin } from '@mui/icons-material';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import SnackBar from "./SnackBar";
 const EtablissementDetails = ({ etablissement }) => {
   const { user } = useAuthContext()
   const userType = user.userType
@@ -27,37 +33,37 @@ const EtablissementDetails = ({ etablissement }) => {
   const [assignedRetab, setassignedRetab] = React.useState([])
   const [error, setError] = useState(undefined)
   const [open, setOpen] = React.useState(false);
-  const affecterCoupure = async()=>{
-    const response = await fetch(`/api/Clients/affecterCoupure/${etablissement._id}`,{
-      method:'PATCH'
-    })
-    const json =await response.json();
-    if(response.ok){
-     alert("coupure affecter")
-    }
-    if(!response.ok){
-      setError(json.error);
-      setTimeout(()=>{
-        setError("")
-      },3000)
-    }
-  }
-  const affecterRetablissement = async()=>{
-    const response = await fetch(`/api/Clients/affecterRetab/${etablissement._id}`,{
-      method:'PATCH'
+  const affecterCoupure = async () => {
+    const response = await fetch(`/api/Clients/affecterCoupure/${etablissement._id}`, {
+      method: 'PATCH'
     })
     const json = await response.json();
-    if(response.ok){
+    if (response.ok) {
+      alert("coupure affecter")
+    }
+    if (!response.ok) {
+      setError(json.error);
+      setTimeout(() => {
+        setError("")
+      }, 3000)
+    }
+  }
+  const affecterRetablissement = async () => {
+    const response = await fetch(`/api/Clients/affecterRetab/${etablissement._id}`, {
+      method: 'PATCH'
+    })
+    const json = await response.json();
+    if (response.ok) {
       alert("retablissement affecter")
     }
-    if(!response.ok){
+    if (!response.ok) {
       setError(json.error);
-      setTimeout(()=>{
+      setTimeout(() => {
         setError("")
-      },3000)
-        }
+      }, 3000)
+    }
   }
-  const blackList = async()=>{
+  const blackList = async () => {
 
   }
   const handleUpdate = async () => {
@@ -117,28 +123,30 @@ const EtablissementDetails = ({ etablissement }) => {
   }
 
 
-  const icon3 = (<button onClick={handleUpdate} style={{ marginRight: "25px", backgroundColor: "transparent", borderColor: "transparent", cursor: "pointer" }}><LuPencilLine style={{ width: "24px", height: "24px" }} /></button>);
+  const icon3 = (<Button component="label" variant="contained" endIcon={<BsArrowRightCircleFill />}>Coupures</Button>);
 
-  const icon5 = (<button onClick={handleClick} style={{ backgroundColor: "transparent", borderColor: "transparent", cursor: "pointer" }}><img width="24px" height="24px" src="https://img.icons8.com/material-rounded/24/filled-trash.png" alt="filled-trash" />
-  </button>);
+  const icon5 = (<Button component="label" variant="outlined" endIcon={<BsArrowRightCircle />}>Retablissement</Button>);
 
-  return (
+  const icon1 = (<button onClick={handleUpdate} style={{ marginRight: "25px", backgroundColor: "transparent", borderColor: "transparent", cursor: "pointer" }}><LuPencilLine style={{ width: "24px", height: "24px" }} /></button>);
+
+  const icon2 = (<button onClick={handleClick} style={{ backgroundColor: "transparent", borderColor: "transparent", cursor: "pointer" }}><img width="24px" height="24px" src="https://img.icons8.com/material-rounded/24/filled-trash.png" alt="filled-trash" />  </button>);
+    return (
     <React.Fragment>
       {error && <div className="error">{error}</div>}
 
-            <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-      {userType === 'CadreAgence'?
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        :
-        <></> 
+      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        {userType === 'CadreAgence' ?
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          :
+          <></>
         }
         <TableCell align="center">{etablissement?.NumeroEtablissement}</TableCell>
         <TableCell align="center">{etablissement?.Nom} </TableCell>
@@ -148,89 +156,91 @@ const EtablissementDetails = ({ etablissement }) => {
         <TableCell align="center"></TableCell>
 
         {userType === 'CadreAgence' ?
-        <TableCell align='center' ><div style={{ paddingRight: "10px" }}>
-        <Button style={{ margin: "2px" }} onClick={affecterCoupure} variant="contained"> affecter coupure </Button>
-        <Button style={{ margin: "2px" }} onClick={affecterRetablissement}  variant="contained"> affecter retablissement </Button>
-        <Button style={{ margin: "2px" }} onClick={blackList} variant="contained"> Black List </Button>
-        </div></TableCell>
-        :
-        <TableCell align='center' ><div style={{ paddingRight: "10px" }}>{icon3}{icon5}</div></TableCell>
-        }          
-          
+          <TableCell align='center' ><div style={{ paddingRight: "10px" }}>
+            <Button style={{ margin: "2px" }} onClick={affecterCoupure} > {icon3} </Button>
+            <Button style={{ margin: "2px" }} onClick={affecterRetablissement} >{icon5} </Button>
+            <Button style={{ margin: "2px" }}> <SnackBar/> </Button>
+          </div></TableCell>
+          :
+          <TableCell align='center' ><div style={{ paddingRight: "10px" }}>{icon1}{icon2}</div></TableCell>
+        }
+
       </TableRow>
-      {userType==="CadreAgence" ?
-      <TableRow>
-      <TableRow>
-      <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: "#eeeeee" }} colSpan={6}>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <Box sx={{ margin: 1 }}>
-            <Typography variant="h6" gutterBottom component="div">
-              les coupures de {etablissement?.Nom}
-            </Typography>
-            <Table size="small" aria-label="purchases">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center" >code </TableCell>
-                  <TableCell align="center">Nom</TableCell>
-                  <TableCell align="center">Adresse </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody className='entreprise'>
-                {assignedCoupure[0]?.clients && assignedCoupure[0]?.clients?.map((coupure,index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center" component="th" scope="row">
-                      {coupure.codeClient}
-                    </TableCell>
-                    <TableCell align="center">{coupure.nomClient}</TableCell>
-                    <TableCell align="center">
-                      {coupure.adresseClient}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
-        </Collapse>
-      </TableCell>
-    </TableRow>
-    <TableRow>
-    <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: "#eeeeee" }} colSpan={6}>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <Box sx={{ margin: 1 }}>
-          <Typography variant="h6" gutterBottom component="div">
-            les retablissement de {etablissement?.Nom}
-          </Typography>
-          <Table size="small" aria-label="purchases">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" >code </TableCell>
-                <TableCell align="center">Nom</TableCell>
-                <TableCell align="center">Adresse </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody className='entreprise'>
-              {assignedRetab[0]?.clients && assignedRetab[0]?.clients?.map((retablissement,index) => (
-                <TableRow key={index}>
-                  <TableCell align="center" component="th" scope="row">
-                    {retablissement.codeClient}
-                  </TableCell>
-                  <TableCell align="center">{retablissement.nomClient}</TableCell>
-                  <TableCell align="center">
-                    {retablissement.adresseClient}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
-      </Collapse>
-    </TableCell>
-  </TableRow>
-  </TableRow>
-    :<></>
+      {userType === "CadreAgence" ?
+ <TableRow>
+ <TableCell  style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+   <Collapse in={open} timeout="auto" unmountOnExit>
+     <Box sx={{ margin: 1 }}>
+       <Accordion style={{backgroundColor:"#EEEEEE"}}>
+         <AccordionSummary
+           expandIcon={<ExpandMoreIcon />}
+           aria-controls="panel1-content"
+           id="panel1-header"
+           >
+               Les Coupures de l'entreprise {etablissement?.Nom}
+         </AccordionSummary>
+         <AccordionDetails>
+           <Table size="small" aria-label="purchases">
+             <TableHead>
+               <TableRow>
+                 <TableCell>Code</TableCell>
+                 <TableCell>Nom</TableCell>
+                 <TableCell align="right">Adresse</TableCell>
+               </TableRow>
+             </TableHead>
+             <TableBody>
+             {assignedCoupure[0]?.clients && assignedCoupure[0]?.clients?.map((coupure, index) => (
+                     <TableRow key={index}>
+                   <TableCell component="th" scope="row">
+                   {coupure.codeClient}
+                   </TableCell>
+                   <TableCell>{coupure.nomClient}</TableCell>
+                   <TableCell align="right">{coupure.adresseClient}</TableCell>
+                 </TableRow>
+               ))}
+             </TableBody>
+           </Table>
+         </AccordionDetails>
+       </Accordion>
+       <Accordion style={{backgroundColor:"#EEEEEE"}}>
+         <AccordionSummary
+           expandIcon={<ExpandMoreIcon />}
+           aria-controls="panel2-content"
+           id="panel2-header"
+           >
+           Les Retablissements de l'entreprise {etablissement?.Nom}
+         </AccordionSummary>
+         <AccordionDetails>
+           <Table size="small" aria-label="purchases">
+             <TableHead>
+               <TableRow>
+                 <TableCell>Code</TableCell>
+                 <TableCell>Nom</TableCell>
+                 <TableCell align="right">Adresse</TableCell>
+               </TableRow>
+             </TableHead>
+             <TableBody>
+             {assignedRetab[0]?.clients && assignedRetab[0]?.clients?.map((retablissement, index) => (
+                     <TableRow key={index}>
+                   <TableCell component="th" scope="row">
+                   {retablissement.codeClient}
+                   </TableCell>
+                   <TableCell>{retablissement.nomClient}</TableCell>
+                   <TableCell align="right">{retablissement.adresseClient}</TableCell>
+                 </TableRow>
+               ))}
+             </TableBody>
+           </Table>
+         </AccordionDetails>
+       </Accordion>
+     </Box>
+   </Collapse>
+ </TableCell>
+</TableRow>
+          :<></>
        }
-    </React.Fragment>
+        </React.Fragment>
 
   )
 }
-export default EtablissementDetails;
+      export default EtablissementDetails;

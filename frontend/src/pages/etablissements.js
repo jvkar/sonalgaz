@@ -60,18 +60,20 @@ const Etablissement = ({ etablissement }) => {
         <h1>La Liste des Entreprises </h1>
         <div className='AddBtt'>
           <Button onClick={handleDelete} style={{ marginRight: "15px" }} className="DeleteAll" variant="outlined" startIcon={<MdDelete />}>Delete ALL</Button>
-          <ModelAddEntreprise/>
+          <ModelAddEntreprise />
         </div>
       </div>
       <TableContainer component={Paper}>
         <Table >
           <TableRow>
-          <TableCell align="center">Numéro de l'entreprise</TableCell>
-                  <TableCell align="center">Nom de l'entreprise</TableCell>
-                  <TableCell align="center">Adresse De l'entreprise</TableCell>
-                  <TableCell align="center">Nombre de fois dans la liste noire</TableCell>
-                  <TableCell align="center">nombre de coupure/annee</TableCell>
-                  <TableCell align="center">nombre de retablissements/annee</TableCell>
+            <TableCell align="center">Numéro de l'entreprise</TableCell>
+            <TableCell align="center">Nom de l'entreprise</TableCell>
+            <TableCell align="center">Adresse De l'entreprise</TableCell>
+            <TableCell align="center">Nombre de fois dans la liste noire</TableCell>
+            <TableCell align="center">nombre de coupure/annee</TableCell>
+            <TableCell align="center">nombre de retablissements/annee</TableCell>
+            <TableCell align="center"></TableCell>
+            <TableCell align="center"></TableCell>
             <TableCell style={{ fontWeight: "bold" }} align="center"></TableCell>
           </TableRow>
           <TableBody>

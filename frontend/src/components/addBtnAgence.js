@@ -12,11 +12,6 @@ import { useState } from 'react';
 import { useRef } from 'react';
 
 
-
-
-
-
-
 export default function AddButtonAgance({Openn,Open2}) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);

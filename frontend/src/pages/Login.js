@@ -1,36 +1,19 @@
-import { useState } from "react";
-import { useLogin } from "../hooks/useLogin";
+import React from 'react'
+import  '../styles/login.css'
+import Paper from '@mui/material/Paper';
+import { Box } from '@mui/material'
+import LoginForm from '../components/forms/loginForm'
+
 const Login = () => {
+    return (
+        <div className='containerr' style={{ display:"flex",justifyContent:"center",alignItems:"center"}}>
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const { loginAdmin, error, isLoading } = useLogin()
-  const handleLogin = async (e) => {
-    e.preventDefault();
-   
-    await loginAdmin(username,password)
-
-  }
-  return (
-    <form className="form" onSubmit={handleLogin}>
-      <h1>Login</h1>
-      <label>username :</label>
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <label>password :</label>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button type="submit" disabled={isLoading}>Log in</button>
-      {error && <div className="error">{error}</div>}
-
-    </form>
-  );
+                    <Paper elevation={3} >
+                        <LoginForm/>
+                    </Paper>
+            
+        </div>
+    )
 }
 
-export default Login;
+export default Login

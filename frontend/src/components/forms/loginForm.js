@@ -1,0 +1,71 @@
+import React from 'react'
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Box, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
+import { useState } from "react";
+import { useLogin } from "../../hooks/useLogin";
+import Button from '@mui/material/Button';
+import sonelgaz from '../../images/myImage.png'
+const LoginForm = () => {
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const { loginAdmin, error, isLoading } = useLogin()
+  const handleLogin = async (e) => {
+    e.preventDefault();
+   
+    await loginAdmin(username,password)
+
+  }
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event) => {
+  event.preventDefault();
+  };
+  return (
+    <form className="form" onSubmit={handleLogin}>
+
+    <div>
+        <img style={{ display: "block", paddingLeft: "40%", paddingTop: '8%' }} src={sonelgaz} alt="sonelgaz logo" width="20%" height="30%" />
+    </div>
+    <Box height={20} />
+    <Grid container style={{ paddingTop: "20px" }} >
+        <Grid item xs={12} spacing={2} sx={{ paddingLeft: "35px", paddingBottom: "15px" }}>
+            <TextField id="username" label="username" variant="outlined" siz="small" sx={{ minWidth: "90%" }} value={username}
+                onChange={(e) => setUsername(e.target.value)} />
+        </Grid>
+        <Grid item xs={12} spacing={2} sx={{ paddingLeft: "35px" }}>
+            <FormControl siz="small" variant="outlined" height="10px" sx={{ minWidth: "90%", paddingBottom: "30px" }}>
+                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                <OutlinedInput
+                    id="outlined-adornment-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    type={showPassword ? 'text' : 'password'}
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowPassword}
+                                onMouseDown={handleMouseDownPassword}
+                                edge="end"
+                            >
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                        </InputAdornment>
+                    }
+                    label="Password"
+                />
+            </FormControl>
+        </Grid>
+        <Grid item xs={12} style={{ paddingLeft: "35%" }}>
+            <Button variant="contained" type="submit" disabled={isLoading} style={{ backgroundColor: "#f3610c" }}>
+                Se Connecter
+            </Button>
+        </Grid>
+    {error && <div className="error">{error}</div>}
+    </Grid>
+</form>
+  );
+}
+
+export default LoginForm;
