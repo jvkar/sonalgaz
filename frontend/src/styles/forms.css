@@ -1,0 +1,46 @@
+.form {
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  .form h3 {
+    text-align: center;
+  }
+  
+  .form label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .form input[type="text"],.form input[type="number"] {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .form button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin : 5px
+  }
+  .radioGroupe {
+    display: flex;
+    justify-content: space-between;
+    width: 10rem;
+    margin: 15px;
+}
+  .form button:hover {
+    background-color: #45a049;
+  }
+  
+  .form .error {
+    color: red;
+    margin-top: 10px;
+  }
+  

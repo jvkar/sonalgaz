@@ -1,0 +1,106 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=Work+Sans&display=swap');
+
+body {
+   font-family: 'Work Sans', sans-serif;
+   margin :0;
+}
+.App{
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-start;
+}
+
+
+.pages{
+   width: 100%;
+   padding: 20px;
+}
+.Myimage {
+   height: 124px;
+   width: 88px;
+}
+table {
+
+   width: 100vh;
+   height: 50px;
+}
+
+th {
+
+   text-align: start;
+
+}
+
+td {
+   text-align: start;
+
+   border-top: 1px solid black;
+   padding: 5px;
+   
+}
+.clients{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 150vh;
+
+}
+.factures{
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   width: 150vh;
+
+}
+.etablissement{
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   width: 150vh;
+
+}
+.agences{
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   width: 150vh;
+
+}
+.Title {
+   display: flex;
+   justify-content: space-between;
+   align-items:flex-end;
+   background-color:#fff;
+   border-top-left-radius: 12px;
+   border-top-right-radius: 12px;
+   padding-top: 25px;
+   padding-bottom: 25px;
+   margin-bottom: 2px;
+}
+h1 {
+   padding-left: 15px;
+}
+.AddBtt {
+   padding-right: 85px;
+   display: flex;
+}
+
+.Btt {
+   padding-right: 75px;
+}
+.karim{
+   background-color:#e9e8e8;
+}
+div.error {
+   padding: 10px;
+   background: #ffefef;
+   border: 1px solid  #e7195a;
+   color: #e7195a;
+   border-radius: 4px;
+   margin: 20px;
+   width: 60%;
+ }
+ input.error {
+   border: 1px solid  #e7195a;
+ }

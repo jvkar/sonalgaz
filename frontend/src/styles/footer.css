@@ -1,0 +1,17 @@
+.footer{
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    justify-content: center;
+    text-align: center;
+    margin-top: 5%;
+}
+.social-media{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.social-media a{
+    text-decoration: none;
+    color: black;
+}
