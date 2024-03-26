@@ -95,7 +95,8 @@ const affecterCoupure = async (req, res) => {
       resetIterations(id)
     }
     const iterationCoupure = coupureIterations.get(id) + 1;
-    const clients = await Client.find({ typeClient: 'coupure', listId: null }).limit(10);
+    const entrep = await Etablissement.findOne({_id:id})
+    const clients = await Client.find({ typeClient: 'coupure', listId: null,agence:entrep.agence }).limit(10);
     if(clients.length === 0){
       return res.status(404).json({ error: "There are no available clients." });
     }
@@ -133,7 +134,8 @@ const affecterRetablissement = async (req, res) => {
       resetIterations(id) 
     }
     const iterationRetablissement = retablissementIterations.get(id) + 1;
-    const clients = await Client.find({ typeClient: 'retablissement', listId: null }).limit(10);
+    const entrep = await Etablissement.findOne({_id:id})
+    const clients = await Client.find({ typeClient: 'retablissement', listId: null,agence:entrep.agence }).limit(10);
     if(clients.length === 0){
       return res.status(404).json({ error: "There are no available clients." });
     }

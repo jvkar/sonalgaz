@@ -84,17 +84,22 @@ if ( user && user.userType==='CadreAgence'  && user.agence){
         name:"la liste des clients",
         icon: <FaRegChartBar/>,
     },
+    {
+     path:`/BlackList/${id}`,
+     name:"Black List",
+     icon: <FaRegChartBar/>,
+    },
+
     {  
         name: "Logout",
         icon: (
             <button className='btnLogout' onClick={handleClick}>
                 <CiLogout />
                
-            </button>
+            </button>        
         ),
         path: "/login"
-   }
-
+   },     
 
   ]
 }

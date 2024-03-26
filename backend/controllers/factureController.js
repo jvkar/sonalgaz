@@ -23,10 +23,7 @@ const addManyFactures = async (req,res)=>{
   if (!existingClient) {
     return res.status(404).json({ error: "il faut creer les clients correspendant au numero de la facture"});
   }
-
   const csvfilepath = __dirname +'/../filesFactures/'+req.file?.originalname;
-
-
 
    csvtojson()
    .fromFile(csvfilepath)

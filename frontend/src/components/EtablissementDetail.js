@@ -63,8 +63,28 @@ const EtablissementDetails = ({ etablissement }) => {
       }, 3000)
     }
   }
-  const blackList = async () => {
+  const addToBlackList = async (e) => {
 
+    if (!user) {
+      setError('You must be logged in')
+      return
+    }
+     e.preventDefault()
+
+       const response = await fetch(`/api/Etablissements/BlackListAdd/${etablissement._id}`,{
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${user.token}` }
+
+       }) 
+       const json = response.json()
+       if(response.ok){
+        window.location.reload()
+       }
+      if(!response.ok){
+        setError(json.error)
+
+      }
+   
   }
   const handleUpdate = async () => {
     if (!user) {
@@ -90,7 +110,7 @@ const EtablissementDetails = ({ etablissement }) => {
     if (user) {
       fetchCoupureData()
     }
-  }, [assignedCoupure[0], user]);
+  }, [assignedCoupure, user]);
   useEffect(() => {
     const fetchRetabData = async () => {
       const response = await fetch(`/api/Clients/retabPerEtab/${etablissement._id}`, {
@@ -155,7 +175,7 @@ const EtablissementDetails = ({ etablissement }) => {
         <TableCell align="center">{etablissement?.NumeroEtablissement}</TableCell>
         <TableCell align="center">{etablissement?.Nom} </TableCell>
         <TableCell align="center">{etablissement?.Adresse}</TableCell>
-        <TableCell align="center"></TableCell>
+        <TableCell align="center">{etablissement?.timesInBlackList}</TableCell>
         <TableCell align="center"></TableCell>
         <TableCell align="center"></TableCell>
 
@@ -163,7 +183,7 @@ const EtablissementDetails = ({ etablissement }) => {
           <TableCell align='center' ><div style={{ paddingRight: "10px" }}>
             <Button style={{ margin: "2px" }} onClick={affecterCoupure} > {icon3} </Button>
             <Button style={{ margin: "2px" }} onClick={affecterRetablissement} >{icon5} </Button>
-            <Button style={{ margin: "2px" }}> <SnackBar/> </Button>
+            <Button style={{ margin: "2px" }} onClick={addToBlackList}> <SnackBar/> </Button>
           </div></TableCell>
           :
           <TableCell align='center' ><div style={{ paddingRight: "10px" }}>{icon1}{icon2}</div></TableCell>

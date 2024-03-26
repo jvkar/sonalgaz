@@ -14,6 +14,15 @@ const BlackListSchema= new Schema({
     type : String,
     // required : true 
   },
+  agence:{type: Schema.Types.ObjectId,
+    ref:'Agence',
+    default : null    
+  },
+  entreprise:{
+    type: Schema.Types.ObjectId,
+    ref:'Etablissement',
+    default : null    
+  },
   agenceName:{
     type:String,
   },

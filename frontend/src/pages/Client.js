@@ -32,7 +32,7 @@ const Client = () => {
   }, [dispatch]);
 
   return (
-    <div className="clients">
+    <div className="list">
       <div>
 
           <h1>la liste des coupures</h1>

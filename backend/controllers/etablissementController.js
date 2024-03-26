@@ -68,24 +68,56 @@ const addManyEtablissements = async (req,res)=>{
     res.status(500).json({ error: error.message });
   }
 }
+const addToBlackList = async (req, res) => {
+  const { id } = req.params;
+  const etablissement = await Etablissement.findOne({ _id: id });
 
-const addToBlackList=async(req,res)=>{
-  const {id}=req.params
-  const etablissement=await Etablissement.findOne({_id:id})
-  const agenceName = await Agence.findOne({_id:etablissement.agence})
-  const {Nom,NumeroEtablissement,Adresse}=etablissement.toObject()
-  if(etablissement){
-    const blackList=await BlackList.create({Nom,NumeroEtablissement,Adresse,agenceName:agenceName?.nom}) 
-    res.json(blackList)
+  if (!etablissement) {
+    return res.status(404).json({ error: "Etablissement not found" });
   }
-  else {
-    res.status(404).json({error:"error"});
+
+  const agenceName = await Agence.findOne({ _id: etablissement.agence });
+  const { Nom, NumeroEtablissement, Adresse, agence } = etablissement.toObject();
+
+  // Check if a document exists in the BlackList collection with the given entreprise ID
+  const blackListEntry = await BlackList.findOne({ entreprise: id });
+
+  if (blackListEntry) {
+    // If the enterprise is already in the BlackList, increment the timesInBlackList
+    const etab = await Etablissement.findOne({_id:blackListEntry.entreprise})
+    const newTimesInBlackList = etab.timesInBlackList + 1;
+    await Etablissement.updateOne({ _id: id }, { timesInBlackList:newTimesInBlackList });
+  } else {
+    // If the enterprise is not in the BlackList, create a new entry
+ 
+    await BlackList.create({
+      Nom,
+      NumeroEtablissement,
+      Adresse,
+      agence,
+      agenceName: agenceName?.nom,
+      entreprise: id
+    });
+    await Etablissement.updateOne({ _id: id }, { timesInBlackList: 1 });
+    return res.json({message: "added"})
   }
-  
-}
+
+  res.json({ message: "Operation completed successfully" });
+};
 const getBlackList =async(req,res)=>{
-  const blackList=await BlackList.find()
-  res.json(blackList)
+  const {id} = req.params
+  try{
+    const blackList=await BlackList.find({agence:id})
+    if(!blackList){
+      return res.status(400).json("Empty List")
+    }
+    if(blackList)
+     return res.status(200).json(blackList)
+
+  }catch(error){
+    return res.status(500).json("error Internal Server")
+  }
+
 }
 const getFromBlackList=async(req,res)=>{
   const {id}=req.params

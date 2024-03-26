@@ -12,8 +12,8 @@ const {getAllAgences
     ,entrepriseParCadre
 }=require("../controllers/agenceController");
 const requireAuth = require('../middleware/requireAuth')
-router.post('/createuser',createAccount)
 router.use(requireAuth)
+router.post('/createuser',createAccount)
 router.get('/',getAllAgences);
 router.get('/etab/:id',entrepriseParCadre);
 router.delete('/deleteOne/:id',deleteAgence)

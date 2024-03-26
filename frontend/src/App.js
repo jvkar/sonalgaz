@@ -43,7 +43,7 @@ function App() {
             <Route path='/Facture' element={user ? <Facture /> : <Navigate to="/Login" />} />
             <Route path='/agences' element={!user ? <Login /> : <Agences/>} />
             <Route path='/etablissements' element={!user ? <Login /> : <Etablissement/>} />
-            <Route path='/BlackList' element={<BlackList />} />
+            <Route path='/BlackList/:id' element={user ?<BlackList />:<Navigate to="/Login"/>} />
             <Route path='/creerCompte' element={user ? <CreerCompte /> : <Navigate to="/Login" />} />
             <Route path='/UpdateFormAgence/:id' element={<UpdateFormAgence />} />
             <Route path='/UpdateFormEtablissement/:id' element={<UpdateFormEtablissement />} />

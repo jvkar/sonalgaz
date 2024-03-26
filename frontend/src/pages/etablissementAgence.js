@@ -35,7 +35,7 @@ const EtabAgence = ({etablissement}) => {
         }
       }, [dispatch, user])
       return (
-        <div>
+        <div className="list">
 
           <div className='Title'>
             <h1>La Liste des Entreprise</h1>

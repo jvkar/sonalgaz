@@ -48,8 +48,8 @@ const CreerCompteForm = () => {
               userType = 'entreprise';
               numeroKey="NumeroEtablissement"
             }
-
-        userType==='agence'? await agenceCreateAccount(numeroAgence,username,password):await etabCreateAccount(NumeroEtablissement,username,password)
+            const headers = { 'Authorization': `Bearer ${user.token}` };
+        userType==='agence'? await agenceCreateAccount(numeroAgence,username,password,headers):await etabCreateAccount(NumeroEtablissement,username,password,headers)
 
       };
     return (

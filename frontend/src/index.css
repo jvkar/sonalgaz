@@ -14,7 +14,7 @@ body {
 
 .pages{
    width: 100%;
-   padding: 20px;
+
 }
 .pages .containerr{
    padding: 0px;
@@ -42,34 +42,10 @@ td {
    padding: 5px;
    
 }
-.clients{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 150vh;
-
+.list{
+   padding: 20px;
 }
-.factures{
-   display: flex;
-   flex-direction: row;
-   justify-content: space-between;
-   width: 150vh;
 
-}
-.etablissement{
-   display: flex;
-   flex-direction: row;
-   justify-content: space-between;
-   width: 150vh;
-
-}
-.agences{
-   display: flex;
-   flex-direction: row;
-   justify-content: space-between;
-   width: 150vh;
-
-}
 .Title {
    display: flex;
    justify-content: space-between;
