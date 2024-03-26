@@ -14,6 +14,9 @@ const BlackListSchema= new Schema({
     type : String,
     // required : true 
   },
+  agenceName:{
+    type:String,
+  },
 
 }, { timestamps: true })
 module.exports=mongoose.model('BlackList',BlackListSchema);

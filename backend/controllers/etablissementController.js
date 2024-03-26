@@ -71,12 +71,11 @@ const addManyEtablissements = async (req,res)=>{
 
 const addToBlackList=async(req,res)=>{
   const {id}=req.params
-
   const etablissement=await Etablissement.findOne({_id:id})
+  const agenceName = await Agence.findOne({_id:etablissement.agence})
   const {Nom,NumeroEtablissement,Adresse}=etablissement.toObject()
   if(etablissement){
-    const blackList=await BlackList.create({Nom,NumeroEtablissement,Adresse})
-    await Etablissement.findOneAndDelete({_id:id})  
+    const blackList=await BlackList.create({Nom,NumeroEtablissement,Adresse,agenceName:agenceName?.nom}) 
     res.json(blackList)
   }
   else {

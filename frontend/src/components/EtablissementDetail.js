@@ -82,7 +82,9 @@ const EtablissementDetails = ({ etablissement }) => {
       })
       const json = await response.json();
       if (response.ok) {
-        setassignedCoupure(json);
+
+        const allClients = json.flatMap(enterprise => enterprise.clients);
+        setassignedCoupure(allClients);
       }
     }
     if (user) {
@@ -96,13 +98,15 @@ const EtablissementDetails = ({ etablissement }) => {
       })
       const json = await response.json();
       if (response.ok) {
-        setassignedRetab(json);
+
+        const allClients = json.flatMap(enterprise => enterprise.clients);
+        setassignedRetab(allClients);
       }
     }
     if (user) {
       fetchRetabData()
     }
-  }, [assignedRetab[0], user]);
+  }, [assignedRetab, user]);
 
   const { dispatch } = useEtablissementContext()
 
@@ -189,7 +193,7 @@ const EtablissementDetails = ({ etablissement }) => {
                </TableRow>
              </TableHead>
              <TableBody>
-             {assignedCoupure[0]?.clients && assignedCoupure[0]?.clients?.map((coupure, index) => (
+             {assignedCoupure && assignedCoupure?.map((coupure, index) => (
                      <TableRow key={index}>
                    <TableCell component="th" scope="row">
                    {coupure.codeClient}
@@ -220,7 +224,7 @@ const EtablissementDetails = ({ etablissement }) => {
                </TableRow>
              </TableHead>
              <TableBody>
-             {assignedRetab[0]?.clients && assignedRetab[0]?.clients?.map((retablissement, index) => (
+             {assignedRetab && assignedRetab?.map((retablissement, index) => (
                      <TableRow key={index}>
                    <TableCell component="th" scope="row">
                    {retablissement.codeClient}
@@ -228,6 +232,7 @@ const EtablissementDetails = ({ etablissement }) => {
                    <TableCell>{retablissement.nomClient}</TableCell>
                    <TableCell align="right">{retablissement.adresseClient}</TableCell>
                  </TableRow>
+                 
                ))}
              </TableBody>
            </Table>

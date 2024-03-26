@@ -7,65 +7,74 @@ import Button from '@mui/material/Button';
 import sonelgaz from '../../images/myImage.png'
 const LoginForm = () => {
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const { loginAdmin, error, isLoading } = useLogin()
-  const handleLogin = async (e) => {
-    e.preventDefault();
-   
-    await loginAdmin(username,password)
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const { loginAdmin, error, isLoading } = useLogin()
+    const handleLogin = async (e) => {
+        e.preventDefault();
 
-  }
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event) => {
-  event.preventDefault();
-  };
-  return (
-    <form className="form" onSubmit={handleLogin}>
+        await loginAdmin(username, password)
 
-    <div>
-        <img style={{ display: "block", paddingLeft: "40%", paddingTop: '8%' }} src={sonelgaz} alt="sonelgaz logo" width="20%" height="30%" />
-    </div>
-    <Box height={20} />
-    <Grid container style={{ paddingTop: "20px" }} >
-        <Grid item xs={12} spacing={2} sx={{ paddingLeft: "35px", paddingBottom: "15px" }}>
-            <TextField id="username" label="username" variant="outlined" siz="small" sx={{ minWidth: "90%" }} value={username}
-                onChange={(e) => setUsername(e.target.value)} />
-        </Grid>
-        <Grid item xs={12} spacing={2} sx={{ paddingLeft: "35px" }}>
-            <FormControl siz="small" variant="outlined" height="10px" sx={{ minWidth: "90%", paddingBottom: "30px" }}>
-                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                <OutlinedInput
-                    id="outlined-adornment-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    type={showPassword ? 'text' : 'password'}
-                    endAdornment={
-                        <InputAdornment position="end">
-                            <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-                                edge="end"
-                            >
-                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                        </InputAdornment>
-                    }
-                    label="Password"
+    }
+    const [showPassword, setShowPassword] = useState(false);
+    const handleClickShowPassword = () => setShowPassword(!showPassword);
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+    return (
+        <form style={{display:"flex",justifyContent:"center",flexDirection:"column",alignItems:"center",textAlign:"center"}} onSubmit={handleLogin}>
+
+            <div>
+                <img style={{ display: "block", paddingLeft: "40%", paddingTop: '8%' }} src={sonelgaz} alt="sonelgaz logo" width="20%" height="30%" />
+            </div>
+            <Box height={20} />
+            <Grid container style={{ paddingTop: "20px" }} >
+            <Grid container spacing={2} sx={{ padding: "35px", paddingBottom: "95px" }}>
+            <Grid item xs={12}>
+                <TextField
+                    id="username"
+                    label="Username"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                 />
-            </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+                <FormControl variant="outlined" size="small" fullWidth>
+                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                    <OutlinedInput
+                        id="outlined-adornment-password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        type={showPassword ? 'text' : 'password'}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                        label="Password"
+                    />
+                </FormControl>
+            </Grid>
         </Grid>
-        <Grid item xs={12} style={{ paddingLeft: "35%" }}>
-            <Button variant="contained" type="submit" disabled={isLoading} style={{ backgroundColor: "#f3610c" }}>
-                Se Connecter
-            </Button>
-        </Grid>
-    {error && <div className="error">{error}</div>}
-    </Grid>
-</form>
-  );
+                <Grid item xs={12}>
+                    <Button variant="contained" type="submit" disabled={isLoading} style={{ backgroundColor: "#f3610c" }}>
+                        Se Connecter
+                    </Button>
+                </Grid>
+                {error && <div className="error">{error}</div>}
+            </Grid>
+        </form>
+    );
 }
 
 export default LoginForm;

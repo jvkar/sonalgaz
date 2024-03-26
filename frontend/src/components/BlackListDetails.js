@@ -20,7 +20,6 @@ return(
             <td>{blackList?.Nom}</td>
             <td>{blackList?.NumeroEtablissement}</td>
             <td>{blackList?.Adresse}</td>
-            <td><button onClick={handleClick}>Ajouter a la liste blanche</button></td>
         </tr>
           
         </table>

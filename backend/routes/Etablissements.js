@@ -20,10 +20,10 @@ router.use(requireAuth)
 router.get('/etablissement/:id',agencePerEntreprise)
 router.get('/',getAllEtablissement);
 router.post('/',createEtablissement);
-router.delete('/BlackListAdd/:id',addToBlackList)
+router.post('/BlackListAdd/:id',addToBlackList)
 router.delete('/BlackListDel/:id',getFromBlackList)
 router.delete('/delAll',deleteAllEtablissements)
-router.get('/getBL/:id',getBlackList)
+router.get('/getBL',getBlackList)
 router.post('/add',upload,addManyEtablissements)
 router.delete('/del/:id',deleteEtablissement)
 router.patch('/update/:id',updateEtablissemenet)

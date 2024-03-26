@@ -6,7 +6,7 @@ const BlackList = ({ etablissement }) => {
   const [blackList,setBlackList]=React.useState([])
   useEffect (()=>{
     const fetchBlackListData=async()=>{
-      const response = await fetch(`/api/Etablissements/getBL/${etablissement?._id}`)
+      const response = await fetch('/api/Etablissements/getBL')
       const json=await response.json();
       if(response.ok){
         setBlackList(json);
