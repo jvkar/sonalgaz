@@ -1,6 +1,7 @@
 import React,{ useEffect,useState } from "react"
 import { useEtablissementContext } from '../hooks/useEtablissementContext';
-
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
 const BlackListDetails=({blacklist})=>{
   // const {dispatch}=useEtablissementContext()
 
@@ -15,13 +16,16 @@ const BlackListDetails=({blacklist})=>{
 //   }
 // }
 return(
-<table>
-        <tr>
-            <td>{blacklist?.Nom}</td>
-            <td>{blacklist?.NumeroEtablissement}</td>
-            <td>{blacklist?.Adresse}</td>
-        </tr>
-          
-        </table>
+  <React.Fragment>
+          <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableCell align="center">{blacklist?.NumeroEtablissement}</TableCell>
+        <TableCell align="center">{blacklist?.Nom} </TableCell>
+        <TableCell align="center">{blacklist?.Adresse}</TableCell>
+        
+        <TableCell align="center"></TableCell>
+
+      </TableRow>
+  </React.Fragment>
+
 )}
 export default BlackListDetails

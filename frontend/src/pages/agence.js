@@ -19,7 +19,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { MdDelete } from "react-icons/md";
 import { LuPencilLine } from "react-icons/lu";
-import AddButtonAgance from "../components/addBtnAgence";
+import AddButtonAgance from "../components/buttons/addBtnAgence";
 
 import ModelAdd from "../components/models/modelAdd";
 const Agences = () => {

@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import FormAddCSV from '../forms/formAddCsv';
 import FormAdd from '../forms/formAdd';
-import AddButtonAgance from '../addBtnAgence';
+import AddButtonAgance from '../buttons/addBtnAgence';
 
 const style = {
   position: 'absolute',

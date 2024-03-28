@@ -14,8 +14,8 @@ import TableRow from "@mui/material/TableRow";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { LuPencilLine } from "react-icons/lu";
-
-
+import UpdateBtnAgence from './buttons/updateBtnAgence';
+import ModelUpdateAgence from './models/modelUpdateAgence';
 
 
 const AgenceDetails = ({ agence }) => {
@@ -56,7 +56,6 @@ const AgenceDetails = ({ agence }) => {
       dispatch({ type: 'DELETE_AGENCE', payload: json });
     }
   }
-  const icon3 = (<button onClick={handleUpdate} style={{ marginRight: "25px", backgroundColor: "transparent", borderColor: "transparent", cursor: "pointer" }}><LuPencilLine style={{ width: "24px", height: "24px" }} /></button>);
 
   const icon5 = (<button onClick={handleDelete} style={{ backgroundColor: "transparent", borderColor: "transparent", cursor: "pointer" }}><img width="24px" height="24px" src="https://img.icons8.com/material-rounded/24/filled-trash.png" alt="filled-trash" />
   </button>);
@@ -91,7 +90,7 @@ const AgenceDetails = ({ agence }) => {
         <TableCell align="center">{agence?.nom}</TableCell>
         <TableCell align="center">{agence?.adresseAgence}</TableCell>
 
-        <TableCell align='center' ><div style={{ paddingRight: "10px" }}>{icon3}{icon5}</div></TableCell>
+        <TableCell align='center' ><div style={{ paddingRight: "10px" }}>{<ModelUpdateAgence agenceId={agence._id}/>}{icon5}</div></TableCell>
 
       </TableRow>
       <TableRow>

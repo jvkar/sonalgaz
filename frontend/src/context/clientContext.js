@@ -10,10 +10,12 @@ export const clientReducer = (state, action) => {
       return { ...state, clients: { ...state.clients, retablissements: action.payload } };
     case 'CREATE_CLIENT':
       return { 
+        ...state,
         clients: [action.payload, ...state.clients] 
       }
       case 'DELETE_CLIENTS':
         return { 
+          ...state,
           clients: state.clients.filter(c => c._id !== action.payload._id) 
         }
     default:

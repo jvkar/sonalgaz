@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import {useClientContext} from '../hooks/useClientContext'
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
+import { useClientContext } from '../hooks/useClientContext'
 
 
 
-const RetablissementDetails = ({ client }) => {
+const RetablissementDetails = ({ retablissement }) => {
 
 
 
 
   return (
+    <React.Fragment>
+      <TableRow>
 
-      <tbody>
-        <tr>
-          <td>{client?.codeClient}</td>
-          <td>{client?.referenceClient}</td>
-          <td>{client?.nomClient}</td>
-          <td>{client?.adresseClient}</td>
-          <td>{client?.typeClient}</td>
-          <td>{client?.numeroCompteur}</td>
-          <td>{client?.etat}</td>
+        <TableCell component="th" scope="row">
+          {retablissement.codeClient}
+        </TableCell>
+        <TableCell >{retablissement.referenceClient}</TableCell>
+        <TableCell>{retablissement.nomClient}</TableCell>
+        <TableCell >{retablissement.adresseClient}</TableCell>
+        <TableCell >{retablissement.numeroCompteur}</TableCell>
+        <TableCell >{retablissement.typeClient}</TableCell>
+        <TableCell >{retablissement.etat}</TableCell>
 
-       </tr>
-       </tbody>
-     
+      </TableRow>
+    </React.Fragment>
+
 
   )
 }

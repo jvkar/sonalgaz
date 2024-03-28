@@ -23,6 +23,7 @@ const Navbar = () => {
    const toggle=() => setIsOpen(!isOpen);
    let menuItem =[]
    let menuItem2= []
+   let menuItem3= []
    if ( user && user.userType==='admin'){
      menuItem=[
 
@@ -103,6 +104,31 @@ if ( user && user.userType==='CadreAgence'  && user.agence){
 
   ]
 }
+if ( user && user.userType==='responsableEntreprise'  && user.entreprise){
+    const id = user?.entreprise
+
+    menuItem3=[
+
+   {
+      path:"/",
+      name:"Accueil",
+      icon: <FaHome/>,
+  },
+
+
+    {  
+        name: "Logout",
+        icon: (
+            <button className='btnLogout' onClick={handleClick}>
+                <CiLogout />
+               
+            </button>        
+        ),
+        path: "/login"
+   },     
+
+  ]
+}
 
    return (
        <div className='container'>
@@ -129,6 +155,18 @@ if ( user && user.userType==='CadreAgence'  && user.agence){
                    <div className="menuleft">
                     
                     {menuItem2.map((item, index)=> ( 
+                    <ul>
+                        <NavLink to={item.path} key={index} className="link" activeclassName="active">
+                            <div className="icon">{item.icon}</div>
+                            <div style={{display : isOpen ? "block" : "none"}} className="link_text">{item.name}</div>                             </NavLink>
+                        
+                    </ul>
+                    
+                    ))}
+                </div>
+                   <div className="menuleft">
+                    
+                    {menuItem3.map((item, index)=> ( 
                     <ul>
                         <NavLink to={item.path} key={index} className="link" activeclassName="active">
                             <div className="icon">{item.icon}</div>

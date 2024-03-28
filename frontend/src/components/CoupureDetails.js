@@ -1,26 +1,32 @@
 import React, { useEffect } from 'react';
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
 import {useClientContext} from '../hooks/useClientContext'
 
 
 
-const CoupureDetails = ({ client }) => {
+const CoupureDetails = ({ coupure }) => {
 
 
 
   return (
 
   
-        <tbody>
-          <tr>
-        <td>{client?.codeClient}</td>
-          <td>{client?.referenceClient}</td>
-          <td>{client?.nomClient}</td>
-          <td>{client?.adresseClient}</td>
-          <td>{client?.typeClient}</td>
-          <td>{client?.numeroCompteur}</td>
-          <td>{client?.etat}</td>
-          </tr>
-       </tbody>
+    <React.Fragment>
+      <TableRow>
+
+      <TableCell component="th" scope="row">
+          {coupure.codeClient}
+        </TableCell>
+        <TableCell >{coupure.referenceClient}</TableCell>
+        <TableCell>{coupure.nomClient}</TableCell>
+        <TableCell >{coupure.adresseClient}</TableCell>
+        <TableCell >{coupure.numeroCompteur}</TableCell>
+        <TableCell >{coupure.typeClient}</TableCell>
+        <TableCell >{coupure.etat}</TableCell>
+
+      </TableRow>
+    </React.Fragment>
        
 
 

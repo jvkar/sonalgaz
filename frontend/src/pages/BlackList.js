@@ -2,6 +2,13 @@ import React, { useEffect } from "react";
 import BlackListDetails from "../components/BlackListDetails";
 import { useEtablissementContext } from "../hooks/useEtablissementContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import { useParams } from "react-router-dom";
 const BlackList = ({ etablissement }) => {
 
@@ -27,22 +34,30 @@ const BlackList = ({ etablissement }) => {
 
   return (
     <div className="list">
-      <h1>Black liste</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Nom de l'etablissement</th>
-            <th>Numero de l'etablissement</th>
-            <th>Adresse de l'etablissement</th>
+      <div>
+      <h1>La liste noire</h1>
+      </div>
+      <TableContainer component={Paper}>
+            <Table aria-label="collapsible table">
+              <TableHead>
+                <TableRow>
 
-          </tr>
-        </thead>
+                  <TableCell align="center">Numéro de l'entreprise</TableCell>
+                  <TableCell align="center">Nom de l'entreprise</TableCell>
+                  <TableCell align="center">Adresse De l'entreprise</TableCell>
 
-
-      </table>
-          {etablissements && etablissements?.map(blacklist => (
+                  <TableCell align="center"></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+              {etablissements && etablissements?.map(blacklist => (
             <BlackListDetails key={blacklist.id} blacklist={blacklist} />
           ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+
     </div>
   );
 };

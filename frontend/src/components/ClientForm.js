@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useClientContext } from '../hooks/useClientContext'
+import { useParams } from 'react-router-dom'
+
 const ClientForme = () => {
   const { dispatch } = useClientContext()
 
@@ -20,6 +22,7 @@ const ClientForme = () => {
     }
     window.location.reload();
   }
+  const {id}= useParams()
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -31,19 +34,16 @@ const ClientForme = () => {
       formData.append("file", file);
 
     
-    const response = await fetch('/api/Clients/add', {
+    const response = await fetch(`/api/Clients/addClients/${id}`, {
       method: 'POST',
       body: formData,
-    
-      headers: {
-        // 'Content-Type': 'application/json',
-        // "Content-Type": "multipart/form-data"
-      }
+
     })
     const json = await response.json()
 
     if (!response.ok) {
       setError(json.error)
+      console.log("response failed")
     }
     if (response.ok) {
       setError(null)
