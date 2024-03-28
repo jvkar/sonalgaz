@@ -79,16 +79,16 @@ const addToBlackList = async (req, res) => {
   const agenceName = await Agence.findOne({ _id: etablissement.agence });
   const { Nom, NumeroEtablissement, Adresse, agence } = etablissement.toObject();
 
-  // Check if a document exists in the BlackList collection with the given entreprise ID
+
   const blackListEntry = await BlackList.findOne({ entreprise: id });
 
   if (blackListEntry) {
-    // If the enterprise is already in the BlackList, increment the timesInBlackList
+
     const etab = await Etablissement.findOne({_id:blackListEntry.entreprise})
     const newTimesInBlackList = etab.timesInBlackList + 1;
     await Etablissement.updateOne({ _id: id }, { timesInBlackList:newTimesInBlackList });
   } else {
-    // If the enterprise is not in the BlackList, create a new entry
+
  
     await BlackList.create({
       Nom,

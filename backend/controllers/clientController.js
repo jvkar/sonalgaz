@@ -100,7 +100,10 @@ const affecterCoupure = async (req, res) => {
     if(clients.length === 0){
       return res.status(404).json({ error: "There are no available clients." });
     }
-    
+    const nbrCoupure = entrep.affectationCoupure+10
+    await Etablissement.updateOne({_id:id},{
+      affectationCoupure:nbrCoupure
+    })
     const clientIds = clients.map(client => client._id); 
     const clientNames = clients.map(client=>client.nomClient)
     const clientCodes = clients.map(client=>client.codeClient)
@@ -139,6 +142,10 @@ const affecterRetablissement = async (req, res) => {
     if(clients.length === 0){
       return res.status(404).json({ error: "There are no available clients." });
     }
+    const nbrRetablissement = entrep.affectationRetablissement+10
+    await Etablissement.updateOne({_id:id},{
+      affectationRetablissement:nbrRetablissement
+    })
     
     const clientIds = clients.map(client => client._id); 
     const clientNames = clients.map(client=>client.nomClient)

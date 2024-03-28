@@ -16,6 +16,7 @@ import { LuPencilLine } from "react-icons/lu";
 import ModelAddEntreprise from "../components/models/modelAddEntreprise";
 const Etablissement = ({ etablissement }) => {
   const { user } = useAuthContext()
+  const userType = user.userType
   const { etablissements, dispatch } = useEtablissementContext()
   const [error, setError] = useState(undefined)
   const handleDelete = async () => {
@@ -69,7 +70,7 @@ const Etablissement = ({ etablissement }) => {
             <TableCell align="center">Numéro de l'entreprise</TableCell>
             <TableCell align="center">Nom de l'entreprise</TableCell>
             <TableCell align="center">Adresse De l'entreprise</TableCell>
-            <TableCell align="center">Nombre de fois dans la liste noire</TableCell>
+           {userType == "CadreAgence" ? <TableCell align="center">Nombre de fois dans la liste noire</TableCell>:<></>} 
             <TableCell align="center">nombre de coupure/annee</TableCell>
             <TableCell align="center">nombre de retablissements/annee</TableCell>
             <TableCell align="center"></TableCell>

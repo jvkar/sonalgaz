@@ -25,11 +25,11 @@ const EtablissementSchema= new Schema({
      default: null},
   affectationCoupure:{
      type:Number,
-     default : null,
+     default : 0,
   },
   affectationRetablissement:{
      type:Number,
-     default : null,
+     default : 0,
   }
   ,timesInBlackList:{
      type : Number ,

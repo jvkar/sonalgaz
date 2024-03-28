@@ -45,7 +45,7 @@ const createToken = (_id) => {
             }else if ( userType==='responsableEntreprise') {
                 const responsableEntreprise = await ResponsableEntreprise.findOne({username:username});
                 const entreprise = await Etablissement.findOne({_id:responsableEntreprise.etablissement});
-                const nomEntreprise = entreprise.Nom;
+                const nomEntreprise = entreprise?.Nom;
                 res.status(200).json({username,userType,token,entreprise:responsableEntreprise.etablissement,nom:nomEntreprise})
             }
             else {

@@ -175,9 +175,10 @@ const EtablissementDetails = ({ etablissement }) => {
         <TableCell align="center">{etablissement?.NumeroEtablissement}</TableCell>
         <TableCell align="center">{etablissement?.Nom} </TableCell>
         <TableCell align="center">{etablissement?.Adresse}</TableCell>
-        <TableCell align="center">{etablissement?.timesInBlackList}</TableCell>
-        <TableCell align="center"></TableCell>
-        <TableCell align="center"></TableCell>
+        {userType == "CadreAgence"?  <TableCell align="center">{etablissement?.timesInBlackList}</TableCell> : <></>}
+
+        <TableCell align="center">{etablissement?.affectationCoupure}</TableCell>
+        <TableCell align="center">{etablissement?.affectationRetablissement}</TableCell>
 
         {userType === 'CadreAgence' ?
           <TableCell align='center' ><div style={{ paddingRight: "10px" }}>
