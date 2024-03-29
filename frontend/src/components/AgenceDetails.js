@@ -16,7 +16,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { LuPencilLine } from "react-icons/lu";
 import UpdateBtnAgence from './buttons/updateBtnAgence';
 import ModelUpdateAgence from './models/modelUpdateAgence';
-
+import { useNavigate } from 'react-router-dom';
 
 const AgenceDetails = ({ agence }) => {
 
@@ -73,7 +73,10 @@ const AgenceDetails = ({ agence }) => {
       fetchEtablissementsData()
     }
   }, [assignedEtablissements, user]);
-
+  const navigate = useNavigate()
+  const updateUrl = (id) => {
+    navigate(`?id=${id}`);
+  };
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -90,7 +93,7 @@ const AgenceDetails = ({ agence }) => {
         <TableCell align="center">{agence?.nom}</TableCell>
         <TableCell align="center">{agence?.adresseAgence}</TableCell>
 
-        <TableCell align='center' ><div style={{ paddingRight: "10px" }}>{<ModelUpdateAgence agenceId={agence._id}/>}{icon5}</div></TableCell>
+        <TableCell align='center' ><div style={{ paddingRight: "10px" }}>{<ModelUpdateAgence agenceId={agence._id} updateUrl={updateUrl}/>}{icon5}</div></TableCell>
 
       </TableRow>
       <TableRow>

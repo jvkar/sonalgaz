@@ -17,13 +17,18 @@ const style = {
   p: 4,
 };
 
-const ModelUpdateAgence = ({agenceId }) => {
+const ModelUpdateAgence = ({ agenceId, updateUrl }) => {
   const [openFormUpdate, setOpenFormUpdate] = useState(false);
 
-  const handleOpenFormUpdate = () => setOpenFormUpdate(true);
+  const handleOpenFormUpdate = () => {
+    setOpenFormUpdate(true);
+
+    updateUrl(agenceId);
+  }
 
   const handleClose = () => {
     setOpenFormUpdate(false);
+    updateUrl('')
   };
 
   return (
@@ -38,7 +43,7 @@ const ModelUpdateAgence = ({agenceId }) => {
           <UpdateAgence closeEvent={handleClose} agenceId={agenceId}/>
         </Box>
       </Modal>
-      <UpdateBtnAgence openModal={handleOpenFormUpdate} agenceId={agenceId} />
+      <UpdateBtnAgence openModal={handleOpenFormUpdate}/>
     </div>
   );
 };

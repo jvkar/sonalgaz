@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSearchParams } from 'react-router-dom';
 import { useAuthContext } from "../hooks/useAuthContext";
 import {  Grid,Divider,IconButton, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper';
@@ -12,8 +13,10 @@ const UpdateAgence = ({closeEvent}) => {
     const [numeroAgence, setNumeroAgence] = useState('')
     const [adresseAgence, setAdresseAgence] = useState('')
     const [error, setError] = useState('')
-    const { id } = useParams()
-    const handleSubmit = async () => {
+    const [searchParams] = useSearchParams();
+    const id = searchParams.get('id');
+    const handleSubmit = async (event) => {
+        event.preventDefault();
         if (!user) {
             setError('you must be logged in')
             return
@@ -33,6 +36,7 @@ const UpdateAgence = ({closeEvent}) => {
             setNumeroAgence('')
             setAdresseAgence('')
             setError(undefined)
+            window.location.reload()
         }
         if (!response.ok) {
             setError(json.error);
@@ -41,7 +45,7 @@ const UpdateAgence = ({closeEvent}) => {
     }
     return (
         <div>
-        <Paper style={{width:"50%"}}>
+        <Paper style={{boxShadow: "none"}}>
             <Typography variant="h4" align="center" style={{padding:"10px"}} >
             Mettre a jour l'agence
             </Typography>
@@ -52,18 +56,18 @@ const UpdateAgence = ({closeEvent}) => {
             <IoIosClose />
         </IconButton>
             <Divider/>
-            <form onSubmit={handleSubmit} >
-                <Grid containerstyle={{paddingLeft:"15%",paddingTop:'2%'}}>
+            <form onSubmit={handleSubmit} style={{display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",textAlign:"center"}}>
+                <Grid style={{width:"100%"}} containerstyle={{paddingLeft:"15%",paddingTop:'2%'}}>
                     <Grid item xs={12} style={{paddingTop:"3%"}}>
-                        <TextField id="outlined-basic" label="Nom de l'agence" width="15px" variant="outlined" value={nom} onChange={(e) => setNom(e.target.value)} style={{minWidth:"80%"}}/>
+                        <TextField id="outlined-basic" label="Nom de l'agence" width="15px" variant="outlined" value={nom} onChange={(e) => setNom(e.target.value)} style={{minWidth:"100%"}}/>
                     </Grid>
                     <Grid item xs={12} style={{paddingTop:"2%"}}>
-                        <TextField  label="Numero de l'agence" variant="outlined" value={numeroAgence} onChange={(e) => setNumeroAgence(e.target.value)} style={{minWidth:"80%"}} />
+                        <TextField  label="Numero de l'agence" variant="outlined" value={numeroAgence} onChange={(e) => setNumeroAgence(e.target.value)} style={{minWidth:"100%"}} />
                     </Grid>
                     <Grid item xs={12} style={{paddingTop:"2%"}}>
-                        <TextField  label="adresse d'agence" variant="outlined" value={adresseAgence} onChange={(e) => setAdresseAgence(e.target.value)}style={{minWidth:"80%"}} />
+                        <TextField  label="adresse d'agence" variant="outlined" value={adresseAgence} onChange={(e) => setAdresseAgence(e.target.value)}style={{minWidth:"100%"}} />
                     </Grid>
-                    <Grid item xs={12} style={{paddingTop:"2%",paddingLeft:'25%',paddingBottom:'5%'}}>
+                    <Grid item xs={12} style={{paddingTop:"5%",paddingBottom:'5%'}}>
                         <Button type="submit" variant="contained">Mettre a jour</Button>
                     </Grid>
                 </Grid>
