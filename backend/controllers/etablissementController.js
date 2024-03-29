@@ -30,11 +30,17 @@ const addManyEtablissements = async (req,res)=>{
   try {
     
     const csvData = await csvtojson().fromFile(csvfilepath);
+    const agences = await Agence.find({state:"active"});
+    if (agences.length === 0) {
+      return res.status(500).json({ error: "Il faut insérer la liste des agences." });
+    }
     const etablissements = await Etablissement.insertMany(csvData);
-    const agences = await Agence.find({});
     const agenceOne= await Agence.findOne();
     const nbr = agenceOne ? agenceOne.numeroEntreprisesParAgence : null;
     const {NombreDesCoupures}=req.body
+    if(NombreDesCoupures==""){
+     return res.status(500).json({error:" tous les champs doit etre remplis "})
+    }
 
     if (etablissements.length === 0 || (agences.length > 0 && agences[0].etablissements?.length === 0)) {
       agenceIndex = 0;
@@ -64,6 +70,8 @@ const addManyEtablissements = async (req,res)=>{
     }
 
     res.json({ success: "success" });
+  
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

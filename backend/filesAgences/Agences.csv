@@ -1,9 +1,9 @@
-nom,numeroAgence,adresseAgence,numeroEntreprisesParAgence
-beb sebt,1,123 rue blida centre,0
-bouarfa,2,23 rue blida ouest,0
-boufarik,3,983 rue boufarik blida,0
-Mouzaia,4,63 rue mouzaia blida,0
-Larbaa,5,99 rue N 09 larabaa blida,0
-Meftah,6,19 rue N 08 meftah blida,0
-Oued El Alleug,7,rue Oued el alleug blida,0
-Ouled Yaich,8,1 rue Ouledyaich blida,0
+nom,numeroAgence,adresseAgence,numeroEntreprisesParAgence,state
+beb sebt,1,123 rue blida centre,0,active
+bouarfa,2,23 rue blida ouest,0,active
+boufarik,3,983 rue boufarik blida,0,active
+Mouzaia,4,63 rue mouzaia blida,0,active
+Larbaa,5,99 rue N 09 larabaa blida,0,active
+Meftah,6,19 rue N 08 meftah blida,0,active
+Oued El Alleug,7,rue Oued el alleug blida,0,active
+Ouled Yaich,8,1 rue Ouledyaich blida,0,active

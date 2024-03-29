@@ -17,7 +17,9 @@ import { LuPencilLine } from "react-icons/lu";
 import UpdateBtnAgence from './buttons/updateBtnAgence';
 import ModelUpdateAgence from './models/modelUpdateAgence';
 import { useNavigate } from 'react-router-dom';
-
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import { Button } from '@mui/material';
 const AgenceDetails = ({ agence }) => {
 
 
@@ -57,8 +59,7 @@ const AgenceDetails = ({ agence }) => {
     }
   }
 
-  const icon5 = (<button onClick={handleDelete} style={{ backgroundColor: "transparent", borderColor: "transparent", cursor: "pointer" }}><img width="24px" height="24px" src="https://img.icons8.com/material-rounded/24/filled-trash.png" alt="filled-trash" />
-  </button>);
+
   useEffect(() => {
     const fetchEtablissementsData = async () => {
       const response = await fetch(`/api/Etablissements/etablissement/${agence._id}`, {
@@ -77,6 +78,36 @@ const AgenceDetails = ({ agence }) => {
   const updateUrl = (id) => {
     navigate(`?id=${id}`);
   };
+  const updateState = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch(`/api/Agences/stateChange/${agence._id}`, {
+        method: "PATCH",
+        headers: { 'Authorization': `Bearer ${user.token}` }
+      });
+      if (!response.ok) {
+        const json = await response.json();
+        setError(json.error);
+      }
+      if(response.ok){
+        window.location.reload()
+      }
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+  
+  const turnOn = (
+    <Button component="label" variant="contained" style={{backgroundColor:'green'}} endIcon={<ToggleOnIcon />} onClick={updateState}>
+      Active
+    </Button>
+  );
+  
+  const turnOff = (
+    <Button component="label" variant="contained" style={{backgroundColor:'red'}} endIcon={<ToggleOffIcon />} onClick={updateState}>
+      Inactive
+    </Button>
+  );
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -93,7 +124,12 @@ const AgenceDetails = ({ agence }) => {
         <TableCell align="center">{agence?.nom}</TableCell>
         <TableCell align="center">{agence?.adresseAgence}</TableCell>
 
-        <TableCell align='center' ><div style={{ paddingRight: "10px" }}>{<ModelUpdateAgence agenceId={agence._id} updateUrl={updateUrl}/>}{icon5}</div></TableCell>
+        <TableCell align='center' >
+          <div style={{ paddingRight: "10px" }}>
+            {<ModelUpdateAgence agenceId={agence._id} updateUrl={updateUrl}/>}
+            {agence.state === "active" ? turnOn : turnOff}        
+          </div>
+        </TableCell>
 
       </TableRow>
       <TableRow>

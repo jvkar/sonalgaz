@@ -38,11 +38,11 @@ const addManyAgences = async (req,res)=>{
       for(const agence of agencesNumberUpdate ){
         await Agence.findByIdAndUpdate(agence._id,{numeroEntreprisesParAgence:numeroEntreprisesParAgence})
       }
-      const agenceId = agences[i]._id;
-      const etablissementsToUpdate = await Etablissement.find({ agence: null }).limit(Agence.numeroEntreprisesParAgence);
-      for (const etablissement of etablissementsToUpdate) {
-        await Etablissement.findByIdAndUpdate(etablissement._id, { agence: agenceId });
-      }
+      // const agenceId = agences[i]._id;
+      // const etablissementsToUpdate = await Etablissement.find({ agence: null }).limit(Agence.numeroEntreprisesParAgence);
+      // for (const etablissement of etablissementsToUpdate) {
+      //   await Etablissement.findByIdAndUpdate(etablissement._id, { agence: agenceId });
+      // }
     }
     
     res.json({ success: "success" });
@@ -163,6 +163,7 @@ const deleteAgence =async(req,res)=>{
       if(!mongoose.Types.ObjectId.isValid(id)){
         return res.status(404).json({error:"agence n'existe pas"});
       }
+      if(!nom==""&&!numeroAgence==""&&!adresseAgence==""){
       const agence =await Agence.findByIdAndUpdate({_id:id},
         {nom:nom,numeroAgence:numeroAgence,adresseAgence:adresseAgence}
         )
@@ -173,10 +174,36 @@ const deleteAgence =async(req,res)=>{
       if(agence){
         res.status(200).json(updatedAgence);
       }
+    }
+    else{
+      res.status(500).json({error:"tous les champs doit etre remplis"})
+    }
     }catch(error){
       res.status(400).json({error:json.error})
     }
   }
+  const etatAgence = async (req, res) => {
+    const { id } = req.params;
+    try {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: "L'agence n'existe pas." });
+      }
+  
+      const agence = await Agence.findOne({ _id: id });
+  
+      if (!agence) {
+        return res.status(404).json({ error: "L'agence n'existe pas." });
+      }
+  
+      const newState = agence.state === "active" ? "inactive" : "active";
+      await Agence.findByIdAndUpdate(id, { state: newState });
+  
+      res.status(200).json({ message: "État changé avec succès." });
+    } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ error: "Une erreur s'est produite." });
+    }
+  };
 
 module.exports={
     getAllAgences,
@@ -188,4 +215,5 @@ module.exports={
     ,deleteAllAgences
     ,updateAgence
     ,entrepriseParCadre
+    ,etatAgence
 }

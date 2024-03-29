@@ -71,21 +71,11 @@ const UpdateAgence = ({closeEvent}) => {
                         <Button type="submit" variant="contained">Mettre a jour</Button>
                     </Grid>
                 </Grid>
+                {error && <div className="error">{error}</div>}
             </form>    
         </Paper>
     </div>
-        // <div>
-        //     <h3>Mettre a jour l'agence</h3>
-        //     <form className="form" onSubmit={handleSubmit}>
-        //         <label>Nom de l'agence</label>
-        //         <input type="text" value={nom} onChange={(e) => setNom(e.target.value)} />
-        //         <label>Numero de l'agence</label>
-        //         <input type="number" value={numeroAgence} onChange={(e) => setNumeroAgence(e.target.value)} />
-        //         <label>adresse d'agence</label>
-        //         <input type="text" value={adresseAgence} onChange={(e) => setAdresseAgence(e.target.value)} />
-        //         <button type="submit">Mettre a jour</button>
-        //     </form>
-        // </div>
+
     );
 }
 

@@ -14,11 +14,13 @@ const AgenceSchema= new Schema({
    type : String,
    required : true,
    },
-
    numeroEntreprisesParAgence:{
       type : Number,
-
    },
+   state:{
+      type:String,
+      default:"active"
+   }
 
 
 }, { timestamps: true })

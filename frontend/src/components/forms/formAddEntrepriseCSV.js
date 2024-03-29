@@ -44,10 +44,10 @@ const FormAddEntrepriseCSV = ({closeEvent}) => {
     
             setFile(undefined)
             dispatch({ type: 'CREATE_ETABLISSEMENT', payload: json })
+            window.location.reload()
             
           }
         }
-        window.location.reload()
     }
     
     return (
@@ -79,6 +79,7 @@ const FormAddEntrepriseCSV = ({closeEvent}) => {
             </Grid>
         </Grid>
         <Box sx={{m:4}}/>
+        {error && <div className="error">{error}</div>}
         </form>
     </div>
       );
