@@ -11,6 +11,7 @@ const {getAllAgences
     ,updateAgence
     ,entrepriseParCadre
     ,etatAgence
+
 }=require("../controllers/agenceController");
 const requireAuth = require('../middleware/requireAuth')
 router.use(requireAuth)
@@ -24,4 +25,5 @@ router.post('/add',upload,addManyAgences);
 router.get('/agence/:id',entrepriseParAgence);
 router.patch('/update/:id',updateAgence)
 router.patch('/stateChange/:id',etatAgence)
+
 module.exports=router

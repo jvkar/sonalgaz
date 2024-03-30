@@ -10,13 +10,14 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import { useState } from 'react';
 import { useRef } from 'react';
-export default function AddButtonEntreprise({Openn,Open2}) {
+
+
+export default function AddButtonClient({Open}) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-  const btt1=(<Button onClick={Openn} style={{width :'400px',display:'flex', justifyContent:'flex-start'}}>Ajouter une Entreprise</Button>);
-  const btt2=(<Button  onClick={Open2}>Ajouter une liste des entreprise  (Format CSV)</Button>);
+  const btt1=(<Button  onClick={Open}>Ajouter une liste des clients  (Format CSV)</Button>);
 
-const options = [btt1,btt2];
+const options = [btt1];
 
 //handleToggle bah ytkhbaw sub-Button
   const handleToggle = () => {

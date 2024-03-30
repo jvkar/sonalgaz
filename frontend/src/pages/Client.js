@@ -26,6 +26,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ClientForme from "../components/ClientForm";
 import { useAuthContext } from "../hooks/useAuthContext"; 
 import { useParams } from 'react-router-dom';
+import ModelAddClient from "../components/models/modeAddClient";
 
 const Client = () => {
   const {user} = useAuthContext()
@@ -59,10 +60,13 @@ const Client = () => {
   return (
     <div className="list">
     <React.Fragment >
-          <div style={{marginBottom:"20px"}}>
+          <div className='Title' style={{marginBottom:"20px"}}>
             <h1>la liste des clients de l'agence de {Nom}</h1>
-          </div>
+          <div className='AddBtt'>
 
+          <ModelAddClient/>
+        </div>
+          </div>
 
               <Accordion style={{ backgroundColor: "#FFFFFF" }}>
                 <AccordionSummary

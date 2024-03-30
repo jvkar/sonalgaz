@@ -27,6 +27,10 @@ const ListInterventionSchema = new Schema({
     },
     iteration:{
         type:Number
+    },
+    archive:{
+        type:String,
+        default:"Non Archiver"
     }
 }, { timestamps: true })
 module.exports=mongoose.model('ListIntervention',ListInterventionSchema);

@@ -255,6 +255,18 @@ const createClient= async (req, res) => {
     //   res.status(400).json({error: error.message})
     // }
   }
+const archiverClient = async (req,res)=>{
+  const {id} = req.params
+  try{
+   const listInterventions = await ListIntervention.updateMany({entrepriseId:id,archive:"Non Archiver"},
+   {archive:"archiver"}
+   )
+   return res.status(200).json({message:"list modified successfully"})
+   
+  }catch(error){
+   return res.status(400).json({error:json.error})
+  }
+}
 module.exports={
   deleteClient,
   getAllClient,
@@ -268,5 +280,6 @@ module.exports={
   getCoupures,
   getRetablissements,
   affecterCoupure,
-  affecterRetablissement
+  affecterRetablissement,
+  archiverClient
 }
