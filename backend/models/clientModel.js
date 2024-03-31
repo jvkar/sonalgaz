@@ -26,6 +26,10 @@ const ClientSchema= new Schema({
         type : String,
         default:null
     },
+    archived:{
+        type:String,
+        default:"Non Archiver"
+    },
     listId:{
         type : Schema.Types.ObjectId,
         ref: 'ListIntervention',

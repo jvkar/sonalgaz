@@ -10,6 +10,7 @@ import CreerCompte from './pages/creerComptes';
 import UpdateFormAgence from './pages/UpdateFormAgence'
 import UpdateFormEtablissement from './pages/UpdateFormEtab';
 import EtabAgence from './pages/etablissementAgence';
+import ClientEntrep from './pages/ClientEntrep';
 import Login from './pages/Login';
 import Navbar from './components/Navbar'
 import { useAuthContext } from './hooks/useAuthContext';
@@ -43,13 +44,16 @@ function App() {
             <Route path='/Facture' element={user ? <Facture /> : <Navigate to="/Login" />} />
             <Route path='/agences' element={!user ? <Login /> : <Agences/>} />
             <Route path='/etablissements' element={!user ? <Login /> : <Etablissement/>} />
-            <Route path='/BlackList/:id' element={user ?<BlackList />:<Navigate to="/Login"/>} />
             <Route path='/creerCompte' element={user ? <CreerCompte /> : <Navigate to="/Login" />} />
             <Route path='/UpdateFormAgence/:id' element={<UpdateFormAgence />} />
             <Route path='/UpdateFormEtablissement/:id' element={<UpdateFormEtablissement />} />
             {/* partieAgence */}
             <Route path='/entreprises/:id' element ={ userType=="CadreAgence" ? <EtabAgence/> : <Navigate to ='/Login'/>} />
             <Route path='/clients/:id' element={userType =="CadreAgence" ? <Client /> : <Navigate to="/Login" />} />
+            <Route path='/BlackList/:id' element={user ?<BlackList />:<Navigate to="/Login"/>} />
+            {/* partieEntreprise */}
+            <Route path='/listClientsEntreprise/:id' element={user ?<ClientEntrep />:<Navigate to="/Login"/>} />
+
           </Routes>
 
         </div>

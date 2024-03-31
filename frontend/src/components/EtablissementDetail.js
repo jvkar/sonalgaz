@@ -26,6 +26,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SnackBar from "./SnackBar";
+import Archiver from "../components/buttons/archiveButton";
 const EtablissementDetails = ({ etablissement }) => {
   const { user } = useAuthContext()
   const userType = user.userType
@@ -134,7 +135,7 @@ const EtablissementDetails = ({ etablissement }) => {
     if (!user) {
       return
     }
-    const response = await fetch(`api/Etablissements/del/${etablissement._id}`, {
+    const response = await fetch(`/api/Etablissements/del/${etablissement._id}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${user.token}` }
     });
@@ -144,6 +145,21 @@ const EtablissementDetails = ({ etablissement }) => {
     }
     window.location.reload()
 
+  }
+  const archiveList= async(event)=>{
+    event.preventDefault()
+    try{
+     const response =await fetch(`/api/Clients/archiver/${etablissement._id}`,{
+      method:'PATCH',
+      headers: { 'Authorization': `Bearer ${user.token}` }
+     });
+     const json = await response.json();
+     if(!response.ok){
+         setError(json.error)
+     }
+    }catch(error){
+       setError(error)
+    }
   }
 
 
@@ -196,6 +212,7 @@ const EtablissementDetails = ({ etablissement }) => {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
+              <Button style={{ margin: "2px" }} onClick={archiveList}> <Archiver /> </Button>
                 <Accordion style={{ backgroundColor: "#EEEEEE" }}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}

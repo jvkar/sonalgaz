@@ -95,6 +95,7 @@ const affecterCoupure = async (req, res) => {
       resetIterations(id)
     }
     const iterationCoupure = coupureIterations.get(id) + 1;
+
     const entrep = await Etablissement.findOne({_id:id})
     const clients = await Client.find({ typeClient: 'coupure', listId: null,agence:entrep.agence }).limit(10);
     if(clients.length === 0){
@@ -108,17 +109,26 @@ const affecterCoupure = async (req, res) => {
     const clientNames = clients.map(client=>client.nomClient)
     const clientCodes = clients.map(client=>client.codeClient)
     const clientAddresses = clients.map(client=>client.adresseClient)
+    const clientRefs = clients.map(client=>client.referenceClient)
+    const clientCompts = clients.map(client=>client.numeroCompteur)
+    const clientTypes = clients.map(client=>client.typeClient)
+    const clientEtats = clients.map(client=>client.etat)
     
     const listIntervention = await ListIntervention.create({
       entrepriseId: id,
+      agenceId:entrep.agence,
       clients: clientIds.map((clientId, index) => ({
         _id: clientId,
         nomClient: clientNames[index],
         codeClient: clientCodes[index],
-        adresseClient: clientAddresses[index]
+        adresseClient: clientAddresses[index],
+        referenceClient:clientRefs[index],
+        numeroCompteur:clientCompts[index],
+        typeClient:clientTypes[index],
+        etat:clientEtats[index]
       })),
       type:'coupures',
-      iteration: iterationCoupure
+      iteration: iterationCoupure,
     });
     for(const client of clients){
       await Client.findByIdAndUpdate(client._id,{listId:listIntervention._id})
@@ -151,17 +161,26 @@ const affecterRetablissement = async (req, res) => {
     const clientNames = clients.map(client=>client.nomClient)
     const clientCodes = clients.map(client=>client.codeClient)
     const clientAddresses = clients.map(client=>client.adresseClient)
-
+    const clientRefs = clients.map(client=>client.referenceClient)
+    const clientCompts = clients.map(client=>client.numeroCompteur)
+    const clientTypes = clients.map(client=>client.typeClient)
+    const clientEtats = clients.map(client=>client.etat)
+    
     const listIntervention = await ListIntervention.create({
       entrepriseId: id,
+      agenceId:entrep.agence,
       clients: clientIds.map((clientId, index) => ({
         _id: clientId,
         nomClient: clientNames[index],
         codeClient: clientCodes[index],
-        adresseClient: clientAddresses[index]
+        adresseClient: clientAddresses[index],
+        referenceClient:clientRefs[index],
+        numeroCompteur:clientCompts[index],
+        typeClient:clientTypes[index],
+        etat:clientEtats[index]
       })),
       type:'retablissements',
-      iteration: iterationRetablissement
+      iteration: iterationRetablissement,
     });
     for(const client of clients){
       await Client.findByIdAndUpdate(client._id,{listId:listIntervention._id})
@@ -175,7 +194,7 @@ const affecterRetablissement = async (req, res) => {
 const coupureParEtablissement=async (req,res)=>{
   const {id}=req.params
   try {
-  const listClient=await ListIntervention.find({entrepriseId:id,type:'coupures'})
+  const listClient=await ListIntervention.find({entrepriseId:id,type:'coupures',archive:"Non Archiver"})
   res.status(200).json(listClient)    
   }
   catch(error){
@@ -185,7 +204,7 @@ const coupureParEtablissement=async (req,res)=>{
 const retabParEtablissement=async (req,res)=>{
   const {id}=req.params
   try {
-  const listClient=await ListIntervention.find({entrepriseId:id,type:'retablissements'})
+  const listClient=await ListIntervention.find({entrepriseId:id,type:'retablissements',archive:"Non Archiver"})
   res.status(200).json(listClient)    
   }
   catch(error){
@@ -255,18 +274,37 @@ const createClient= async (req, res) => {
     //   res.status(400).json({error: error.message})
     // }
   }
-const archiverClient = async (req,res)=>{
-  const {id} = req.params
-  try{
-   const listInterventions = await ListIntervention.updateMany({entrepriseId:id,archive:"Non Archiver"},
-   {archive:"archiver"}
-   )
-   return res.status(200).json({message:"list modified successfully"})
-   
-  }catch(error){
-   return res.status(400).json({error:json.error})
-  }
-}
+  const archiverClient = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const listInterventions = await ListIntervention.find({ entrepriseId: id });
+  
+      for (const intervention of listInterventions) {
+        // Accessing _id of each intervention object
+        const interventionId = intervention._id;
+  
+        // Update intervention archive status
+        await ListIntervention.updateMany(
+          { _id: interventionId, archive: "Non Archiver" },
+          { archive: "archiver" }
+        );
+  
+        // Finding clients related to this intervention
+        const clients = await Client.find({ listId: interventionId });
+  
+        // Update clients archive status
+        await Client.updateMany(
+          { listId: interventionId },
+          { archived: "archiver" }
+        );
+      }
+  
+      return res.status(200).json({ success: true });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  };
+  
 module.exports={
   deleteClient,
   getAllClient,
@@ -281,5 +319,6 @@ module.exports={
   getRetablissements,
   affecterCoupure,
   affecterRetablissement,
-  archiverClient
+  archiverClient,
+
 }

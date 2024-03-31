@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import CoupureDetails from "../components/CoupureDetails";
 import RetablissementDetails from "../components/RetablissementDetails";
 import { useClientContext } from "../hooks/useClientContext";
@@ -28,40 +28,53 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useParams } from 'react-router-dom';
 import ModelAddClient from "../components/models/modeAddClient";
 
-const Client = () => {
+const ClientEntrep = () => {
   const {user} = useAuthContext()
   const Nom = user?.nom
   const { clients, dispatch } = useClientContext();
   const { id } = useParams()
   const [open, setOpen] = React.useState(false);
+  const [assignedCoupure, setassignedCoupure] = React.useState([])
+  const [assignedRetab, setassignedRetab] = React.useState([])
+  const [error, setError] = useState(undefined)
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const coupureResponse = await fetch(`/api/Clients/coupures/${id}`);
-        const retablissementResponse = await fetch(`/api/Clients/retablissements/${id}`);
+    const fetchCoupureData = async () => {
+      const response = await fetch(`/api/Clients/coupurePerEtab/${id}`, {
+        headers: { 'Authorization': `Bearer ${user.token}` }
+      })
+      const json = await response.json();
+      if (response.ok) {
 
-        if (coupureResponse.ok && retablissementResponse.ok) {
-          const coupureJson = await coupureResponse.json();
-          const retablissementJson = await retablissementResponse.json();
-
-          dispatch({ type: 'SET_COUPURE_CLIENTS', payload: coupureJson });
-          dispatch({ type: 'SET_RETABLISSEMENT_CLIENTS', payload: retablissementJson });
-        } else {
-          console.error('Error fetching data:', coupureResponse.statusText, retablissementResponse.statusText);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
+        const allClients = json.flatMap(enterprise => enterprise.clients);
+        setassignedCoupure(allClients);
       }
-    };
+    }
+    if (user) {
+      fetchCoupureData()
+    }
+  }, [assignedCoupure, user]);
+  useEffect(() => {
+    const fetchRetabData = async () => {
+      const response = await fetch(`/api/Clients/retabPerEtab/${id}`, {
+        headers: { 'Authorization': `Bearer ${user.token}` }
+      })
+      const json = await response.json();
+      if (response.ok) {
 
-    fetchData();
-  }, [ dispatch]);
+        const allClients = json.flatMap(enterprise => enterprise.clients);
+        setassignedRetab(allClients);
+      }
+    }
+    if (user) {
+      fetchRetabData()
+    }
+  }, [assignedRetab, user]);
 
   return (
     <div className="list">
     <React.Fragment >
           <div className='Title' style={{marginBottom:"20px"}}>
-            <h1>la liste des clients de l'agence de {Nom}</h1>
+            <h1>la liste des clients de l'entreprise de {Nom}</h1>
           <div className='AddBtt'>
 
           <ModelAddClient/>
@@ -87,19 +100,21 @@ const Client = () => {
                         <TableCell >Numero compteur</TableCell>
                         <TableCell >Type client</TableCell>
                         <TableCell >Etat</TableCell>
-                        <TableCell >Archiver</TableCell>
                       </TableRow>
                     </TableHead>
 
                     <TableBody>
-                      {clients?.coupures && clients?.coupures?.map(client => (
-
-                          <CoupureDetails key={client._id} coupure={client} />
-
-
-
-                      ))}
-                    </TableBody>
+                        {assignedCoupure && assignedCoupure?.map((coupure, index) => (
+                        //   <TableRow key={index}>
+                        //     <TableCell component="th" scope="row">
+                        //       {coupure.codeClient}
+                        //     </TableCell>
+                        //     <TableCell>{coupure.nomClient}</TableCell>
+                        //     <TableCell align="right">{coupure.adresseClient}</TableCell>
+                        //   </TableRow>
+                        <CoupureDetails key={index} coupure={coupure} />
+                        ))}
+                      </TableBody>
                   </Table>
                 </AccordionDetails>
               </Accordion>
@@ -122,20 +137,22 @@ const Client = () => {
                         <TableCell >Numero compteur</TableCell>
                         <TableCell >Type client</TableCell>
                         <TableCell >Etat</TableCell>
-                        <TableCell >Archiver</TableCell>
-
                       </TableRow>
                     </TableHead>
 
                     <TableBody>
-                      {clients?.retablissements && clients?.retablissements?.map(client => (
+                        {assignedRetab && assignedRetab?.map((retablissement, index) => (
+                        //   <TableRow key={index}>
+                        //     <TableCell component="th" scope="row">
+                        //       {retablissement.codeClient}
+                        //     </TableCell>
+                        //     <TableCell>{retablissement.nomClient}</TableCell>
+                        //     <TableCell align="right">{retablissement.adresseClient}</TableCell>
+                        //   </TableRow>
+                        <RetablissementDetails key={index} retablissement={retablissement} />
 
-                          <RetablissementDetails key={client._id} retablissement={client} />
-
-
-
-                      ))}
-                    </TableBody>
+                        ))}
+                      </TableBody>
                   </Table>
                 </AccordionDetails>
               </Accordion>
@@ -153,4 +170,4 @@ const Client = () => {
   );
 }
 
-export default Client;
+export default ClientEntrep;

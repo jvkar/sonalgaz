@@ -1,36 +1,53 @@
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ListInterventionSchema = new Schema({
-    entrepriseId:{
-        type : Schema.Types.ObjectId,
+    entrepriseId: {
+        type: Schema.Types.ObjectId,
         ref: 'Etablissement',
     },
-    clients:[{
-        _id:{
-        type : Schema.Types.ObjectId,
-        ref: 'Client', 
+
+    clients: [{
+        _id: {
+            type: Schema.Types.ObjectId,
+            ref: 'Client',
         },
-        nomClient:{
-          type:  String,
-          default:null
+        nomClient: {
+            type: String,
+            default: null
         },
-        codeClient:{  type:  Number,
+        codeClient: {
+            type: Number,
+            default: null
+        },
+        adresseClient: {
+            type: String,
+            default: null
+        },
+        referenceClient : {
+            type : Number,
+        },
+        numeroCompteur:{
+            type : Number ,
+        },
+        typeClient : { 
+            type: String,
+        },
+        etat:{
+            type : String,
             default:null
         },
-        adresseClient: { type:  String,
-            default:null
-    },
-        
+
     }],
-    type:{
-        type:String
+    type: {
+        type: String
     },
-    iteration:{
-        type:Number
+    iteration: {
+        type: Number
     },
-    archive:{
-        type:String,
-        default:"Non Archiver"
+    archive: {
+        type: String,
+        default: "Non Archiver"
     }
+
 }, { timestamps: true })
-module.exports=mongoose.model('ListIntervention',ListInterventionSchema);
+module.exports = mongoose.model('ListIntervention', ListInterventionSchema);

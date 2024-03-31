@@ -60,6 +60,7 @@ const AgenceDetails = ({ agence }) => {
   }
 
 
+
   useEffect(() => {
     const fetchEtablissementsData = async () => {
       const response = await fetch(`/api/Etablissements/etablissement/${agence._id}`, {

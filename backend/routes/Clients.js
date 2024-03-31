@@ -13,7 +13,8 @@ const {getAllClient,
     getRetablissements,
     affecterCoupure,
     affecterRetablissement,
-    archiverClient
+    archiverClient,
+
 }=require("../controllers/clientController");
 router.get('/ByFacture/:NumClient',getClientByFacture);
 router.get('/',getAllClient);
@@ -28,5 +29,6 @@ router.get('/retablissements/:id',getRetablissements);
 router.patch('/affecterCoupure/:id',affecterCoupure)
 router.patch('/affecterRetab/:id',affecterRetablissement)
 router.patch('/archiver/:id',archiverClient)
+
 
 module.exports=router
