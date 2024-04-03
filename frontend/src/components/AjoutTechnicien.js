@@ -1,76 +1,71 @@
-import React, { useState } from "react";
-import { useCreateAccount } from "../hooks/useCreateAccount";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useCreateAccount } from "../hooks/useCreateAccount";
+import { useState } from "react";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Box, Divider, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, RadioGroup, TextField, Typography } from '@mui/material'
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-const CreerCompteForm = () => {
+import * as React from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import { MdAddToPhotos } from "react-icons/md";
+import Alert from '@mui/material/Alert';
+const AjoutTechnicienForm = () => {
     const { user } = useAuthContext()
-    const [agence, setAgence] = useState('');
-    const [entreprise, setEntreprise] = useState('');
-    const [numeroAgence, setNumeroAgence] = useState('');
-    const [NumeroEtablissement, setNumeroEtablissement] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [nomTechnicien, setNomTechnicien] = useState('')
+    const [codeTechnicien, setCodeTechnicien] = useState('')
+    const { technicienCreateAccount, etabCreateAccount, agenceCreateAccount, error, isLoading } = useCreateAccount()
     const [error2, setError] = useState(undefined);
-    const { etabCreateAccount, agenceCreateAccount, error, isLoading } = useCreateAccount()
     const [showPassword, setShowPassword] = useState(false);
+    const [open, setOpen] = React.useState(false);
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false);
+    };
+
+  
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-    const handleClear = (e) => {
-        e.preventDefault()
-        setNumeroAgence('')
-        setNumeroEtablissement('')
-        setAgence(false)
-        setEntreprise(false)
-        setUsername('')
-        setPassword('')
-    }
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!user) {
-            setError('You must be logged in')
-            return
-        }
-
-        let userType = '';
-        let numeroKey = '';
-        if (agence != '') {
-            userType = 'agence';
-            numeroKey = "numeroAgence"
-        }
-        else if (entreprise != '') {
-            userType = 'entreprise';
-            numeroKey = "NumeroEtablissement"
-        }
+    const handleSubmit = async (event) => {
+        event.preventDefault()
         const headers = { 'Authorization': `Bearer ${user.token}` };
-        userType === 'agence' ? await agenceCreateAccount(numeroAgence, username, password, headers) : await etabCreateAccount(NumeroEtablissement, username, password, headers)
+       await technicienCreateAccount(nomTechnicien,codeTechnicien, username, password, headers)
 
-    };
+    }
     return (
         <div>
             <Box sx={{ m: 2 }} />
             <Typography variant="h4" align="center" >
-                Créer des comptes
+                Créer des comptes Techniciens
             </Typography>
             <Divider />
             <form onSubmit={handleSubmit}>
                 <Grid container >
                     <Grid item xs={6} sx={{ padding: "45px" }}>
                         <TextField
-                            id="Numero"
+                            id="codeTechnicien"
                             type="number"
-                            value={agence ? numeroAgence : NumeroEtablissement}
-                            onChange={(e) => {
-                                setNumeroAgence(agence ? e.target.value : numeroAgence);
-                                setNumeroEtablissement(entreprise ? e.target.value : NumeroEtablissement);
-                            }}
-                            label="Numéro (Agence/Entreprise)"
+                            value={codeTechnicien}
+                            onChange={(e) => setCodeTechnicien(e.target.value)}
+                            label="code Technicien"
+                            variant="outlined"
+                            siz="small"
+                            sx={{ minWidth: "100%", paddingBottom: "30px" }}
+                        />
+                        <TextField
+                            id="nomTechnicien"
+                            type="text"
+                            value={nomTechnicien}
+                            onChange={(e) => setNomTechnicien(e.target.value)}
+                            label="Nom Technicien"
                             variant="outlined"
                             siz="small"
                             sx={{ minWidth: "100%", paddingBottom: "30px" }}
@@ -109,26 +104,18 @@ const CreerCompteForm = () => {
                     <Grid item xs={6} sx={{ paddingLeft: "50px" }} >
                         <img style={{ display: "block", paddingLeft: "80px", paddingTop: "15px" }} src={require('../images/myImage.png')} alt="sonelgaz logo" width="25%" height="50%" />
                         <FormControl >
-                            <RadioGroup
-                                style={{ paddingTop: "20 px", paddingBottom: "15px", paddingLeft: "25px" }}
-                                row
-                            >
-                                <FormControlLabel value="agence" checked={agence} onChange={(e) => { setAgence(true); setEntreprise(false) }} control={<Radio />} label="Agence" />
-                                <FormControlLabel value="entreprise" checked={entreprise} onChange={(e) => { setAgence(false); setEntreprise(true) }} sx={{ paddingLeft: "25px" }} control={<Radio />} label="Entreprise" />
-                            </RadioGroup>
                             <Stack direction="row" spacing={2} sx={{ paddingTop: "", paddingLeft: "50px" }}>
                                 <Button type="submit" disabled={isLoading} variant="contained"> Créer </Button>
-
                             </Stack>
                         </FormControl>
 
                     </Grid>
                 </Grid>
+
                 {error && <div className="error">{error}</div>}
             </form>
         </div>
     );
 }
 
-export default CreerCompteForm;
-
+export default AjoutTechnicienForm;

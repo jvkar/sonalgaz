@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSearchParams } from 'react-router-dom';
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import {  Grid,Divider,IconButton, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';

@@ -69,7 +69,7 @@ const Agences = () => {
       <div className='Title'>
         <h1>La Liste des Agences</h1>
         <div className='AddBtt'>
-          <Button onClick={handleDelete} style={{ marginRight: "15px" }} className="DeleteAll" variant="outlined" startIcon={<MdDelete />}>Delete ALL</Button>          
+          {/* <Button onClick={handleDelete} style={{ marginRight: "15px" }} className="DeleteAll" variant="outlined" startIcon={<MdDelete />}>Delete ALL</Button>           */}
 
           <ModelAdd/>
         </div>

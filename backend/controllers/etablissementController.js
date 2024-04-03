@@ -249,6 +249,19 @@ const deleteEtablissement =async(req,res)=>{
       if(!mongoose.Types.ObjectId.isValid(id)){
         return res.status(404).json({error:"entreprise n'existe pas"});
       }
+    const existingEtablissementByName = await Etablissement.findOne({ Nom });
+    if (existingEtablissementByName && existingEtablissementByName._id != id) {
+      return res.status(400).json({ error: "An etablissement with this name already exists" });
+    }
+
+    const existingEtablissementByNumber = await Etablissement.findOne({ NumeroEtablissement });
+    if (existingEtablissementByNumber && existingEtablissementByNumber._id != id) {
+      return res.status(400).json({ error: "An etablissement with this number already exists" });
+    }
+    if(Nom==""&&NumeroEtablissement==""&&Adresse==""){
+      return res.status(400).json({error:"tout les champs doit etre remplis"})
+    }
+
       const etablissement =await Etablissement.findByIdAndUpdate({_id:id},
         {Nom:Nom,NumeroEtablissement:NumeroEtablissement,Adresse:Adresse}
         )
@@ -259,8 +272,9 @@ const deleteEtablissement =async(req,res)=>{
       if(etablissement){
         res.status(200).json(updatedEtablissement);
       }
+    
     }catch(error){
-      res.status(400).json({error:json.error})
+      res.status(400).json({error:error.message})
     }
   }
 

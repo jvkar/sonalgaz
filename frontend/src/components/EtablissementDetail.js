@@ -27,6 +27,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SnackBar from "./SnackBar";
 import Archiver from "../components/buttons/archiveButton";
+import ModelUpdateEntreprise from './models/modelUpdateEntreprise';
+import { useNavigate } from 'react-router-dom';
+
 const EtablissementDetails = ({ etablissement }) => {
   const { user } = useAuthContext()
   const userType = user.userType
@@ -162,6 +165,10 @@ const EtablissementDetails = ({ etablissement }) => {
     }
   }
 
+  const navigate = useNavigate()
+  const updateUrl = (id) => {
+    navigate(`?id=${id}`);
+  };
 
   const icon3 = (<Button component="label" variant="contained" endIcon={<BsArrowRightCircleFill />}>Coupures</Button>);
 
@@ -203,7 +210,10 @@ const EtablissementDetails = ({ etablissement }) => {
             <Button style={{ margin: "2px" }} onClick={addToBlackList}> <SnackBar /> </Button>
           </div></TableCell>
           :
-          <TableCell align='center' ><div style={{ paddingRight: "10px" }}>{icon1}{icon2}</div></TableCell>
+          <TableCell align='center' ><div style={{ paddingRight: "10px" }}>
+                        {<ModelUpdateEntreprise entrepriseId={etablissement._id} updateUrl={updateUrl} />}
+          
+          {icon2}</div></TableCell>
         }
 
       </TableRow>

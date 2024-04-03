@@ -125,7 +125,7 @@ const createAccount=async(req,res)=>{
     res.status(200).json({username, token})
     }
     if(!agence){
-      res.status(400).json({error:"il ya pas une agence avec ce numero"})
+     return res.status(400).json({error:"il ya pas une agence avec ce numero"})
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -163,6 +163,16 @@ const deleteAgence =async(req,res)=>{
       if(!mongoose.Types.ObjectId.isValid(id)){
         return res.status(404).json({error:"agence n'existe pas"});
       }
+      const existingEAgenceByName = await Agence.findOne({ nom });
+      if (existingEAgenceByName && existingEAgenceByName._id != id) {
+        return res.status(400).json({ error: "An Agence with this name already exists" });
+      }
+  
+      const existingAgenceByNumber = await Agence.findOne({ numeroAgence });
+      if (existingAgenceByNumber && existingAgenceByNumber._id != id) {
+        return res.status(400).json({ error: "An Agence with this number already exists" });
+      }
+  
       if(!nom==""&&!numeroAgence==""&&!adresseAgence==""){
       const agence =await Agence.findByIdAndUpdate({_id:id},
         {nom:nom,numeroAgence:numeroAgence,adresseAgence:adresseAgence}

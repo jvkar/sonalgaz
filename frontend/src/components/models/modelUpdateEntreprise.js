@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import UpdateAgence from '../forms/UpdateAgence';
-import UpdateBtnAgence from '../buttons/updateBtnAgence';
+import UpdateEtablissement from '../forms/UpdateEtab';
+import UpdateBtnEntreprise from '../buttons/updateBtnEntreprise';
 
 const style = {
   position: 'absolute',
@@ -17,13 +17,13 @@ const style = {
   p: 4,
 };
 
-const ModelUpdateAgence = ({ agenceId, updateUrl }) => {
+const ModelUpdateEntreprise = ({ entrepriseId, updateUrl }) => {
   const [openFormUpdate, setOpenFormUpdate] = useState(false);
 
   const handleOpenFormUpdate = () => {
     setOpenFormUpdate(true);
 
-    updateUrl(agenceId);
+    updateUrl(entrepriseId);
   }
 
   const handleClose = () => {
@@ -40,11 +40,11 @@ const ModelUpdateAgence = ({ agenceId, updateUrl }) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <UpdateAgence closeEvent={handleClose} agenceId={agenceId}/>
+          <UpdateEtablissement closeEvent={handleClose} entrepriseId={entrepriseId}/>
         </Box>
       </Modal>
-      <UpdateBtnAgence openModal={handleOpenFormUpdate}/>
+      <UpdateBtnEntreprise openModal={handleOpenFormUpdate}/>
     </div>
   );
 };
-export default ModelUpdateAgence;
+export default ModelUpdateEntreprise;

@@ -15,6 +15,7 @@ const clientRoutes=require ('./routes/Clients');
 const etablissementRoutes=require ('./routes/Etablissements');
 const agenceRoutes=require ('./routes/Agences');
 const adminRoutes = require ('./routes/Admin')
+const technicienRoutes = require ('./routes/Technicien')
 app.use(cors());
 app.use(express.json());
 app.use((req,res,next)=>{
@@ -25,6 +26,7 @@ app.use('/api/Clients',clientRoutes);
 app.use('/api/Etablissements',etablissementRoutes);
 app.use('/api/Agences',agenceRoutes);
 app.use('/api/Admin',adminRoutes);
+app.use('/api/Techniciens',technicienRoutes);
 app.use('/filesAgences', express.static('./filesAgences'))
 app.use('/filesClients', express.static('./filesClients'))
 app.use('/filesFactures', express.static('./filesFactures'))

@@ -2,6 +2,7 @@ const { default: mongoose } = require('mongoose');
 const jwt = require('jsonwebtoken')
 const { json } = require('express');
 const Admin= require('../models/adminModel')
+const Technicien = require('../models/technicienModel')
 const CadreAgence= require('../models/cadreAgenceModel')
 const Agence =require('../models/agenceModel')
 const Etablissement =require('../models/etablissementModel')
@@ -30,6 +31,13 @@ const createToken = (_id) => {
                 user = await ResponsableEntreprise.login(username, password);
                 if (user) {
                     userType = 'responsableEntreprise';
+                } else {
+                    user= await Technicien.login(username,password);
+                    if(user){   
+                    userType ='technicien'
+                    }
+                    
+                    
                 }
             }
         }
@@ -47,6 +55,12 @@ const createToken = (_id) => {
                 const entreprise = await Etablissement.findOne({_id:responsableEntreprise.etablissement});
                 const nomEntreprise = entreprise?.Nom;
                 res.status(200).json({username,userType,token,entreprise:responsableEntreprise.etablissement,nom:nomEntreprise})
+            }else if(userType ==='technicien'){
+                const technicien = await Technicien.findOne({username:username});
+                const entreprise = await Etablissement.findOne({_id:technicien.entrepriseId});
+                const nomEntreprise = entreprise?.Nom;
+                res.status(200).json({username,userType,token,entreprise:technicien.entrepriseId,nom:nomEntreprise})
+
             }
             else {
                 res.status(200).json({ username, userType, token });

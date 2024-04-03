@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const ResponsableEntreprise = require('../models/responsableEntreprise')
 const CadreAgence = require('../models/cadreAgenceModel')
 const Admin = require( '../models/adminModel' )
+const Technicien = require ('../models/technicienModel')
 const requireAuth = async (req, res, next) => {
   const { authorization } = req.headers
 
@@ -17,6 +18,7 @@ const requireAuth = async (req, res, next) => {
     req.user1 = await ResponsableEntreprise.findOne({ _id }).select('_id')
     req.user2 = await CadreAgence.findOne({_id}).select('_id');
     req.user3 = await Admin.findOne({_id}).select('_id');
+    req.user4 = await Technicien.findOne({_id}).select('_id');
     next()
     
 

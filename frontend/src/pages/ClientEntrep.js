@@ -74,11 +74,8 @@ const ClientEntrep = () => {
     <div className="list">
     <React.Fragment >
           <div className='Title' style={{marginBottom:"20px"}}>
-            <h1>la liste des clients de l'entreprise de {Nom}</h1>
-          <div className='AddBtt'>
+            <h1>la liste des clients de l'{Nom}</h1>
 
-          <ModelAddClient/>
-        </div>
           </div>
 
               <Accordion style={{ backgroundColor: "#FFFFFF" }}>

@@ -125,18 +125,15 @@ const Navbar = () => {
             },
 
             {
-                path: "/listTechnicienEntreprise",
+                path: `/listTechnicienEntreprise/${id}`,
                 name: "Liste Techniciens",
                 icon: <FormatListBulletedIcon />,
             },
             {
-                path: "/ajouterTechnicien",
+                path: `/ajouterTechnicien/${id}`,
                 name: "Ajouter Technicien",
                 icon: <AddCircleIcon />,
             },
-
-
-
             {
                 name: "Logout",
                 icon: (

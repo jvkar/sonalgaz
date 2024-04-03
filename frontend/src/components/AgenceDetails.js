@@ -20,9 +20,12 @@ import { useNavigate } from 'react-router-dom';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import { Button } from '@mui/material';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+
 const AgenceDetails = ({ agence }) => {
 
-
+  const [agenceDetails, setAgenceDetails] = useState(agence);
   const { user, userType } = useAuthContext()
   const [open, setOpen] = React.useState(false);
   const { dispatch } = useAgenceContext();
@@ -58,6 +61,25 @@ const AgenceDetails = ({ agence }) => {
       dispatch({ type: 'DELETE_AGENCE', payload: json });
     }
   }
+  const updateState = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch(`/api/Agences/stateChange/${agence._id}`, {
+        method: "PATCH",
+        headers: { 'Authorization': `Bearer ${user.token}` }
+      });
+      const json = await response.json();
+      if (!response.ok) {
+        setError(json.error);
+      }
+      if (response.ok) {
+        setAgenceDetails(json);
+        window.location.reload();
+      }
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
 
 
@@ -79,36 +101,15 @@ const AgenceDetails = ({ agence }) => {
   const updateUrl = (id) => {
     navigate(`?id=${id}`);
   };
-  const updateState = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await fetch(`/api/Agences/stateChange/${agence._id}`, {
-        method: "PATCH",
-        headers: { 'Authorization': `Bearer ${user.token}` }
-      });
-      if (!response.ok) {
-        const json = await response.json();
-        setError(json.error);
-      }
-      if(response.ok){
-        window.location.reload()
-      }
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-  
-  const turnOn = (
-    <Button component="label" variant="contained" style={{backgroundColor:'green'}} endIcon={<ToggleOnIcon />} onClick={updateState}>
-      Active
-    </Button>
-  );
-  
-  const turnOff = (
-    <Button component="label" variant="contained" style={{backgroundColor:'red'}} endIcon={<ToggleOffIcon />} onClick={updateState}>
-      Inactive
-    </Button>
-  );
+
+
+
+
+  // const turnOff = (
+  //   <Button component="label" variant="contained" style={{backgroundColor:'red'}} endIcon={<ToggleOffIcon />} onClick={updateState}>
+  //     Inactive
+  //   </Button>
+  // );
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -127,8 +128,17 @@ const AgenceDetails = ({ agence }) => {
 
         <TableCell align='center' >
           <div style={{ paddingRight: "10px" }}>
-            {<ModelUpdateAgence agenceId={agence._id} updateUrl={updateUrl}/>}
-            {agence.state === "active" ? turnOn : turnOff}        
+            {<ModelUpdateAgence agenceId={agence._id} updateUrl={updateUrl} />}
+
+            <FormControlLabel
+              control={
+                <Button  onClick={updateState} disableRipple>
+                  <Switch defaultChecked={agence.state === "active"} />
+                </Button>
+              }
+              label={agence.state === "active" ? "active" : "inactive"}
+
+            />
           </div>
         </TableCell>
 

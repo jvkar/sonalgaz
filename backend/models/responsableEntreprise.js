@@ -16,8 +16,6 @@ const ResponsableEntrepriseSchema =new Schema({
     }
     ,password:{
         type : String,
-     
-     
     },
     etablissement :{
       type: Schema.Types.ObjectId,
