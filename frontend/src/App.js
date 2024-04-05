@@ -9,6 +9,7 @@ import BlackList from './pages/BlackList';
 import CreerCompte from './pages/creerComptes';
 import EtabAgence from './pages/etablissementAgence';
 import ClientEntrep from './pages/ClientEntrep';
+import Technicien from './pages/Technicien';
 import Login from './pages/Login';
 import Navbar from './components/Navbar'
 import AjoutTechnicien from './pages/ajoutTechnicien';
@@ -50,6 +51,7 @@ function App() {
             <Route path='/BlackList/:id' element={user ?<BlackList />:<Navigate to="/Login"/>} />
             {/* partieEntreprise */}
             <Route path='/listClientsEntreprise/:id' element={user ?<ClientEntrep />:<Navigate to="/Login"/>} />
+            <Route path='/listTechnicienEntreprise/:id' element={user ?<Technicien />:<Navigate to="/Login"/>} />
             <Route path='/ajouterTechnicien/:id' element={user? <AjoutTechnicien/>:<Navigate to="/Login"/>}/>
           </Routes>
 

@@ -17,6 +17,7 @@ const AjoutTechnicienForm = () => {
     const [password, setPassword] = useState('');
     const [nomTechnicien, setNomTechnicien] = useState('')
     const [codeTechnicien, setCodeTechnicien] = useState('')
+    const [nbrInterventions, setNbrInterventions] = useState('')
     const { technicienCreateAccount, etabCreateAccount, agenceCreateAccount, error, isLoading } = useCreateAccount()
     const [error2, setError] = useState(undefined);
     const [showPassword, setShowPassword] = useState(false);
@@ -37,7 +38,7 @@ const AjoutTechnicienForm = () => {
     const handleSubmit = async (event) => {
         event.preventDefault()
         const headers = { 'Authorization': `Bearer ${user.token}` };
-       await technicienCreateAccount(nomTechnicien,codeTechnicien, username, password, headers)
+       await technicienCreateAccount(nomTechnicien,codeTechnicien,nbrInterventions, username, password, headers)
 
     }
     return (
@@ -66,6 +67,16 @@ const AjoutTechnicienForm = () => {
                             value={nomTechnicien}
                             onChange={(e) => setNomTechnicien(e.target.value)}
                             label="Nom Technicien"
+                            variant="outlined"
+                            siz="small"
+                            sx={{ minWidth: "100%", paddingBottom: "30px" }}
+                        />
+                        <TextField
+                            id="nbrInterventions"
+                            type="text"
+                            value={nbrInterventions}
+                            onChange={(e) => setNbrInterventions(e.target.value)}
+                            label="Nombre des Interventions affecter"
                             variant="outlined"
                             siz="small"
                             sx={{ minWidth: "100%", paddingBottom: "30px" }}

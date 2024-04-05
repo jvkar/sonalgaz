@@ -54,7 +54,7 @@ export const useCreateAccount = () => {
       setIsLoading(false)
     }
   }
-  const technicienCreateAccount = async (nomTechnicien,codeTechnicien,username, password,headers) => {
+  const technicienCreateAccount = async (nomTechnicien,codeTechnicien,nbrInterventions,username, password,headers) => {
     if(!user){
       setError('you must be logged in')
       return
@@ -64,10 +64,9 @@ export const useCreateAccount = () => {
 
     const response = await fetch(`/api/Techniciens/createuser/${id}`, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json',
-      ...headers
+      headers: {'Content-Type': 'application/json', ...headers
     },
-      body: JSON.stringify({ nomTechnicien,codeTechnicien,username, password })
+      body: JSON.stringify({ nomTechnicien,codeTechnicien,nbrInterventions,username, password })
     })
     const json = await response.json()
 

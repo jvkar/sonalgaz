@@ -4,7 +4,7 @@ import TableRow from "@mui/material/TableRow";
 import { useAuthContext } from '../hooks/useAuthContext';
 
 
-const CoupureDetails = ({ technicien }) => {
+const TechnicienDetails = ({ technicien }) => {
   const {user} = useAuthContext()
   const userType = user.userType
 
@@ -21,6 +21,7 @@ const CoupureDetails = ({ technicien }) => {
 
         <TableCell>{technicien.nomTechnicien}</TableCell>
         <TableCell >{technicien.username}</TableCell>
+        <TableCell ></TableCell>
 
 
       </TableRow>
@@ -30,4 +31,4 @@ const CoupureDetails = ({ technicien }) => {
 
   )
 }
-export default CoupureDetails;
+export default TechnicienDetails;

@@ -30,6 +30,11 @@ const ClientSchema= new Schema({
         type:String,
         default:"Non Archiver"
     },
+    entrepriseId:{
+        type : Schema.Types.ObjectId,
+        ref: 'Etablissement',
+        default:null
+    },
     listId:{
         type : Schema.Types.ObjectId,
         ref: 'ListIntervention',
@@ -39,6 +44,11 @@ const ClientSchema= new Schema({
         type : Schema.Types.ObjectId,
         ref: 'Agence',
         default:null,
+    },
+    technicienId:{
+        type : Schema.Types.ObjectId,
+        ref:'Technicien',
+        default:null
     }
     
     

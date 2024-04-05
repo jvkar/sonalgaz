@@ -54,7 +54,10 @@ const getAllAgences = async (req,res)=>{
     
     try{ const agences= await Agence.find({}).sort({numeroAgence:1})
 
-         res.status(200).json(agences);
+    if(!agences){
+      return res.status(500).json({error:"there s no agences"})
+    }     
+    res.status(200).json(agences);
          
   
     } catch (error) {
@@ -205,10 +208,12 @@ const deleteAgence =async(req,res)=>{
         return res.status(404).json({ error: "L'agence n'existe pas." });
       }
   
-      const newState = agence.state === "active" ? "inactive" : "active";
+      const newState =agence.state == "active" ? "inactive" : "active";
+      
       await Agence.findByIdAndUpdate(id, { state: newState });
+      const newAgence = await Agence.findOne({_id:id})
   
-      res.status(200).json({ message: "État changé avec succès." });
+      res.status(200).json(newAgence);
     } catch (error) {
       console.error("Error:", error);
       res.status(500).json({ error: "Une erreur s'est produite." });

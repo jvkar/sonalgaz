@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { TechnicienContext } from "../context/technicienContext"
-export const useClientContext = () => {
+export const useTechnicienContext = () => {
   const context = useContext(TechnicienContext)
 
   if(!context) {

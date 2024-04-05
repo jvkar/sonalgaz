@@ -27,7 +27,12 @@ const BlackList = ({ etablissement }) => {
 
       }
     }
-    fetchBlackListData()
+    if(user && user.userType === " CadreAgence"){
+      setTimeout(()=>{
+
+        fetchBlackListData()
+      },3000)
+    }
      
   },[dispatch]);
 
@@ -53,6 +58,7 @@ const BlackList = ({ etablissement }) => {
               {etablissements && etablissements?.map(blacklist => (
             <BlackListDetails key={blacklist.id} blacklist={blacklist} />
           ))}
+          {!etablissements && <div><h3>loading data ...</h3></div>}
               </TableBody>
             </Table>
           </TableContainer>

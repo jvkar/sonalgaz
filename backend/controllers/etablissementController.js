@@ -3,6 +3,7 @@ const Etablissement =require('../models/etablissementModel')
 const BlackList=require('../models/BlackListModel')
 const Agence=require('../models/agenceModel')
 const ResponsableEntreprise= require('../models/responsableEntreprise')
+const ListInterventions = require('../models/ListeInterventionModel')
 const csvtojson =require ('csvtojson');
 const multer = require('multer');
 const path = require('path');
@@ -183,7 +184,7 @@ const getAllEtablissement = async (req,res)=>{
         
  
    } catch (error) {
-       console.error(error);
+
        res.status(500).json({ error: 'Internal Server Error' });
    }
 
@@ -225,23 +226,31 @@ const deleteAllEtablissements=async(req,res)=>{
     res.status(400).json({error:json.error});
   }
 }
-const deleteEtablissement =async(req,res)=>{
-  const {id}=req.params
-  try{
-    if(!mongoose.Types.ObjectId.isValid(id)){
-      return res.status(404).json({error:"entreprise n'existe pas"});
+const deleteEtablissement = async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid ID format" });
     }
-    const etablissement=await Etablissement.findByIdAndDelete({_id:id})
-    res.status(200).json(etablissement)
-    if(!etablissement){
-      res.status(400).json({erorr:"l'entreprise n'existe pas"})
-    }
-  }
-  catch(error){
-    res.status(400).json({error:json.error})
-  }
 
+    const listInterventions = await ListInterventions.findOne({ entrepriseId: id });
+
+    if (listInterventions !== null) {
+      return res.status(400).json({ error: "You cannot delete this entreprise because it has associated interventions" });
+    }
+
+    const etablissement = await Etablissement.findOneAndDelete({ _id: id });
+
+    if (!etablissement) {
+      return res.status(404).json({ error: "Etablissement not found" });
+    }
+
+    return res.status(200).json(etablissement);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
+};
+
   const updateEtablissemenet=async(req,res)=>{
     const {id}=req.params
     const {Nom,NumeroEtablissement,Adresse}=req.body

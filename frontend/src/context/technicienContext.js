@@ -5,7 +5,9 @@ export const TechnicienContext = createContext()
 export const technicienReducer = (state, action) => {
   switch (action.type) {
     case 'SET_TECHNICIENS':
-      return { ...state, techniciens: { ...state.techniciens, techniciens: action.payload } };
+      return{
+      techniciens: action.payload
+      }
 
     case 'CREATE_TECHNICIENS':
       return { 

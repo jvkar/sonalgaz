@@ -131,7 +131,7 @@ const affecterCoupure = async (req, res) => {
       iteration: iterationCoupure,
     });
     for(const client of clients){
-      await Client.findByIdAndUpdate(client._id,{listId:listIntervention._id})
+      await Client.findByIdAndUpdate(client._id,{listId:listIntervention._id,entrepriseId:listIntervention.entrepriseId})
     }
     coupureIterations.set(id, iterationCoupure);
     return res.status(200).json({ success: true, listInterventions:[listIntervention] });  
@@ -183,7 +183,7 @@ const affecterRetablissement = async (req, res) => {
       iteration: iterationRetablissement,
     });
     for(const client of clients){
-      await Client.findByIdAndUpdate(client._id,{listId:listIntervention._id})
+      await Client.findByIdAndUpdate(client._id,{listId:listIntervention._id,entrepriseId:listIntervention.entrepriseId})
     }
     retablissementIterations.set(id, iterationRetablissement);
     return res.status(200).json({ success: true, listInterventions:[listIntervention] });  

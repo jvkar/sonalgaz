@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react';
-import { useAgenceContext } from '../hooks/useAgenceContext';
 import { useAuthContext } from '../hooks/useAuthContext'
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
@@ -13,7 +12,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { LuPencilLine } from "react-icons/lu";
+import { LuFileJson, LuPencilLine } from "react-icons/lu";
 import UpdateBtnAgence from './buttons/updateBtnAgence';
 import ModelUpdateAgence from './models/modelUpdateAgence';
 import { useNavigate } from 'react-router-dom';
@@ -22,13 +21,13 @@ import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import { Button } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-
+import { useAgenceContext } from "../hooks/useAgenceContext"
 const AgenceDetails = ({ agence }) => {
-
+  
+  const { dispatch } = useAgenceContext()
   const [agenceDetails, setAgenceDetails] = useState(agence);
   const { user, userType } = useAuthContext()
   const [open, setOpen] = React.useState(false);
-  const { dispatch } = useAgenceContext();
   const [assignedEtablissements, setassignedEtablissements] = React.useState([])
   const [error, setError] = React.useState(undefined);
 
@@ -68,13 +67,13 @@ const AgenceDetails = ({ agence }) => {
         method: "PATCH",
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
-      const json = await response.json();
       if (!response.ok) {
+        const json = await response.json();
         setError(json.error);
       }
       if (response.ok) {
-        setAgenceDetails(json);
-        window.location.reload();
+        const json = await response.json();
+       setAgenceDetails(json)
       }
     } catch (error) {
       setError(error.message);
@@ -94,9 +93,15 @@ const AgenceDetails = ({ agence }) => {
       }
     }
     if (user) {
-      fetchEtablissementsData()
+      setTimeout(()=>{
+
+        fetchEtablissementsData()
+      },3000)
     }
-  }, [assignedEtablissements, user]);
+  }, [agence._id, user]);
+
+
+
   const navigate = useNavigate()
   const updateUrl = (id) => {
     navigate(`?id=${id}`);
@@ -133,10 +138,10 @@ const AgenceDetails = ({ agence }) => {
             <FormControlLabel
               control={
                 <Button  onClick={updateState} disableRipple>
-                  <Switch defaultChecked={agence.state === "active"} />
+                  <Switch checked={agenceDetails.state === "active" ? true: false} />
                 </Button>
               }
-              label={agence.state === "active" ? "active" : "inactive"}
+              label={agenceDetails.state === "active" ? "active" : "inactive"}
 
             />
           </div>
@@ -170,6 +175,7 @@ const AgenceDetails = ({ agence }) => {
                       </TableCell>
                     </TableRow>
                   ))}
+                  {!assignedEtablissements&& <div><h3>loading....</h3></div>}
                 </TableBody>
               </Table>
             </Box>

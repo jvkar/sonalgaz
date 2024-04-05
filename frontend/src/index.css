@@ -83,3 +83,15 @@ div.error {
  input.error {
    border: 1px solid  #e7195a;
  }
+div.message {
+   padding: 10px;
+   background: #d3ffd3;
+   border: 1px solid  #00c900;
+   color: #00c900;
+   border-radius: 4px;
+   margin: 20px;
+   width: 60%;
+ }
+ input.message {
+   border: 1px solid  #00c900;
+ }

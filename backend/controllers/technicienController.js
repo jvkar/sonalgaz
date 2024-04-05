@@ -11,13 +11,13 @@ const createAccount=async(req,res)=>{
     try {
   
   
-      const {nomTechnicien,codeTechnicien,username, password} = req.body
+      const {nomTechnicien,codeTechnicien,nbrInterventions,username, password} = req.body
 
-     if(nomTechnicien=="" && codeTechnicien =="" && username =="" && password ==""){
+     if(nomTechnicien=="" && codeTechnicien =="" && nbrInterventions==""&& username =="" && password ==""){
         return res.status(400).json({error:"tout les champs doit etre remplis"})
      }
 
-        const technicien = await Technicien.createAccountTechnicien(nomTechnicien, codeTechnicien,username, password,id);
+        const technicien = await Technicien.createAccountTechnicien(nomTechnicien, codeTechnicien,nbrInterventions,username, password,id);
   
       const token = createToken(technicien._id)
       res.status(200).json({username, token})
@@ -35,11 +35,14 @@ const getTechnicienById = async(req,res)=>{
              return res.status(400).json("there s no available techniciens")
         }
         else{
-         res.status(200).json({techniciens})
+         return res.status(200).json(techniciens)
         }
     }catch(error){
         res.status(404).json({error:error.message})
     }
+};
+const affecterCoupureTechnicien = async(req,res) =>{
+
 }
   module.exports={
     createAccount

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import EtablissementDetails from "../components/EtablissementDetail"
-import { useEtablissementContext } from "../hooks/useEtablissementContext"
+import TechnicienDetails from "../components/TechnicienDetails";
+import { useTechnicienContext } from "../hooks/useTechnicienContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import * as React from "react";
 import Table from "@mui/material/Table";
@@ -13,51 +13,53 @@ import Paper from "@mui/material/Paper";
 import { useParams } from 'react-router-dom';
 
 
-const Technicien = ({etablissement}) => {
+const Technicien = ({technicien}) => {
     const { user } = useAuthContext()
-    const { etablissements, dispatch } = useEtablissementContext()
+    const [technicienD,setTechnicien] = useState([])
+    const { techniciens, dispatch } = useTechnicienContext()
     const [error, setError] = useState(undefined)
     const { id } = useParams()
     useEffect(() => {
-        const fetchEtablissement = async () => {
-          const response = await fetch(`/api/Etablissements/etablissement/${id}`, {
+        const fetchTechniciens = async () => {
+          const response = await fetch(`/api/Techniciens/getTechniciens/${id}`, {
             headers: { 'Authorization': `Bearer ${user.token}` },
           })
           const json = await response.json()
     
           if (response.ok) {
-            dispatch({ type: 'SET_ETABLISSEMENT', payload: json })
-    
+            dispatch({ type: 'SET_TECHNICIENS', payload: json })
+            setTechnicien(json)
+          }
+          if(!response.ok){
+            setError(json.error)
           }
         }
-        if (user && user.userType == "CadreAgence") {
-            fetchEtablissement()
+        if (user && user.userType == "responsableEntreprise") {
+          fetchTechniciens()
         }
       }, [dispatch, user])
       return (
         <div className="list">
-
+          {error && <div className="error"> {error} </div>}
           <div className='Title'>
-            <h1>La Liste des Entreprise</h1>
+            <h1>La Liste des Techniciens</h1>
 
           </div>
           <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center"></TableCell>
-                  <TableCell align="center">Numéro de l'entreprise</TableCell>
-                  <TableCell align="center">Nom de l'entreprise</TableCell>
-                  <TableCell align="center">Adresse De l'entreprise</TableCell>
-                  <TableCell align="center">Nombre de fois dans la liste noire</TableCell>
-                  <TableCell align="center">nombre de coupure/annee</TableCell>
-                  <TableCell align="center">nombre de retablissements/annee</TableCell>
+
+                  <TableCell >Code Technicien</TableCell>
+                  <TableCell >Nom de Technicien</TableCell>
+                  <TableCell >Username Technicien</TableCell>
+
                   <TableCell align="center"></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-              {etablissements && etablissements.map(etablissement => (
-              <EtablissementDetails key={etablissement._id} etablissement={etablissement} />
+              {techniciens && techniciens.map(technicien => (
+              <TechnicienDetails key={technicien._id} technicien={technicien} />
             ))}
               </TableBody>
             </Table>
@@ -68,4 +70,4 @@ const Technicien = ({etablissement}) => {
     );
 }
  
-export default EtabAgence;
+export default Technicien;

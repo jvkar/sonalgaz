@@ -49,6 +49,7 @@ const Agences = () => {
 
 
   useEffect(() => {
+
     const fetchAgences = async () => {
       const response = await fetch('/api/Agences', {
         headers: { 'Authorization': `Bearer ${user.token}` },
@@ -57,11 +58,14 @@ const Agences = () => {
 
       if (response.ok) {
         dispatch({ type: 'SET_AGENCE', payload: json })
-
+        console.log(json)
       }
     }
+    
     if (user && user.userType == "admin") {
+      setTimeout(()=>{
       fetchAgences()
+    },3000)
     }
   }, [dispatch, user])
   return (
@@ -89,6 +93,7 @@ const Agences = () => {
             {agences && agences.map(agence => (
               <AgenceDetails key={agence._id} agence={agence} />
             ))}
+            {!agences && <div><h3>loading.......</h3></div>}
           </TableBody>
         </Table>
       </TableContainer>

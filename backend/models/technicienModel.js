@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 const TechnicienSchema = new Schema({
-    nomTechnicient: {
+    nomTechnicien: {
         type: String,
     }
     ,
@@ -14,6 +14,10 @@ const TechnicienSchema = new Schema({
         ref: 'Etablissement',
         default:null,
     },
+    nbrInterventions :{
+      type:Number,
+    },
+
     username: {
         type: String,
         unique: true,
@@ -24,7 +28,7 @@ const TechnicienSchema = new Schema({
     }
 })
 //signup
-TechnicienSchema.statics.createAccountTechnicien = async function(nomTechnicient,codeTechnicien, username,password,entrepriseId) {
+TechnicienSchema.statics.createAccountTechnicien = async function(nomTechnicien,codeTechnicien,nbrInterventions, username,password,entrepriseId) {
 
     const exists = await this.findOne({ username })
   
@@ -35,7 +39,7 @@ TechnicienSchema.statics.createAccountTechnicien = async function(nomTechnicient
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
   
-    const technicien = await this.create({ nomTechnicient,codeTechnicien,username, password: hash,entrepriseId })
+    const technicien = await this.create({ nomTechnicien,codeTechnicien,nbrInterventions,username, password: hash,entrepriseId })
   
     return technicien
   }
