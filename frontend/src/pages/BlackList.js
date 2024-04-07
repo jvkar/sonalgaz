@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useState} from "react";
 import BlackListDetails from "../components/BlackListDetails";
 import { useEtablissementContext } from "../hooks/useEtablissementContext";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -9,11 +9,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useParams } from "react-router-dom";
 const BlackList = ({ etablissement }) => {
 
   const {user}= useAuthContext()
   const {etablissements,dispatch} = useEtablissementContext()
+  const [isLoading , setIsLoading] = useState(true)
+  const [blackList,setBlackList] = useState(etablissement)
   const {id} = useParams()
   useEffect (()=>{
     const fetchBlackListData=async()=>{
@@ -24,14 +27,15 @@ const BlackList = ({ etablissement }) => {
       if(response.ok){
 
         dispatch({ type: 'SET_ETABLISSEMENT', payload: json })
-
+        setBlackList(json)
+        setIsLoading(false)
       }
     }
-    if(user && user.userType === " CadreAgence"){
-      setTimeout(()=>{
+    if(user && user.userType == "CadreAgence"){
+
 
         fetchBlackListData()
-      },3000)
+
     }
      
   },[dispatch]);
@@ -55,10 +59,12 @@ const BlackList = ({ etablissement }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-              {etablissements && etablissements?.map(blacklist => (
+              {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
+              etablissements && etablissements?.map(blacklist => (
             <BlackListDetails key={blacklist.id} blacklist={blacklist} />
-          ))}
-          {!etablissements && <div><h3>loading data ...</h3></div>}
+          ))
+        )}
+
               </TableBody>
             </Table>
           </TableContainer>

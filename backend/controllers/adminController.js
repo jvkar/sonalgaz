@@ -88,6 +88,14 @@ const createToken = (_id) => {
       res.status(400).json({ error: error.message });
     }
   };
+  const changePassword  = async () =>{
+    let 
+    try { 
+        
+    } catch (error) {
+         
+    }
+  }
   module.exports={
     createAccount,loginUser
   }

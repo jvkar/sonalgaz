@@ -10,6 +10,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useParams } from 'react-router-dom';
 
 
@@ -17,6 +18,7 @@ const EtabAgence = ({etablissement}) => {
     const { user } = useAuthContext()
     const { etablissements, dispatch } = useEtablissementContext()
     const [error, setError] = useState(undefined)
+    const [isLoading,setIsLoading] = useState(true)
     const { id } = useParams()
     useEffect(() => {
         const fetchEtablissement = async () => {
@@ -27,7 +29,7 @@ const EtabAgence = ({etablissement}) => {
     
           if (response.ok) {
             dispatch({ type: 'SET_ETABLISSEMENT', payload: json })
-    
+            setIsLoading(false)
           }
         }
         if (user && user.userType == "CadreAgence") {
@@ -56,9 +58,12 @@ const EtabAgence = ({etablissement}) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-              {etablissements && etablissements.map(etablissement => (
+              {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
+
+              etablissements && etablissements.map(etablissement => (
               <EtablissementDetails key={etablissement._id} etablissement={etablissement} />
-            ))}
+            ))
+          )} 
               </TableBody>
             </Table>
           </TableContainer>

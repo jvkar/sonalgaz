@@ -53,4 +53,10 @@ AdminSchema.statics.createAccount = async function(username, password) {
   
     return admin
   }
+  AdminSchema.statics.changePassword = async function (password){
+    if( password == "" ){
+      throw Error('tous les champs doit etre remplis')
+    }
+
+  }
  module.exports=mongoose.model('Admin',AdminSchema);

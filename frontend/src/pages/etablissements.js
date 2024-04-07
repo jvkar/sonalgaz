@@ -13,12 +13,14 @@ import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { MdDelete } from "react-icons/md";
 import { LuPencilLine } from "react-icons/lu";
+import CircularProgress from "@mui/material/CircularProgress";
 import ModelAddEntreprise from "../components/models/modelAddEntreprise";
 const Etablissement = ({ etablissement }) => {
   const { user } = useAuthContext()
   const userType = user.userType
   const { etablissements, dispatch } = useEtablissementContext()
   const [error, setError] = useState(undefined)
+  const [isLoading,setIsLoading] = useState(true)
   const handleDelete = async () => {
     if (!user) {
       setError("you must be logged in")
@@ -47,6 +49,7 @@ const Etablissement = ({ etablissement }) => {
 
       if (response.ok) {
         dispatch({ type: 'SET_ETABLISSEMENT', payload: json })
+        setIsLoading(false)
 
       }
     }
@@ -78,9 +81,12 @@ const Etablissement = ({ etablissement }) => {
             <TableCell style={{ fontWeight: "bold" }} align="center"></TableCell>
           </TableRow>
           <TableBody>
-            {etablissements && etablissements.map(etablissement => (
+
+          {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
+            etablissements && etablissements.map(etablissement => (
               <EtablissementDetails key={etablissement._id} etablissement={etablissement} />
-            ))}
+            ))
+          )}
           </TableBody>
         </Table>
       </TableContainer>

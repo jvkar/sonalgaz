@@ -20,10 +20,11 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { MdDelete } from "react-icons/md";
 import { LuPencilLine } from "react-icons/lu";
 import AddButtonAgance from "../components/buttons/addBtnAgence";
-
+import CircularProgress from "@mui/material/CircularProgress";
 import ModelAdd from "../components/models/modelAdd";
 const Agences = () => {
   const [ error, setError] = useState('')
+  const [isLoading,setIsLoading]=useState(true)
   const { agences, dispatch } = useAgenceContext()
   const { user } = useAuthContext()
   const handleDelete=async()=>{
@@ -58,14 +59,15 @@ const Agences = () => {
 
       if (response.ok) {
         dispatch({ type: 'SET_AGENCE', payload: json })
-        console.log(json)
+        
+        setIsLoading(false)
       }
     }
     
     if (user && user.userType == "admin") {
-      setTimeout(()=>{
+
       fetchAgences()
-    },3000)
+
     }
   }, [dispatch, user])
   return (
@@ -76,6 +78,7 @@ const Agences = () => {
           {/* <Button onClick={handleDelete} style={{ marginRight: "15px" }} className="DeleteAll" variant="outlined" startIcon={<MdDelete />}>Delete ALL</Button>           */}
 
           <ModelAdd/>
+          
         </div>
       </div>
       <TableContainer component={Paper}>
@@ -90,10 +93,11 @@ const Agences = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {agences && agences.map(agence => (
+          {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
+             agences && agences.map(agence => (
               <AgenceDetails key={agence._id} agence={agence} />
-            ))}
-            {!agences && <div><h3>loading.......</h3></div>}
+            ))
+          )}
           </TableBody>
         </Table>
       </TableContainer>

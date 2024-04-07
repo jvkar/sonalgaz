@@ -192,7 +192,7 @@ const deleteAgence =async(req,res)=>{
       res.status(500).json({error:"tous les champs doit etre remplis"})
     }
     }catch(error){
-      res.status(400).json({error:json.error})
+      res.status(400).json({error:error.message})
     }
   }
   const etatAgence = async (req, res) => {

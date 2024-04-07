@@ -29,7 +29,7 @@ import SnackBar from "./SnackBar";
 import Archiver from "../components/buttons/archiveButton";
 import ModelUpdateEntreprise from "./models/modelUpdateEntreprise";
 import { useNavigate } from "react-router-dom";
-
+import CircularProgress from "@mui/material/CircularProgress";
 const EtablissementDetails = ({ etablissement }) => {
   const { user } = useAuthContext();
   const userType = user.userType;
@@ -37,6 +37,7 @@ const EtablissementDetails = ({ etablissement }) => {
   const [assignedCoupure, setassignedCoupure] = React.useState([]);
   const [assignedRetab, setassignedRetab] = React.useState([]);
   const [error, setError] = useState(undefined);
+  const [isLoading , setIsLoading] = useState(true)
 
 
   const [open, setOpen] = React.useState(false);
@@ -118,14 +119,15 @@ const EtablissementDetails = ({ etablissement }) => {
       if (response.ok) {
         const allClients = json.flatMap((enterprise) => enterprise.clients);
         setassignedCoupure(allClients);
+        setIsLoading(false)
         
       }
     };
     if (user) {
-      setTimeout(()=>{
+
 
         fetchCoupureData();
-      },3000)
+
     }
   }, [assignedCoupure, user]);
   useEffect(() => {
@@ -140,14 +142,16 @@ const EtablissementDetails = ({ etablissement }) => {
       if (response.ok) {
         const allClients = json.flatMap((enterprise) => enterprise.clients);
         setassignedRetab(allClients);
+        setIsLoading(false)
+
 
       }
     };
     if (user) {
-      setTimeout(()=>{
+
 
         fetchRetabData();
-      },3000)
+
     }
   }, [assignedRetab, user]);
 
@@ -365,7 +369,9 @@ const EtablissementDetails = ({ etablissement }) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {assignedCoupure.length!==0 ? ( assignedCoupure?.map((coupure, index) => (
+                      {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
+
+                        assignedCoupure.length!==0 ? ( assignedCoupure?.map((coupure, index) => (
                             <TableRow key={index}>
                               <TableCell component="th" scope="row">
                                 {coupure.codeClient}
@@ -377,8 +383,9 @@ const EtablissementDetails = ({ etablissement }) => {
                             </TableRow>
                           )))
                         :
-                        (<h1>thers no data</h1>)}
-                        {!assignedCoupure && <div><h3>loading data ....</h3></div>}
+                        (<h1>thers no data</h1>)
+                        )}
+
                       </TableBody>
                     </Table>
                   </AccordionDetails>
@@ -401,7 +408,9 @@ const EtablissementDetails = ({ etablissement }) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {assignedRetab.length!==0?
+                      {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
+
+                        assignedRetab.length!==0?
                           (assignedRetab?.map((retablissement, index) => (
                             <TableRow key={index}>
                               <TableCell component="th" scope="row">
@@ -415,8 +424,8 @@ const EtablissementDetails = ({ etablissement }) => {
                           )))
                           :
                           (<h1>there s no data</h1>)
-                          }
-                          {!assignedRetab && <div><h3>loading data ....</h3></div>}
+                        )}
+
                       </TableBody>
                     </Table>
                   </AccordionDetails>

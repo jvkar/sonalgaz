@@ -16,9 +16,9 @@ export default function AddButtonAgance({Openn,Open2}) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const btt1=(<Button onClick={Openn} style={{width :'400px',display:'flex', justifyContent:'flex-start'}}>Ajouter une Agence</Button>);
-  const btt2=(<Button  onClick={Open2}>Ajouter une liste des agences  (Format CSV)</Button>);
+  // const btt2=(<Button  onClick={Open2}>Ajouter une liste des agences  (Format CSV)</Button>);
 
-const options = [btt1,btt2];
+const options = [btt1];
 
 //handleToggle bah ytkhbaw sub-Button
   const handleToggle = () => {

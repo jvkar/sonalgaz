@@ -280,19 +280,15 @@ const createClient= async (req, res) => {
       const listInterventions = await ListIntervention.find({ entrepriseId: id });
   
       for (const intervention of listInterventions) {
-        // Accessing _id of each intervention object
         const interventionId = intervention._id;
   
-        // Update intervention archive status
         await ListIntervention.updateMany(
           { _id: interventionId, archive: "Non Archiver" },
           { archive: "archiver" }
         );
   
-        // Finding clients related to this intervention
         const clients = await Client.find({ listId: interventionId });
   
-        // Update clients archive status
         await Client.updateMany(
           { listId: interventionId },
           { archived: "archiver" }
