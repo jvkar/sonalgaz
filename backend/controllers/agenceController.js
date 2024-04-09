@@ -219,6 +219,17 @@ const deleteAgence =async(req,res)=>{
       res.status(500).json({ error: "Une erreur s'est produite." });
     }
   };
+  const changePassword  = async (req,res) =>{
+    const { username, password,newPassword,confirmedPassword } = req.body;
+    try { 
+       const user = await CadreAgence.changePassword(username,password,newPassword,confirmedPassword)
+
+           return res.status(200).json({message:"le mot de pass est change avec succes"})
+ 
+    } catch (error) {
+        return res.status(400).json({error:error.message})
+    }
+  }
 
 module.exports={
     getAllAgences,
@@ -231,4 +242,5 @@ module.exports={
     ,updateAgence
     ,entrepriseParCadre
     ,etatAgence
+    ,changePassword
 }

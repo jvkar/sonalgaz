@@ -13,6 +13,7 @@ const {getAllEtablissement,
     getBlackList,
     getFromBlackList,
     createAccount
+    ,changePassword
 }=require("../controllers/etablissementController");
 const requireAuth = require('../middleware/requireAuth')
 router.use(requireAuth)
@@ -27,5 +28,6 @@ router.delete('/delAll',deleteAllEtablissements)
 router.post('/add',upload,addManyEtablissements)
 router.delete('/del/:id',deleteEtablissement)
 router.patch('/update/:id',updateEtablissemenet)
+router.patch('/passwordChanged',changePassword)
 
 module.exports=router

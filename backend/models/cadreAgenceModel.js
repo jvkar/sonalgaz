@@ -69,4 +69,34 @@ CadreAgenceSchema.statics.createAccountAgence = async function(numeroAgence,user
   
     return cadreAgence
   }
+  CadreAgenceSchema.statics.changePassword = async function (username, password, newPassword, confirmedPassword) {
+    if (username === "" || password === "" || newPassword === "" || confirmedPassword === "") {
+        throw Error('Tous les champs doivent être remplis');
+    }
+
+    const cadreAgence = await this.findOne({ username });
+    if (!cadreAgence) {
+        throw Error('Utilisateur non trouvé');
+    }
+
+    const match = await bcrypt.compare(password, cadreAgence.password);
+    if (!match) {
+        throw Error('Le mot de passe est incorrect');
+    }
+
+    if (newPassword === password) {
+        throw Error('Veuillez entrer un nouveau mot de passe différent de l\'ancien');
+    }
+
+    if (newPassword !== confirmedPassword) {
+        throw Error('La confirmation du mot de passe est incorrecte');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+ 
+    cadreAgence.password = hashedPassword;
+    await cadreAgence.save();
+    return cadreAgence
+};
  module.exports=mongoose.model('CadreAgence',CadreAgenceSchema);

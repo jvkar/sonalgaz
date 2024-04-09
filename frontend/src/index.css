@@ -95,3 +95,8 @@ div.message {
  input.message {
    border: 1px solid  #00c900;
  }
+ .leftSide{
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+ }

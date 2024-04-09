@@ -64,4 +64,34 @@ TechnicienSchema.statics.createAccountTechnicien = async function(nomTechnicien,
   
     return technicien
   }
+  TechnicienSchema.statics.changePassword = async function (username, password, newPassword, confirmedPassword) {
+    if (username === "" || password === "" || newPassword === "" || confirmedPassword === "") {
+        throw Error('Tous les champs doivent être remplis');
+    }
+
+    const technicien = await this.findOne({ username });
+    if (!technicien) {
+        throw Error('Utilisateur non trouvé');
+    }
+
+    const match = await bcrypt.compare(password, technicien.password);
+    if (!match) {
+        throw Error('Le mot de passe est incorrect');
+    }
+
+    if (newPassword === password) {
+        throw Error('Veuillez entrer un nouveau mot de passe différent de l\'ancien');
+    }
+
+    if (newPassword !== confirmedPassword) {
+        throw Error('La confirmation du mot de passe est incorrecte');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+ 
+    technicien.password = hashedPassword;
+    await technicien.save();
+    return technicien
+};
  module.exports=mongoose.model('Technicien',TechnicienSchema);

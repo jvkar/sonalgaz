@@ -146,6 +146,18 @@ const updateTechnicien = async(req,res)=>{
     res.status(400).json({error:error.message})
   }
 }
+const changePassword  = async (req,res) =>{
+  const { username, password,newPassword,confirmedPassword } = req.body;
+  try { 
+     const user = await Technicien.changePassword(username,password,newPassword,confirmedPassword)
+
+         return res.status(200).json({message:"le mot de pass est change avec succes"})
+
+  } catch (error) {
+      return res.status(400).json({error:error.message})
+  }
+}
+
   module.exports={
     createAccount
     ,getTechnicienById
@@ -154,4 +166,5 @@ const updateTechnicien = async(req,res)=>{
     ,getCoupurePerTechnicien
     ,getRetablissementPerTechnicien
     ,updateTechnicien
+    ,changePassword
   }
