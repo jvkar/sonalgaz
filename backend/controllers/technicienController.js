@@ -72,7 +72,6 @@ const affecterRetabTechnicien = async(req,res) =>{
   const { entrepriseId, technicianId } = req.params;
   const technicien = await Technicien.findOne({_id:technicianId})
   const nbrInterventionsTechnicien = technicien.nbrInterventions
-  console.log(nbrInterventionsTechnicien)
     try {
         const clients = await Client.find({entrepriseId:entrepriseId,archived:"Non Archiver",typeClient:"retablissement",technicienId:null}).limit(nbrInterventionsTechnicien)
         if(clients.length===0){

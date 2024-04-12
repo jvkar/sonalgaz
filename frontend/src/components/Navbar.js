@@ -18,7 +18,7 @@ const Navbar = () => {
 
     const { logout } = useLogout()
     const handleClick = () => {
-        console.log('handleClick function is called');
+
         logout();
         console.log('logout');
     }
@@ -27,6 +27,7 @@ const Navbar = () => {
     let menuItem = []
     let menuItem2 = []
     let menuItem3 = []
+    let menuItem4 = []
     if (user && user.userType === 'admin') {
         menuItem = [
 
@@ -109,7 +110,6 @@ const Navbar = () => {
     }
     if (user && user.userType === 'responsableEntreprise' && user.entreprise) {
         const id = user?.entreprise
-
         menuItem3 = [
 
             {
@@ -147,13 +147,43 @@ const Navbar = () => {
 
         ]
     }
+    if (user && user.userType === 'technicien' && user.technicien ) {
+        const id = user?.technicien
+
+
+
+        menuItem4 = [
+
+            {
+                path: "/",
+                name: "Accueil",
+                icon: <FaHome />,
+            },
+            {
+                path: `/listClientsTechnicien/${id}`,
+                name: "Liste Clients",
+                icon: <FormatListBulletedIcon />,
+            },
+            {
+                name: "Logout",
+                icon: (
+                    <button className='btnLogout' onClick={handleClick}>
+                        <CiLogout />
+
+                    </button>
+                ),
+                path: "/login"
+            },
+
+        ]
+    }
 
     return (
         <div className='container'>
-            < div style={{ width: isOpen ? "220px" : "80px" }} className="sidebar">
+            < div  className={`sidebar ${isOpen ? 'isOpen' : ''}`} >
                 <div className="top-section">
                     <img style={{ display: isOpen ? "block" : "none" }} src={require('../images/myImage.png')} alt="sonelgaz logo" className='logo' />
-                    <div style={{ marginLeft: isOpen ? "60px" : "-11px" }} className="bars">
+                    <div className={`bars ${isOpen ? 'isOpen' : ''}`}>
                         {isOpen ? <MdClose onClick={toggle} /> : < TbList onClick={toggle} />}
                     </div>
                 </div>
@@ -163,7 +193,7 @@ const Navbar = () => {
                     {menuItem.map((item, index) => (
                         <ul>
                             <NavLink to={item.path} key={index} className="link" activeclassName="active">
-                                <div className="icon">{item.icon}</div>
+                                <div className={`icon ${isOpen ? 'isOpen' : ''}`}>{item.icon}</div>
                                 <div style={{ display: isOpen ? "block" : "none" }} className="link_text">{item.name}</div>                             </NavLink>
 
                         </ul>
@@ -175,7 +205,7 @@ const Navbar = () => {
                     {menuItem2.map((item, index) => (
                         <ul>
                             <NavLink to={item.path} key={index} className="link" activeclassName="active">
-                                <div className="icon">{item.icon}</div>
+                                <div className={`icon ${isOpen ? 'isOpen' : ''}`}>{item.icon}</div>
                                 <div style={{ display: isOpen ? "block" : "none" }} className="link_text">{item.name}</div>                             </NavLink>
 
                         </ul>
@@ -187,7 +217,19 @@ const Navbar = () => {
                     {menuItem3.map((item, index) => (
                         <ul>
                             <NavLink to={item.path} key={index} className="link" activeclassName="active">
-                                <div className="icon">{item.icon}</div>
+                                <div className={`icon ${isOpen ? 'isOpen' : ''}`}>{item.icon}</div>
+                                <div style={{ display: isOpen ? "block" : "none" }} className="link_text">{item.name}</div>                             </NavLink>
+
+                        </ul>
+
+                    ))}
+                </div>
+                <div className="menuleft">
+
+                    {menuItem4.map((item, index) => (
+                        <ul>
+                            <NavLink to={item.path} key={index} className="link" activeclassName="active">
+                                <div className={`icon ${isOpen ? 'isOpen' : ''}`}>{item.icon}</div>
                                 <div style={{ display: isOpen ? "block" : "none" }} className="link_text">{item.name}</div>                             </NavLink>
 
                         </ul>

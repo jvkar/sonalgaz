@@ -13,20 +13,21 @@ const RetablissementDetails = ({ retablissement }) => {
 
   return (
     <React.Fragment>
+    {userType != "technicien" &&(
       <TableRow>
 
         <TableCell component="th" scope="row">
-          {retablissement.codeClient}
+          {retablissement?.codeClient}
         </TableCell>
-        <TableCell >{retablissement.referenceClient}</TableCell>
-        <TableCell>{retablissement.nomClient}</TableCell>
-        <TableCell >{retablissement.adresseClient}</TableCell>
-        <TableCell >{retablissement.numeroCompteur}</TableCell>
-        <TableCell >{retablissement.typeClient}</TableCell>
-        <TableCell >{retablissement.etat}</TableCell>
+        <TableCell >{retablissement?.referenceClient}</TableCell>
+        <TableCell>{retablissement?.nomClient}</TableCell>
+        <TableCell >{retablissement?.adresseClient}</TableCell>
+        <TableCell >{retablissement?.numeroCompteur}</TableCell>
+        <TableCell >{retablissement?.typeClient}</TableCell>
+        <TableCell >{retablissement?.etat}</TableCell>
         {userType==="CadreAgence"?
-        <TableCell style={{ color: retablissement.archived === 'archiver' ? 'green' : 'red' }}>
-          {retablissement.archived}
+        <TableCell style={{ color: retablissement?.archived === 'archiver' ? 'green' : 'red' }}>
+          {retablissement?.archived}
         </TableCell>
         :
         <>
@@ -34,6 +35,7 @@ const RetablissementDetails = ({ retablissement }) => {
         }
 
       </TableRow>
+      )}
     </React.Fragment>
 
 

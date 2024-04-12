@@ -90,7 +90,6 @@ const TechnicienDetails = ({ technicien }) => {
       if (response.ok) {
         setAssignedCoupures(json);
         setIsLoading(false)
-
       }
       if (!response.ok) {
         setError(json.error);

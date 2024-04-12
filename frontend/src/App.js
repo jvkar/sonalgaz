@@ -8,12 +8,14 @@ import BlackList from './pages/BlackList';
 import CreerCompte from './pages/creerComptes';
 import EtabAgence from './pages/etablissementAgence';
 import ClientEntrep from './pages/ClientEntrep';
+import ClientTech from './pages/ClientTechnicien';
 import Technicien from './pages/Technicien';
 import Login from './pages/Login';
 import Password from './pages/Password';
 import Navbar from './components/Navbar'
 import AjoutTechnicien from './pages/ajoutTechnicien';
 import { useAuthContext } from './hooks/useAuthContext';
+
 import Footer from './components/Footer';
 
 import './styles/navbar.css'
@@ -30,7 +32,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
 
-
+    
         <Navbar />
         <div className='leftSide'>
         <Profile/>
@@ -55,6 +57,9 @@ function App() {
             <Route path='/listClientsEntreprise/:id' element={!user && userType !== 'responsableEntreprise' ? <Login />:<ClientEntrep/>} />
             <Route path='/listTechnicienEntreprise/:id' element={!user && userType !== 'responsableEntreprise' ?<Login />:<Technicien/>} />
             <Route path='/ajouterTechnicien/:id' element={!user && userType !== 'responsableEntreprise' ? <Login/>:<AjoutTechnicien/>}/>
+            {/* partieTechnicien*/}
+            <Route path='/listClientsTechnicien/:id' element={!user && userType !== 'technicien' ? <Login />:<ClientTech/>} />
+
           </Routes>
 
         </div>

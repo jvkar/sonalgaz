@@ -14,20 +14,21 @@ const CoupureDetails = ({ coupure }) => {
 
 
     <React.Fragment>
+      {userType != "technicien" &&(
       <TableRow>
 
         <TableCell component="th" scope="row">
-          {coupure.codeClient}
+          {coupure?.codeClient}
         </TableCell>
-        <TableCell >{coupure.referenceClient}</TableCell>
-        <TableCell>{coupure.nomClient}</TableCell>
-        <TableCell >{coupure.adresseClient}</TableCell>
-        <TableCell >{coupure.numeroCompteur}</TableCell>
-        <TableCell >{coupure.typeClient}</TableCell>
-        <TableCell >{coupure.etat}</TableCell>
+        <TableCell >{coupure?.referenceClient}</TableCell>
+        <TableCell>{coupure?.nomClient}</TableCell>
+        <TableCell >{coupure?.adresseClient}</TableCell>
+        <TableCell >{coupure?.numeroCompteur}</TableCell>
+        <TableCell >{coupure?.typeClient}</TableCell>
+        <TableCell >{coupure?.etat}</TableCell>
         {userType==="CadreAgence"?
-        <TableCell style={{ color: coupure.archived === 'archiver' ? 'green' : 'red' }}>
-          {coupure.archived}
+        <TableCell style={{ color: coupure?.archived === 'archiver' ? 'green' : 'red' }}>
+          {coupure?.archived}
         </TableCell>
         :
         <>
@@ -35,6 +36,7 @@ const CoupureDetails = ({ coupure }) => {
         }
 
       </TableRow>
+      )}
     </React.Fragment>
 
 

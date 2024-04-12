@@ -27,9 +27,12 @@ main {
   background:  #0066CC;
   color: #fff;
   height: 100vh;
-  width: 500px;
+  width: 80px;
   transition: all 0.5s;
 
+}
+.sidebar.isOpen {
+  width: 220px; /* Set width to 220px when isOpen is true */
 }
 .top-section {
   display:flex;
@@ -44,8 +47,11 @@ main {
 }
 .bars{
 font-size: 40px;
-
+margin-left: -11px;
 display: flex;
+}
+.bars.isOpen{
+  margin-left: 60px;
 }
 .link{
   display: flex;
@@ -76,4 +82,31 @@ display: flex;
 }
 .btnLogout:hover{
  color:black
+}
+
+@media only screen and (max-width: 600px) {
+  .sidebar {
+    width: 0px; /* Default width */
+  }
+  
+  .sidebar.isOpen {
+    width: 100vh; /* Set width to 220px when isOpen is true */
+  }
+  .bars{
+    font-size: 30px;
+    margin-left: 0px;
+    position: absolute;
+    color: #000000;
+    margin-top: 30px;
+  }
+  .bars.isOpen {
+    margin-left: 80px; 
+    color: #eee;
+  }
+  .icon{
+    display:none;
+  }
+  .icon.isOpen{
+    display: block;
+  }
 }
