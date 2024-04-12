@@ -6,6 +6,7 @@ const Facture=require('../models/factureModel')
 const csvtojson =require ('csvtojson');
 const multer = require('multer');
 const path = require('path');
+const { isNull } = require('util');
 // const mime = require('mime-types');
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -300,6 +301,37 @@ const createClient= async (req, res) => {
       return res.status(400).json({ error: error.message });
     }
   };
+  const validerClient = async (req,res) =>{
+    const {id} = req.params
+    try{
+      const client = await Client.findOne({_id:id,etat:"en attente"})
+      await Client.findByIdAndUpdate(client._id,{
+        etat:"valider"
+      })
+      return res.status(200).json({message:"client valider avec success"})
+    }catch(error){
+      return res.status(500).json({error:error.message})
+      
+    }
+  }
+  const invaliderClient = async (req,res) =>{
+    const {id} = req.params
+    const {cause} = req.body
+    try{
+      const client = await Client.findOne ({_id:id,etat:"en attente",cause:null})
+      if (!client) {
+        return res.status(404).json({ message: "Client not found or conditions not met" });
+      }
+      await Client.findByIdAndUpdate(client._id,{
+        etat:"Invalider",
+        cause:cause
+      })
+      return res.status(200).json({message:"client invalider avec success"})
+    }catch(error){
+      return res.status(500).json({error:error.message})
+      
+    }
+  }
   
 module.exports={
   deleteClient,
@@ -316,5 +348,7 @@ module.exports={
   affecterCoupure,
   affecterRetablissement,
   archiverClient,
+  validerClient,
+  invaliderClient
 
 }

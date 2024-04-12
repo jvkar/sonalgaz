@@ -24,6 +24,10 @@ const ClientSchema= new Schema({
     },
     etat:{
         type : String,
+        default:"en attente"
+    },
+    cause:{
+        type:String,
         default:null
     },
     archived:{
