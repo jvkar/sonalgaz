@@ -13,17 +13,28 @@ const RetablissementDetails = ({ retablissement }) => {
 
   return (
     <React.Fragment>
-    {userType != "technicien" &&(
+
       <TableRow>
 
         <TableCell component="th" scope="row">
           {retablissement?.codeClient}
         </TableCell>
+        {userType != 'technicien' &&
+        (
         <TableCell >{retablissement?.referenceClient}</TableCell>
+        )}
         <TableCell>{retablissement?.nomClient}</TableCell>
-        <TableCell >{retablissement?.adresseClient}</TableCell>
-        <TableCell >{retablissement?.numeroCompteur}</TableCell>
-        <TableCell >{retablissement?.typeClient}</TableCell>
+        {userType != 'technicien' &&( 
+          <TableCell >{retablissement?.adresseClient}</TableCell>
+        )}
+        {userType != 'technicien' && (
+          <TableCell >{retablissement?.numeroCompteur}</TableCell>
+        )}
+        {userType != 'technicien' && (
+          <TableCell >{retablissement?.typeClient}</TableCell>
+
+        )}
+
         <TableCell >{retablissement?.etat}</TableCell>
         {userType==="CadreAgence"?
         <TableCell style={{ color: retablissement?.archived === 'archiver' ? 'green' : 'red' }}>
@@ -35,7 +46,7 @@ const RetablissementDetails = ({ retablissement }) => {
         }
 
       </TableRow>
-      )}
+
     </React.Fragment>
 
 

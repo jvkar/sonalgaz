@@ -9,6 +9,8 @@ import CreerCompte from './pages/creerComptes';
 import EtabAgence from './pages/etablissementAgence';
 import ClientEntrep from './pages/ClientEntrep';
 import ClientTech from './pages/ClientTechnicien';
+import CoupureTech from './pages/CoupuresTechnicien';
+import RetablissementTech from './pages/RetablissementsTechnicien';
 import Technicien from './pages/Technicien';
 import Login from './pages/Login';
 import Password from './pages/Password';
@@ -59,6 +61,8 @@ function App() {
             <Route path='/ajouterTechnicien/:id' element={!user && userType !== 'responsableEntreprise' ? <Login/>:<AjoutTechnicien/>}/>
             {/* partieTechnicien*/}
             <Route path='/listClientsTechnicien/:id' element={!user && userType !== 'technicien' ? <Login />:<ClientTech/>} />
+            <Route path='/Coupures/:id' element={!user && userType !== 'technicien' ? <Login />:<CoupureTech/>} />
+            <Route path='/Retablissements/:id' element={!user && userType !== 'technicien' ? <Login />:<RetablissementTech/>} />
 
           </Routes>
 

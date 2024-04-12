@@ -165,6 +165,16 @@ const Navbar = () => {
                 icon: <FormatListBulletedIcon />,
             },
             {
+                path: `/Coupures/${id}`,
+                name: "Liste Coupures",
+                icon: <FormatListBulletedIcon />,
+            },
+            {
+                path: `/Retablissements/${id}`,
+                name: "Liste Retablissements",
+                icon: <FormatListBulletedIcon />,
+            },
+            {
                 name: "Logout",
                 icon: (
                     <button className='btnLogout' onClick={handleClick}>

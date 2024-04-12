@@ -87,11 +87,9 @@ const ClientTech = () => {
                     <TableHead>
                       <TableRow>
                       <TableCell>Code</TableCell>
-                        <TableCell>Reference</TableCell>
+
                         <TableCell>Nom</TableCell>
-                        <TableCell >Adresse</TableCell>
-                        <TableCell >Numero compteur</TableCell>
-                        <TableCell >Type client</TableCell>
+
                         <TableCell >Etat</TableCell>
                       </TableRow>
                     </TableHead>
@@ -124,24 +122,16 @@ const ClientTech = () => {
                     <TableHead>
                       <TableRow>
                         <TableCell>Code</TableCell>
-                        <TableCell>Reference</TableCell>
+
                         <TableCell>Nom</TableCell>
-                        <TableCell >Adresse</TableCell>
-                        <TableCell >Numero compteur</TableCell>
-                        <TableCell >Type client</TableCell>
+
                         <TableCell >Etat</TableCell>
                       </TableRow>
                     </TableHead>
 
                     <TableBody>
                         {assignedRetab && assignedRetab?.map((retablissement, index) => (
-                        //   <TableRow key={index}>
-                        //     <TableCell component="th" scope="row">
-                        //       {retablissement.codeClient}
-                        //     </TableCell>
-                        //     <TableCell>{retablissement.nomClient}</TableCell>
-                        //     <TableCell align="right">{retablissement.adresseClient}</TableCell>
-                        //   </TableRow>
+
                         <RetablissementDetails key={index} retablissement={retablissement} />
 
                         ))}
