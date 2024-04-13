@@ -305,6 +305,8 @@ const createClient= async (req, res) => {
     const {id} = req.params
     try{
       const client = await Client.findOne({_id:id,etat:"en attente"})
+      const list = await ListIntervention.findOne({_id:client.listId})
+      await ListIntervention.findById(list)
       await Client.findByIdAndUpdate(client._id,{
         etat:"valider"
       })
@@ -322,10 +324,13 @@ const createClient= async (req, res) => {
       if (!client) {
         return res.status(404).json({ message: "Client not found or conditions not met" });
       }
+
       await Client.findByIdAndUpdate(client._id,{
         etat:"Invalider",
         cause:cause
       })
+      const clientList = await ListIntervention.findOne({_id:client.listId})
+      
       return res.status(200).json({message:"client invalider avec success"})
     }catch(error){
       return res.status(500).json({error:error.message})
