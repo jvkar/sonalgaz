@@ -15,7 +15,7 @@ const Login = () => {
                         '& > :not(style)': {
                         m: 1,
                         height: "75vh",
-                        borderRadius:"20px ",
+                        borderRadius:"20px",
                         },
                     }}
                     >

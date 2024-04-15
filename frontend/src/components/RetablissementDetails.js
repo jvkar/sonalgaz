@@ -35,7 +35,8 @@ const RetablissementDetails = ({ retablissement }) => {
 
         )}
 
-        <TableCell >{retablissement?.etat}</TableCell>
+        <TableCell style={{ color: retablissement?.etat === 'valider' ? 'green' : retablissement?.etat === 'invalider' ? 'red' : 'blue' }}>
+          {retablissement?.etat}</TableCell>
         {userType==="CadreAgence"?
         <TableCell style={{ color: retablissement?.archived === 'archiver' ? 'green' : 'red' }}>
           {retablissement?.archived}

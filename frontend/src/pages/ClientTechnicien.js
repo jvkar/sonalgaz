@@ -96,13 +96,6 @@ const ClientTech = () => {
 
                     <TableBody>
                         {assignedCoupure && assignedCoupure?.map((coupure, index) => (
-                        //   <TableRow key={index}>
-                        //     <TableCell component="th" scope="row">
-                        //       {coupure.codeClient}
-                        //     </TableCell>
-                        //     <TableCell>{coupure.nomClient}</TableCell>
-                        //     <TableCell align="right">{coupure.adresseClient}</TableCell>
-                        //   </TableRow>
                         <CoupureDetails key={index} coupure={coupure} />
                         ))}
                       </TableBody>

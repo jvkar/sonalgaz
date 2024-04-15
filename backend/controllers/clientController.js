@@ -301,43 +301,73 @@ const createClient= async (req, res) => {
       return res.status(400).json({ error: error.message });
     }
   };
-  const validerClient = async (req,res) =>{
-    const {id} = req.params
-    try{
-      const client = await Client.findOne({_id:id,etat:"en attente"})
-      const list = await ListIntervention.findOne({_id:client.listId})
-      await ListIntervention.findById(list)
-      await Client.findByIdAndUpdate(client._id,{
-        etat:"valider"
-      })
-      return res.status(200).json({message:"client valider avec success"})
-    }catch(error){
-      return res.status(500).json({error:error.message})
-      
-    }
-  }
-  const invaliderClient = async (req,res) =>{
-    const {id} = req.params
-    const {cause} = req.body
-    try{
-      const client = await Client.findOne ({_id:id,etat:"en attente",cause:null})
-      if (!client) {
-        return res.status(404).json({ message: "Client not found or conditions not met" });
-      }
-
-      await Client.findByIdAndUpdate(client._id,{
-        etat:"Invalider",
-        cause:cause
-      })
-      const clientList = await ListIntervention.findOne({_id:client.listId})
-      
-      return res.status(200).json({message:"client invalider avec success"})
-    }catch(error){
-      return res.status(500).json({error:error.message})
-      
-    }
-  }
+  const validerClient = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const client = await Client.findOne({ _id: id, etat: "en attente" });
   
+      if (!client) {
+        return res.status(404).json({ message: "Client not found or not in 'en attente' state" });
+      }
+  
+      const list = await ListIntervention.findOne({ clients: { $elemMatch: { _id: id } } });
+  
+      if (!list) {
+        return res.status(404).json({ message: "List of interventions not found" });
+      }
+      const foundClientIndex = list.clients.findIndex((element) => element._id.toString() === id);
+
+      if (foundClientIndex === -1) {
+        return res.status(404).json({ message: "Client not found in the list of interventions" });
+      }
+  
+      list.clients[foundClientIndex].etat = "valider";
+      await list.save();
+
+
+      await Client.findByIdAndUpdate(client._id, { etat: "valider" });
+  
+      return res.status(200).json({ message: "Client validated successfully" });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  };
+  
+  const invaliderClient = async (req, res) => {
+    const { id } = req.params;
+    try {
+
+      const client = await Client.findOne({ _id: id, etat: "en attente" });
+  
+      if (!client) {
+        return res.status(404).json({ message: "Client not found or not in 'en attente' state" });
+      }
+  
+
+      const list = await ListIntervention.findOne({ clients: { $elemMatch: { _id: id } } });
+  
+      if (!list) {
+        return res.status(404).json({ message: "List of interventions not found" });
+      }
+      const foundClientIndex = list.clients.findIndex((element) => element._id.toString() === id);
+
+      if (foundClientIndex === -1) {
+        return res.status(404).json({ message: "Client not found in the list of interventions" });
+      }
+  
+   
+      list.clients[foundClientIndex].etat = "invalider";
+      await list.save();
+      
+
+  
+      await Client.findByIdAndUpdate(client._id, { etat: "invalider" });
+  
+      return res.status(200).json({ message: "Client invalidated successfully" });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  };
 module.exports={
   deleteClient,
   getAllClient,

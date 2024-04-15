@@ -37,7 +37,9 @@ const CoupureDetails = ({ coupure }) => {
           
         <TableCell >{coupure?.typeClient}</TableCell>
         )}
-        <TableCell >{coupure?.etat}</TableCell>
+        <TableCell style={{ color: coupure?.etat === 'valider' ? 'green' : coupure?.etat === 'invalider' ? 'red' : 'blue' }} >
+          {coupure?.etat}
+          </TableCell>
         {userType==="CadreAgence"?
         <TableCell style={{ color: coupure?.archived === 'archiver' ? 'green' : 'red' }}>
           {coupure?.archived}

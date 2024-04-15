@@ -246,6 +246,7 @@ const TechnicienDetails = ({ technicien }) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
+                    
                     {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
                       assignedCoupures.length !== 0 ? (
                         assignedCoupures?.map((coupure) => (
@@ -259,9 +260,7 @@ const TechnicienDetails = ({ technicien }) => {
                             </TableCell>
                           </TableRow>
                         ))
-                      ) : (
-                        <h1>thers no data</h1>
-                      )
+                      ) : (<h1>there s no data</h1>)
                     )}
                     </TableBody>
                   </Table>
@@ -299,9 +298,7 @@ const TechnicienDetails = ({ technicien }) => {
                             </TableCell>
                           </TableRow>
                         ))
-                      ) : (
-                        <h1>there s no data</h1>
-                      )
+                      ) : (<h1>there s no data</h1>)
                     )}
 
                     </TableBody>

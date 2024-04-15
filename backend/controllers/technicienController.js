@@ -91,7 +91,7 @@ const affecterRetabTechnicien = async(req,res) =>{
 const getCoupurePerTechnicien = async (req,res)=>{
   const {id} = req.params
   try {
-      const coupures = await Client.find({technicienId:id,typeClient:"coupure"}).sort({codeClient:1})
+      const coupures = await Client.find({technicienId:id,typeClient:"coupure",archived:'Non Archiver'}).sort({codeClient:1})
       if(coupures.length!==0){
           return res.status(200).json(coupures)
       }
@@ -103,7 +103,7 @@ const getCoupurePerTechnicien = async (req,res)=>{
 const getRetablissementPerTechnicien = async (req,res)=>{
   const {id} = req.params
   try {
-      const retablissements = await Client.find({technicienId:id,typeClient:"retablissement"}).sort({codeClient:1})
+      const retablissements = await Client.find({technicienId:id,typeClient:"retablissement",archived:'Non Archiver'}).sort({codeClient:1})
       if(retablissements.length!==0){
           return res.status(200).json(retablissements)
       }

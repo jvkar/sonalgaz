@@ -37,7 +37,8 @@ const Client = () => {
   const { clients, dispatch } = useClientContext();
   const { id } = useParams();
   const [open, setOpen] = React.useState(false);
-  const [filterType, setFilterType] = useState("all"); // State variable to manage the filter type
+  const [filterType, setFilterType] = useState("all");
+  const [stateFilterType, setStateFilterType] = useState("all");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,14 +72,25 @@ const Client = () => {
     fetchData();
   }, [dispatch]);
 
-  // Function to filter clients based on the selected filter type
   const filterClients = (client) => {
     if (filterType === "archiver") {
       return client.archived === "archiver";
     } else if (filterType === "Non Archiver") {
       return client.archived === "Non Archiver";
     } else {
-      return true; // Show all clients
+      return true;
+    }
+  };
+  const filterClients2 = (client) => {
+    if (filterType === "valider") {
+      return client.etat === "valider";
+    } else if (filterType === "invalider") {
+      return client.etat === "invalider";
+  
+    } else if (filterType === "en attente"){
+        return client.etat ==="en attente"
+    } else {
+      return true;
     }
   };
   const handleChange = (event) => {
@@ -123,6 +135,41 @@ const Client = () => {
             </MenuItem>
           </Select>
         </FormControl>
+        <FormControl>
+          <InputLabel id="demo-simple-select-label">Etat</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={filterType}
+            label="en attente"
+            onChange={handleChange}
+          >
+            <MenuItem value={"all"}>
+              {" "}
+
+                All Clients
+            </MenuItem>
+            <MenuItem value={"en attente"}>
+              {" "}
+
+                en attente Clients
+
+            </MenuItem>
+            <MenuItem value={"valider"}>
+              {" "}
+             
+                valide Clients
+
+            </MenuItem>
+            <MenuItem value={"invalider"}>
+              {" "}
+
+                Non valide Clients
+
+            </MenuItem>
+
+          </Select>
+        </FormControl>
 
         <Accordion style={{ backgroundColor: "#FFFFFF" }}>
           <AccordionSummary
@@ -151,6 +198,7 @@ const Client = () => {
                 {clients?.coupures &&
                   clients?.coupures
                     .filter(filterClients)
+                    .filter(filterClients2)
                     .map((client) => (
                       <CoupureDetails key={client._id} coupure={client} />
                     ))}
