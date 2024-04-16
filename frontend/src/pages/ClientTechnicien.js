@@ -1,42 +1,34 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect } from "react";
 import CoupureDetails from "../components/CoupureDetails";
 import RetablissementDetails from "../components/RetablissementDetails";
-import { useClientContext } from "../hooks/useClientContext";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
+
 import TableRow from "@mui/material/TableRow";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import Typography from "@mui/material/Typography";
+
 import TableHead from "@mui/material/TableHead";
-import { BsArrowRightCircle } from "react-icons/bs";
-import { BsArrowRightCircleFill } from "react-icons/bs";
+
 import '../index.css'
-import Paper from "@mui/material/Paper";
-import { Button } from '@mui/material';
-import { LuPencilLine } from "react-icons/lu";
-import { Margin } from '@mui/icons-material';
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ClientForme from "../components/ClientForm";
+
 import { useAuthContext } from "../hooks/useAuthContext"; 
 import { useParams } from 'react-router-dom';
-import ModelAddClient from "../components/models/modeAddClient";
+
 
 const ClientTech = () => {
   const {user} = useAuthContext()
   const Nom = user?.nom
-  const { clients, dispatch } = useClientContext();
+
   const { id } = useParams()
-  const [open, setOpen] = React.useState(false);
+
   const [assignedCoupure, setassignedCoupure] = React.useState([])
   const [assignedRetab, setassignedRetab] = React.useState([])
-  const [error, setError] = useState(undefined)
+
   useEffect(() => {
     const fetchCoupureData = async () => {
       const response = await fetch(`/api/Techniciens/coupurePerEtab/${id}`, {
@@ -50,7 +42,7 @@ const ClientTech = () => {
     if (user) {
       fetchCoupureData()
     }
-  }, [assignedCoupure, user]);
+  }, [assignedCoupure, user,id]);
   useEffect(() => {
     const fetchRetabData = async () => {
       const response = await fetch(`/api/Techniciens/retabPerEtab/${id}`, {
@@ -64,7 +56,7 @@ const ClientTech = () => {
     if (user) {
       fetchRetabData()
     }
-  }, [assignedRetab, user]);
+  }, [assignedRetab, user,id]);
 
   return (
     <div className="list">

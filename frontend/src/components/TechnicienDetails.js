@@ -224,10 +224,7 @@ const TechnicienDetails = ({ technicien }) => {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Button style={{ margin: "2px" }}>
-                {" "}
-                <Archiver />{" "}
-              </Button>
+
               <Accordion style={{ backgroundColor: "#EEEEEE" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}

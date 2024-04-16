@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuthContext } from '../../hooks/useAuthContext';
-import { Box, Button, Grid, Typography, Divider } from '@mui/material';
+import {  Button, Grid, Typography, Divider } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
 const ChangePassForm = ({ closeEvent }) => {
@@ -59,59 +59,55 @@ const ChangePassForm = ({ closeEvent }) => {
     }
   };
   return (
-    <div>
-      <Box sx={{ m: 2 }} />
-      <Typography variant="h4" align="center">
-        Modifier Votre mot de passe
-      </Typography>
-      <Divider />
-      <form onSubmit={handleUpdate}>
-        <Box height={20} />
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              id="Password"
-              label="Mot de passe"
-              variant="outlined"
-              size="small" // Change siz to size
-              sx={{ minWidth: '100%' }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              id="newPassword"
-              label="Nouveau mot de passe"
-              variant="outlined"
-              size="small"
-              sx={{ minWidth: '100%' }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              value={confirmedPassword}
-              onChange={(e) => setConfirmedPassword(e.target.value)}
-              id="confirmedPassword"
-              label="Confirmer le mot de passe"
-              variant="outlined"
-              size="small"
-              sx={{ minWidth: '100%' }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="h5" style={{ marginTop: '11px', marginLeft: '30px' }}>
-              <Button type="submit" variant="contained" size="medium">
-                Modifier
-              </Button>
-            </Typography>
-          </Grid>
+    <div style={{ maxWidth: '600px', margin: 'auto', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' ,backgroundColor:"white"}}>
+    <Typography variant="h4" align="center" gutterBottom>
+      Modifier Votre mot de passe
+    </Typography>
+    <Divider />
+    <form onSubmit={handleUpdate} style={{ marginTop: '20px' }}>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={12}>
+          <TextField
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            id="Password"
+            label="Mot de passe actuel"
+            variant="outlined"
+            size="small"
+            fullWidth
+          />
         </Grid>
-      </form>
-      {error && <div className="error">{error}</div>}
-    </div>
+        <Grid item xs={12}>
+          <TextField
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            id="newPassword"
+            label="Nouveau mot de passe"
+            variant="outlined"
+            size="small"
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            value={confirmedPassword}
+            onChange={(e) => setConfirmedPassword(e.target.value)}
+            id="confirmedPassword"
+            label="Confirmer le nouveau mot de passe"
+            variant="outlined"
+            size="small"
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Button type="submit" variant="contained" size="large" fullWidth style={{ backgroundColor: '#4caf50', color: 'white', marginTop: '20px' }}>
+            Modifier
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
+    {error && <div style={{ color: 'red', marginTop: '20px' }}>{error}</div>}
+  </div>
   );
 };
 
