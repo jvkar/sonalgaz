@@ -15,7 +15,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
 import TextField from '@mui/material/TextField';
-
+import Address from './adresseComponent';
 export default function RetabCard({ retablissement }) {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -87,7 +87,6 @@ export default function RetabCard({ retablissement }) {
             minWidth:
               "clamp(0px, (calc(var(--stack-point) - 2 * var(--Card-padding) - 2 * var(--variant-borderWidth, 0px)) + 1px - 100%) * 999, 100%)",
           },
-          // make the card resizable for demo
           overflow: "auto",
           resize: "horizontal",
         }}
@@ -98,7 +97,7 @@ export default function RetabCard({ retablissement }) {
             {retablissement?.nomClient}
           </Typography>
           <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
-            {retablissement?.adresseClient}
+          <Address address={retablissement?.adresseClient}/>
           </Typography>
           <Sheet
             sx={{

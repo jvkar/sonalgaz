@@ -88,30 +88,34 @@ const affecterRetabTechnicien = async(req,res) =>{
         return res.status(400).json({error:error.message})
     }
 }
-const getCoupurePerTechnicien = async (req,res)=>{
-  const {id} = req.params
+const getCoupurePerTechnicien = async (req, res) => {
+  const { id } = req.params;
   try {
-      const coupures = await Client.find({technicienId:id,typeClient:"coupure",archived:'Non Archiver'}).sort({codeClient:1})
-      if(coupures.length!==0){
-          return res.status(200).json(coupures)
-      }
-
-  }catch (error) {
-        return res.status(400).json({error:error.message})
+    const coupures = await Client.find({ technicienId: id, typeClient: "coupure", archived: "Non Archiver" }).sort({ codeClient: 1 });
+    if (coupures.length !== 0) {
+      return res.status(200).json(coupures);
+    } else {
+      return res.status(404).json({ message: "No coupures found for the technician" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "An error occurred while fetching coupures for the technician" });
   }
-}
-const getRetablissementPerTechnicien = async (req,res)=>{
-  const {id} = req.params
+};
+
+const getRetablissementPerTechnicien = async (req, res) => {
+  const { id } = req.params;
   try {
-      const retablissements = await Client.find({technicienId:id,typeClient:"retablissement",archived:'Non Archiver'}).sort({codeClient:1})
-      if(retablissements.length!==0){
-          return res.status(200).json(retablissements)
-      }
-
-  }catch (error) {
-        return res.status(400).json({error:error.message})
+    const retablissements = await Client.find({ technicienId: id, typeClient: "retablissement", archived: "Non Archiver" }).sort({ codeClient: 1 });
+    if (retablissements.length !== 0) {
+      return res.status(200).json(retablissements);
+    } else {
+      return res.status(404).json({ message: "No retablissements found for the technician" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "An error occurred while fetching retablissements for the technician" });
   }
-}
+};
+
 const updateTechnicien = async(req,res)=>{
   const {id}=req.params
   const {nomTechnicien,codeTechnicien,nbrInterventions}=req.body
