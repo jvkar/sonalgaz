@@ -8,7 +8,7 @@ export const useCreateAccount = () => {
   const { dispatch } = useAuthContext()
   const {id} = useParams()
 
-  const agenceCreateAccount = async (numeroAgence,username, password,headers) => {
+  const agenceCreateAccount = async (nomCadre,numeroAgence,username, password,headers) => {
     if(!user){
       setError('you must be logged in')
       return
@@ -21,7 +21,7 @@ export const useCreateAccount = () => {
       headers: {'Content-Type': 'application/json',
       ...headers
     },
-      body: JSON.stringify({ numeroAgence,username, password })
+      body: JSON.stringify({ nomCadre,numeroAgence,username, password })
     })
     const json = await response.json()
 
@@ -33,14 +33,14 @@ export const useCreateAccount = () => {
       setIsLoading(false)
     }
   }
-  const etabCreateAccount = async (NumeroEtablissement,username, password,headers) => {
+  const etabCreateAccount = async (nomResponsable,NumeroEtablissement,username, password,headers) => {
     setIsLoading(true)
     setError(null)
 
     const response = await fetch('/api/Etablissements/createuser', {
       method: 'POST',
       headers: {'Content-Type': 'application/json' ,...headers},
-      body: JSON.stringify({ NumeroEtablissement,username, password })
+      body: JSON.stringify({ nomResponsable,NumeroEtablissement,username, password })
     })
     const json = await response.json()
 

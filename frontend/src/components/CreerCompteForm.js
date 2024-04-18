@@ -11,6 +11,8 @@ const CreerCompteForm = () => {
     const { user } = useAuthContext()
     const [agence, setAgence] = useState('');
     const [entreprise, setEntreprise] = useState('');
+    const [nomCadre,setNomCadre] = useState ('')
+    const [nomResponsable,setNomResponsable] = useState('')
     const [numeroAgence, setNumeroAgence] = useState('');
     const [NumeroEtablissement, setNumeroEtablissement] = useState('');
     const [username, setUsername] = useState('');
@@ -30,6 +32,8 @@ const CreerCompteForm = () => {
         setEntreprise(false)
         setUsername('')
         setPassword('')
+        setNomCadre('')
+        setNomResponsable('')
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,8 +53,8 @@ const CreerCompteForm = () => {
             numeroKey = "NumeroEtablissement"
         }
         const headers = { 'Authorization': `Bearer ${user.token}` };
-        userType === 'agence' ? await agenceCreateAccount(numeroAgence, username, password, headers) : await etabCreateAccount(NumeroEtablissement, username, password, headers)
-
+        userType === 'agence' ? await agenceCreateAccount(nomCadre,numeroAgence, username, password, headers) : await etabCreateAccount(nomResponsable,NumeroEtablissement, username, password, headers)
+        handleClear(e);
     };
     return (
         <div>
@@ -71,6 +75,18 @@ const CreerCompteForm = () => {
                                 setNumeroEtablissement(entreprise ? e.target.value : NumeroEtablissement);
                             }}
                             label="Numéro (Agence/Entreprise)"
+                            variant="outlined"
+                            siz="small"
+                            sx={{ minWidth: "100%", paddingBottom: "30px" }}
+                        />
+                        <TextField
+                            id="nom"
+                            label="Nom (Cadre/Responsable)"
+                            value={agence ? nomCadre: nomResponsable}
+                            onChange={(e) => {
+                                setNomCadre(agence ? e.target.value : nomCadre);
+                                setNomResponsable(entreprise ? e.target.value : nomResponsable);
+                            }}
                             variant="outlined"
                             siz="small"
                             sx={{ minWidth: "100%", paddingBottom: "30px" }}

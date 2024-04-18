@@ -118,11 +118,11 @@ const createAccount=async(req,res)=>{
   try {
 
 
-    const {numeroAgence,username, password} = req.body
+    const {nomCadre,numeroAgence,username, password} = req.body
     const agence= await Agence.findOne({numeroAgence:numeroAgence})
  
     if(agence){
-      const cadreAgence = await CadreAgence.createAccountAgence(numeroAgence, username, password,agence._id);
+      const cadreAgence = await CadreAgence.createAccountAgence(nomCadre,numeroAgence, username, password,agence._id);
 
     const token = createToken(cadreAgence._id)
     res.status(200).json({username, token})
@@ -203,17 +203,23 @@ const deleteAgence =async(req,res)=>{
       }
   
       const agence = await Agence.findOne({ _id: id });
+      const entrepriseAgence = await Etablissement.findOne({agence:id})
+      
   
       if (!agence) {
         return res.status(404).json({ error: "L'agence n'existe pas." });
       }
-  
+      if(!entrepriseAgence){
       const newState =agence.state == "active" ? "inactive" : "active";
       
       await Agence.findByIdAndUpdate(id, { state: newState });
       const newAgence = await Agence.findOne({_id:id})
   
       res.status(200).json(newAgence);
+      }
+      else{
+        res.status(500).json({error:"you cannot inactive this agence it contains entreprises"})
+      }
     } catch (error) {
       console.error("Error:", error);
       res.status(500).json({ error: "Une erreur s'est produite." });
@@ -230,6 +236,17 @@ const deleteAgence =async(req,res)=>{
         return res.status(400).json({error:error.message})
     }
   }
+  const getNumberOfAgences = async (req,res) =>{
+    try{
+      const agences = await Agence.find({})
+      if(agences){
+        const agencesLength = agences.length
+        res.status(200).json(agencesLength)
+      }
+    }catch(error){
+      res.status(400).json({error:error.message})
+    }
+  }
 
 module.exports={
     getAllAgences,
@@ -243,4 +260,5 @@ module.exports={
     ,entrepriseParCadre
     ,etatAgence
     ,changePassword
+    ,getNumberOfAgences
 }

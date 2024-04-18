@@ -30,7 +30,7 @@ const LoginForm = () => {
             <Box height={20} />
             <Grid container style={{ paddingTop: "20px" }} >
             <Grid container spacing={2} sx={{ padding: "35px", paddingBottom: "95px" }}>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{width: "70%"}}>
                 <TextField
                     id="username"
                     label="Username"
@@ -41,7 +41,7 @@ const LoginForm = () => {
                     onChange={(e) => setUsername(e.target.value)}
                 />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{width: "70%"}}>
                 <FormControl variant="outlined" size="small" fullWidth>
                     <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                     <OutlinedInput

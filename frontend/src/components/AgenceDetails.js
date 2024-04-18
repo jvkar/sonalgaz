@@ -32,34 +32,9 @@ const AgenceDetails = ({ agence }) => {
   const [assignedEtablissements, setassignedEtablissements] = React.useState(
     []
   );
+
   const [error, setError] = React.useState(undefined);
 
-  const handleUpdate = async () => {
-    if (!user) {
-      setError("You must be logged in");
-      return;
-    }
-
-    window.location.href = `/UpdateFormAgence/${agence._id}`;
-  };
-  const handleDelete = async () => {
-    if (!user) {
-      setError("You must be logged in");
-      return;
-    }
-
-    const response = await fetch(`/api/Agences/deleteOne/${agence._id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${user.token}` },
-    });
-    const json = await response.json();
-    if (!response.ok) {
-      setError(json.error);
-    }
-    if (response.ok) {
-      dispatch({ type: "DELETE_AGENCE", payload: json });
-    }
-  };
   const updateState = async (event) => {
     event.preventDefault();
     try {
@@ -94,6 +69,9 @@ const AgenceDetails = ({ agence }) => {
         setassignedEtablissements(json);
         setIsLoading(false);
       }
+      if(!response.ok){
+        setError(json.error)
+      }
     };
     if (user) {
       fetchEtablissementsData();
@@ -105,13 +83,25 @@ const AgenceDetails = ({ agence }) => {
     navigate(`?id=${id}`);
   };
 
-  // const turnOff = (
-  //   <Button component="label" variant="contained" style={{backgroundColor:'red'}} endIcon={<ToggleOffIcon />} onClick={updateState}>
-  //     Inactive
-  //   </Button>
-  // );
+  useEffect(() => {
+
+    const timeoutDuration = 3000;
+
+
+    if (error) {
+      const timeoutId = setTimeout(() => {
+        setError(null);
+      }, timeoutDuration);
+
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [error]);
   return (
     <React.Fragment>
+      
+      
+      {error && <div className="error">{error}</div>}
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
           <IconButton

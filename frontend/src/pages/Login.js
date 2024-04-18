@@ -14,8 +14,9 @@ const Login = () => {
                         flexWrap: 'wrap',
                         '& > :not(style)': {
                         m: 1,
-                        height: "75vh",
+                        height: "auto",
                         borderRadius:"20px",
+                        padding:"10px"
                         },
                     }}
                     >

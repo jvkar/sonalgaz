@@ -14,6 +14,8 @@ const {getAllEtablissement,
     getFromBlackList,
     createAccount
     ,changePassword
+    ,getNumberOfEtablissements
+    ,getNumberOfEtablissementsPerAgence
 }=require("../controllers/etablissementController");
 const requireAuth = require('../middleware/requireAuth')
 router.use(requireAuth)
@@ -29,5 +31,7 @@ router.post('/add',upload,addManyEtablissements)
 router.delete('/del/:id',deleteEtablissement)
 router.patch('/update/:id',updateEtablissemenet)
 router.patch('/passwordChanged',changePassword)
+router.get('/lengthEtablissements',getNumberOfEtablissements)
+router.get('/lengthEtablissementsPerAgence/:id',getNumberOfEtablissementsPerAgence)
 
 module.exports=router

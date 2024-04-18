@@ -41,9 +41,14 @@ function App() {
         <div className='pages'>
 
           <Routes>
-            <Route path='/Login' element={!user ? <Login /> : <Navigate to='/' />} />
-            <Route path='/Logout' element={user ? <Login /> : <Navigate to='/' />} />
-            <Route path='/' element={user ? <Home /> : <Navigate to="/Login" />} />
+          <Route 
+              path="/" 
+              element={user ? <Home /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/login" 
+              element={!user ? <Login /> : <Navigate to="/" />} 
+            />
             <Route path='/passwordChange' element={user ? <Password /> : <Navigate to="/Login" />} />
 
             {/* partiADMIN */}

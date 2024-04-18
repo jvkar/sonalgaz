@@ -2,8 +2,9 @@ const mongoose=require('mongoose');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 const ResponsableEntrepriseSchema =new Schema({
-    Nom : {
+    nomResponsable : {
         type : String ,
+        required:true
     },
     NumeroEtablissement:{
         type: Number,
@@ -26,7 +27,7 @@ const ResponsableEntrepriseSchema =new Schema({
     
 })
 //signup
-ResponsableEntrepriseSchema.statics.createAccountEtab = async function(NumeroEtablissement,username, password,etablissement) {
+ResponsableEntrepriseSchema.statics.createAccountEtab = async function(nomResponsable,NumeroEtablissement,username, password,etablissement) {
 
     const exists = await this.findOne({ username })
   
@@ -37,7 +38,7 @@ ResponsableEntrepriseSchema.statics.createAccountEtab = async function(NumeroEta
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
   
-    const responsableEntreprise = await this.create({ NumeroEtablissement,username, password: hash,etablissement })
+    const responsableEntreprise = await this.create({nomResponsable, NumeroEtablissement,username, password: hash,etablissement })
   
     return responsableEntreprise
   }

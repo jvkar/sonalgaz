@@ -368,6 +368,84 @@ const createClient= async (req, res) => {
       return res.status(500).json({ error: error.message });
     }
   };
+  const getCoupureLenghtPerAgence = async (req,res) =>{
+    const { id }  = req.params    
+    try {
+      const coupures = await Client.find({agence:id,typeClient:"coupure"})
+      if(coupures){
+       const  coupuresLength= coupures.length
+        res.status(200).json(coupuresLength)
+      }
+
+    }catch(error){
+      res.status(400).json({error:error.message})
+    }
+  }
+  const getCoupureLenghtPerEntreprise = async (req,res) =>{
+    const { id }  = req.params    
+    try {
+      const coupures = await Client.find({entrepriseId:id,typeClient:"coupure"})
+      if(coupures){
+       const  coupuresLength= coupures.length
+        res.status(200).json(coupuresLength)
+      }
+
+    }catch(error){
+      res.status(400).json({error:error.message})
+    }
+  }
+  const getRetablissementsLenghtPerAgence = async (req,res) =>{
+    const {id} = req.params
+    try {
+      const retablissements = await Client.find({agence:id,typeClient:"retablissement"})
+      if(retablissements){
+       const  retablissementsLength= retablissements.length
+        
+        res.status(200).json(retablissementsLength)
+      }
+    }catch(error){
+      res.status(400).json({error:error.message})
+    }
+  }
+  const getRetablissementsLenghtPerEntreprise = async (req,res) =>{
+    const {id} = req.params
+    try {
+      const retablissements = await Client.find({entrepriseId:id,typeClient:"retablissement"})
+      if(retablissements){
+       const  retablissementsLength= retablissements.length
+        
+        res.status(200).json(retablissementsLength)
+      }
+    }catch(error){
+      res.status(400).json({error:error.message})
+    }
+  }
+  const getClientLengthPerAgence = async (req,res) =>{
+    const {id} = req.params
+    try{
+      const clients = await Client.find({agence:id})
+      if(clients){
+        const clientsLength = clients.length 
+        res.status(200).json(clientsLength)
+      }
+    }catch(error){
+      res.status(400).json({error:error.message})
+    }
+  }
+  const getClientLengthPerEntreprise = async (req,res) =>{
+    const {id} = req.params
+    try{
+      const clients = await Client.find({entrepriseId:id})
+      if(clients){
+        const clientsLength = clients.length 
+        res.status(200).json(clientsLength)
+      }
+    }catch(error){
+      res.status(400).json({error:error.message})
+    }
+  }
+
+
 module.exports={
   deleteClient,
   getAllClient,
@@ -384,6 +462,12 @@ module.exports={
   affecterRetablissement,
   archiverClient,
   validerClient,
-  invaliderClient
+  invaliderClient,
+  getCoupureLenghtPerAgence,
+  getRetablissementsLenghtPerAgence,
+  getClientLengthPerAgence,
+  getCoupureLenghtPerEntreprise,
+  getRetablissementsLenghtPerEntreprise,
+  getClientLengthPerEntreprise,
 
 }

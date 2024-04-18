@@ -11,6 +11,7 @@ const {getAllAgences
     ,updateAgence
     ,entrepriseParCadre
     ,etatAgence
+    ,getNumberOfAgences
     ,changePassword
 
 }=require("../controllers/agenceController");
@@ -27,5 +28,6 @@ router.get('/agence/:id',entrepriseParAgence);
 router.patch('/update/:id',updateAgence)
 router.patch('/stateChange/:id',etatAgence)
 router.patch('/passwordChanged',changePassword)
+router.get('/lengthAgences',getNumberOfAgences)
 
 module.exports=router

@@ -203,13 +203,13 @@ const createEtablissement= async (req, res) => {
 //creer des comptes pour les entreprises
 const createAccount=async(req,res)=>{
   try {
-  const {NumeroEtablissement,username, password} = req.body
+  const {nomResponsable,NumeroEtablissement,username, password} = req.body
   const etablissement= await Etablissement.findOne({NumeroEtablissement:NumeroEtablissement})
   if(!etablissement){
       res.status(400).json({error:"n'existe pas une entreprise avec ce numero"})
   }
   if(etablissement){
-    const responsableEntreprise = await ResponsableEntreprise.createAccountEtab(NumeroEtablissement,username, password,etablissement._id)
+    const responsableEntreprise = await ResponsableEntreprise.createAccountEtab(nomResponsable,NumeroEtablissement,username, password,etablissement._id)
     const token = createToken(responsableEntreprise._id)
     res.status(200).json({username, token})
 
@@ -297,6 +297,29 @@ const deleteEtablissement = async (req, res) => {
         return res.status(400).json({error:error.message})
     }
   }
+  const getNumberOfEtablissements = async (req,res) =>{
+    try{
+      const etablissements = await Etablissement.find({})
+      if(etablissements){
+        const etablissementsLength = etablissements.length
+        res.status(200).json(etablissementsLength)
+      }
+    }catch(error){
+      res.status(400).json({error:error.message})
+    }
+  }
+  const getNumberOfEtablissementsPerAgence = async(req,res)=>{
+    const {id} = req.params
+    try{
+      const etablissements= await Etablissement.find({agence:id})
+      if(etablissements){
+        const etablissementLength = etablissements.length
+        res.status(200).json(etablissementLength)
+      }
+    }catch(error){
+      res.status(400).json({error:error.message})
+    }
+  }
 
 module.exports={
     getAllEtablissement,
@@ -311,5 +334,7 @@ module.exports={
     ,deleteEtablissement
     ,updateEtablissemenet
     ,changePassword
+    ,getNumberOfEtablissements
+    ,getNumberOfEtablissementsPerAgence
 
 }

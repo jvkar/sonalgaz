@@ -3,8 +3,9 @@ const bcrypt = require('bcrypt');
 const validator=require('validator')
 const Schema = mongoose.Schema;
 const CadreAgenceSchema =new Schema({
-    Nom : {
+    nomCadre : {
         type : String ,
+        required:true
     },
     numeroAgence:{
         type: Number,
@@ -16,9 +17,7 @@ const CadreAgenceSchema =new Schema({
      
     }
     ,password:{
-        type : String,
-     
-     
+        type : String,  
     },
     
     agence :{type: Schema.Types.ObjectId,
@@ -30,8 +29,8 @@ const CadreAgenceSchema =new Schema({
     
 })
 //signup
-CadreAgenceSchema.statics.createAccountAgence = async function(numeroAgence,username, password,agence) {
-    if(!username || !password || !numeroAgence){
+CadreAgenceSchema.statics.createAccountAgence = async function(nomCadre,numeroAgence,username, password,agence) {
+    if(!nomCadre || !username || !password || !numeroAgence){
         throw Error("tous les champs doit etre rempli")
     }
     if(!validator.isStrongPassword){
@@ -46,7 +45,7 @@ CadreAgenceSchema.statics.createAccountAgence = async function(numeroAgence,user
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
   
-    const cadreAgence = await this.create({ numeroAgence,username, password: hash,agence })
+    const cadreAgence = await this.create({nomCadre, numeroAgence,username, password: hash,agence })
   
     return cadreAgence
   }
