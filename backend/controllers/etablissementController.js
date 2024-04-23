@@ -1,5 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const Etablissement =require('../models/etablissementModel')
+const Client = require('../models/clientModel')
 const BlackList=require('../models/BlackListModel')
 const Agence=require('../models/agenceModel')
 const ResponsableEntreprise= require('../models/responsableEntreprise')
@@ -26,57 +27,102 @@ const upload = multer({storage}).single('file');
 const usedAgenceIds = new Set();
 let agenceIndex = 0;
 
-const addManyEtablissements = async (req,res)=>{
+// const addManyEtablissements = async (req,res)=>{
+//   const csvfilepath = __dirname +'/../filesEtablissements/'+req.file?.originalname;
+//   try {
+    
+//     const csvData = await csvtojson().fromFile(csvfilepath);
+//     const agences = await Agence.find({state:"active"});
+//     if (agences.length === 0) {
+//       return res.status(500).json({ error: "Il faut insérer la liste des agences." });
+//     }
+//     const etablissements = await Etablissement.insertMany(csvData);
+//     const agenceOne= await Agence.findOne();
+//     const nbr = agenceOne ? agenceOne.numeroEntreprisesParAgence : null;
+//     const {NombreDesCoupures}=req.body
+//     if(NombreDesCoupures==""){
+//      return res.status(500).json({error:" tous les champs doit etre remplis "})
+//     }
+
+//     if (etablissements.length === 0 || (agences.length > 0 && agences[0].etablissements?.length === 0)) {
+//       agenceIndex = 0;
+//       usedAgenceIds.clear();
+//     }
+
+//     for (let i = 0; i < etablissements.length; i++) {
+//       const etablissementsNumberUpdate= await Etablissement.find({NombreDesCoupures:0});
+//       for(const etablissements of etablissementsNumberUpdate ){
+//             await Etablissement.findByIdAndUpdate(etablissements._id,{NombreDesCoupures:NombreDesCoupures})
+//       }
+//     }
+//     agenceIndex = agenceIndex || 0;
+//     for (let i = 0; i < etablissements.length; i+=nbr) {
+//       const agenceId = agences[agenceIndex % agences.length]._id
+
+//       while (usedAgenceIds.has(agenceId)) {
+//         agenceIndex++;
+//       }
+//       const etablissementsToUpdate = await Etablissement.find({ agence: null}).limit(nbr);
+
+//       for (const etablissement of etablissementsToUpdate) {
+//         await Etablissement.findByIdAndUpdate(etablissement._id, { agence: agenceId });
+//         usedAgenceIds.add(agenceId);
+//       }
+//       agenceIndex++;
+//     }
+
+//     res.json({ success: "success" });
+  
+
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// }
+const addManyEtablissements = async (req, res) => {
   const csvfilepath = __dirname +'/../filesEtablissements/'+req.file?.originalname;
   try {
-    
     const csvData = await csvtojson().fromFile(csvfilepath);
-    const agences = await Agence.find({state:"active"});
+    const agences = await Agence.find({ state: "active" });
+
     if (agences.length === 0) {
       return res.status(500).json({ error: "Il faut insérer la liste des agences." });
     }
-    const etablissements = await Etablissement.insertMany(csvData);
-    const agenceOne= await Agence.findOne();
+
+    await Etablissement.insertMany(csvData);
+
+    const agenceOne = await Agence.findOne();
     const nbr = agenceOne ? agenceOne.numeroEntreprisesParAgence : null;
-    const {NombreDesCoupures}=req.body
-    if(NombreDesCoupures==""){
-     return res.status(500).json({error:" tous les champs doit etre remplis "})
+    const { NombreDesCoupures } = req.body;
+
+    if (NombreDesCoupures === "") {
+      return res.status(500).json({ error: "Tous les champs doivent être remplis." });
     }
 
-    if (etablissements.length === 0 || (agences.length > 0 && agences[0].etablissements?.length === 0)) {
-      agenceIndex = 0;
-      usedAgenceIds.clear();
-    }
 
-    for (let i = 0; i < etablissements.length; i++) {
-      const etablissementsNumberUpdate= await Etablissement.find({NombreDesCoupures:0});
-      for(const etablissements of etablissementsNumberUpdate ){
-            await Etablissement.findByIdAndUpdate(etablissements._id,{NombreDesCoupures:NombreDesCoupures})
-      }
-    }
-    agenceIndex = agenceIndex || 0;
-    for (let i = 0; i < etablissements.length; i+=nbr) {
-      const agenceId = agences[agenceIndex % agences.length]._id
+    await Etablissement.updateMany({ NombreDesCoupures: 0 }, { NombreDesCoupures });
 
-      while (usedAgenceIds.has(agenceId)) {
-        agenceIndex++;
-      }
-      const etablissementsToUpdate = await Etablissement.find({ agence: null}).limit(nbr);
+    let etablissementsToUpdate = await Etablissement.find({ agence: null }).limit(nbr);
+
+
+    for (let i = 0; i < csvData.length; i += nbr) {
+      const agenceId = agences[agenceIndex % agences.length]._id;
 
       for (const etablissement of etablissementsToUpdate) {
         await Etablissement.findByIdAndUpdate(etablissement._id, { agence: agenceId });
-        usedAgenceIds.add(agenceId);
       }
+
+      etablissementsToUpdate = await Etablissement.find({ agence: null }).limit(nbr);
+
+
       agenceIndex++;
     }
 
     res.json({ success: "success" });
-  
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
+
 const addToBlackList = async (req, res) => {
   const { id } = req.params;
   const etablissement = await Etablissement.findOne({ _id: id });
@@ -176,19 +222,15 @@ const agencePerEntreprise= async(req,res)=>{
   }
 }
 //get all Etablissements
-const getAllEtablissement = async (req,res)=>{
-   try{ const etablissements= await Etablissement.find({}).sort({NumeroEtablissement:1})
-     
+const getAllEtablissement = async (req, res) => {
+  try {
+    const etablissements = await Etablissement.find({}).sort({ NumeroEtablissement: 1 });
+    res.status(200).json(etablissements);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
-        res.status(200).json(etablissements);
-        
- 
-   } catch (error) {
-
-       res.status(500).json({ error: 'Internal Server Error' });
-   }
-
-}
 //create etablissement
 const createEtablissement= async (req, res) => {
     const {Nom,NumeroEtablissement,Adresse,NombreDesCoupures} = req.body
@@ -320,7 +362,41 @@ const deleteEtablissement = async (req, res) => {
       res.status(400).json({error:error.message})
     }
   }
+  const archiverEntreprise= async(req,res)=>{
+   const {id} = req.params
+   try{
+    const entreprise=await Etablissement.findOneAndUpdate({_id:id,etat:"Non Archiver"},
+    {etat:"archiver"},
+    { new: true }
+  )
+  const clients= await Client.find({entrepriseId:id,archived:"Non Archiver"})
+  for(const client of clients){
+    await Client.findByIdAndUpdate(client._id,
+      {archived:"archiver"})
+  }
+  res.status(200).json(entreprise)
+   }catch(error){
+    res.status(400).json({error:error.message})
 
+   }
+  }
+  const archiverToutLesEntreprises = async (req, res) => {
+    try {
+      await Etablissement.updateMany({ etat: "Non Archiver" }, { etat: "archiver" });
+  
+
+      const entreprises = await Etablissement.find({ etat: "archiver" });
+      const updatePromises = entreprises.map(async (entreprise) => {
+        await Client.updateMany({ entrepriseId: entreprise._id, archived: "Non Archiver" }, { archived: "archiver" });
+      });
+      await Promise.all(updatePromises);
+  
+      res.status(200).json({ message: "All the entreprises updated successfully" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
 module.exports={
     getAllEtablissement,
     createEtablissement,
@@ -336,5 +412,7 @@ module.exports={
     ,changePassword
     ,getNumberOfEtablissements
     ,getNumberOfEtablissementsPerAgence
+    ,archiverEntreprise
+    ,archiverToutLesEntreprises
 
 }

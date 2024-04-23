@@ -59,53 +59,54 @@ const ChangePassForm = ({ closeEvent }) => {
     }
   };
   return (
-    <div style={{ maxWidth: '600px', margin: 'auto', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' ,backgroundColor:"white"}}>
+    <div style={{ maxWidth: '600px', margin: 'auto', padding: '20px', border: '1px solid #ccc', borderRadius: '25px' ,backgroundColor:"white"}}>
     <Typography variant="h4" align="center" gutterBottom>
       Modifier Votre mot de passe
     </Typography>
     <Divider />
-    <form onSubmit={handleUpdate} style={{ marginTop: '20px' }}>
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={12}>
-          <TextField
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            id="Password"
-            label="Mot de passe actuel"
-            variant="outlined"
-            size="small"
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            id="newPassword"
-            label="Nouveau mot de passe"
-            variant="outlined"
-            size="small"
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            value={confirmedPassword}
-            onChange={(e) => setConfirmedPassword(e.target.value)}
-            id="confirmedPassword"
-            label="Confirmer le nouveau mot de passe"
-            variant="outlined"
-            size="small"
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button type="submit" variant="contained" size="large" fullWidth style={{ backgroundColor: '#4caf50', color: 'white', marginTop: '20px' }}>
-            Modifier
-          </Button>
-        </Grid>
-      </Grid>
-    </form>
+    <form onSubmit={handleUpdate} style={{ margin: '20px auto', maxWidth: '400px' }}>
+  <Grid container spacing={2} justifyContent="center">
+    <Grid item xs={12} style={{padding:"16px", display: "flex",justifyContent: "center"}}>
+      <TextField
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        id="Password"
+        label="Mot de passe actuel"
+        variant="outlined"
+        size="small"
+        fullWidth
+      />
+    </Grid>
+    <Grid item xs={12} style={{padding:"16px", display: "flex",justifyContent: "center"}}>
+      <TextField
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+        id="newPassword"
+        label="Nouveau mot de passe"
+        variant="outlined"
+        size="small"
+        fullWidth
+      />
+    </Grid>
+    <Grid item xs={12} style={{padding:"16px", display: "flex",justifyContent: "center"}}>
+      <TextField
+        value={confirmedPassword}
+        onChange={(e) => setConfirmedPassword(e.target.value)}
+        id="confirmedPassword"
+        label="Confirmer le nouveau mot de passe"
+        variant="outlined"
+        size="small"
+        fullWidth
+      />
+    </Grid>
+    <Grid item xs={12} style={{padding:"16px", display: "flex",justifyContent: "center"}}>
+      <Button type="submit" variant="contained" size="large" fullWidth style={{ backgroundColor: 'rgb(0 108 228);', color: 'white' ,width:"40%"}}>
+        Modifier
+      </Button>
+    </Grid>
+  </Grid>
+</form>
+
     {error && <div style={{ color: 'red', marginTop: '20px' }}>{error}</div>}
   </div>
   );

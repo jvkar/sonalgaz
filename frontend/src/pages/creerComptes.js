@@ -12,8 +12,8 @@ const CreerCompte = () => {
                     flexWrap: 'wrap',
                     '& > :not(style)': {
                         m: 1,
-                        width: "60%",
-                        borderRadius: "50px "
+                        width: "40%",
+                        borderRadius: "25px "
                     },
                 }}
             >

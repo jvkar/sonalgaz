@@ -16,6 +16,8 @@ const {getAllEtablissement,
     ,changePassword
     ,getNumberOfEtablissements
     ,getNumberOfEtablissementsPerAgence
+    ,archiverEntreprise
+    ,archiverToutLesEntreprises
 }=require("../controllers/etablissementController");
 const requireAuth = require('../middleware/requireAuth')
 router.use(requireAuth)
@@ -33,5 +35,6 @@ router.patch('/update/:id',updateEtablissemenet)
 router.patch('/passwordChanged',changePassword)
 router.get('/lengthEtablissements',getNumberOfEtablissements)
 router.get('/lengthEtablissementsPerAgence/:id',getNumberOfEtablissementsPerAgence)
-
+router.patch('/archiverEntreprise/:id',archiverEntreprise)
+router.patch('/archiveAll',archiverToutLesEntreprises);
 module.exports=router
