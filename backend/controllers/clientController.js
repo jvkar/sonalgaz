@@ -6,6 +6,8 @@ const Facture=require('../models/factureModel')
 const csvtojson =require ('csvtojson');
 const multer = require('multer');
 const path = require('path');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 const { isNull } = require('util');
 // const mime = require('mime-types');
 const storage = multer.diskStorage({
@@ -444,7 +446,36 @@ const createClient= async (req, res) => {
       res.status(400).json({error:error.message})
     }
   }
+ const exportPDFclients = async(req,res) =>{
+  try {
 
+    const clients = await Client.find();
+
+
+    const doc = new PDFDocument();
+    const filename = 'client_list.pdf';
+    const filePath = `./pdfs/${filename}`; 
+
+    doc.pipe(fs.createWriteStream(filePath)); 
+
+
+    doc.fontSize(14).text('Client List', { align: 'center' }).moveDown();
+
+    clients.forEach((client, index) => {
+      doc.text(`${index + 1}. ${client.nomClient}`);
+    });
+
+
+    doc.end();
+
+    res.status(200).send('PDF exported successfully');
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+}
+ 
 
 module.exports={
   deleteClient,
@@ -469,5 +500,6 @@ module.exports={
   getCoupureLenghtPerEntreprise,
   getRetablissementsLenghtPerEntreprise,
   getClientLengthPerEntreprise,
+  exportPDFclients
 
 }

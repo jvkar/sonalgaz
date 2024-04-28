@@ -22,7 +22,7 @@ const {getAllClient,
     getRetablissementsLenghtPerEntreprise,
     getCoupureLenghtPerEntreprise,
     getClientLengthPerEntreprise,
-
+    exportPDFclients
     
 }=require("../controllers/clientController");
 router.get('/ByFacture/:NumClient',getClientByFacture);
@@ -43,9 +43,8 @@ router.patch('/invalider/:id',invaliderClient)
 router.get('/clientsLengthPerAgence/:id',getClientLengthPerAgence)
 router.get('/coupureLengthPerAgence/:id',getCoupureLenghtPerAgence)
 router.get('/retablissementLengthPerAgence/:id',getRetablissementsLenghtPerAgence)
-
 router.get('/clientsLengthPerEntreprise/:id',getClientLengthPerEntreprise)
 router.get('/coupureLengthPerEntreprise/:id',getCoupureLenghtPerEntreprise)
 router.get('/retablissementLengthPerEntreprise/:id',getRetablissementsLenghtPerEntreprise)
-
+router.get('/export/pdf',exportPDFclients);
 module.exports=router
