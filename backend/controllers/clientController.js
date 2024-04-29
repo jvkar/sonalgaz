@@ -446,35 +446,68 @@ const createClient= async (req, res) => {
       res.status(400).json({error:error.message})
     }
   }
- const exportPDFclients = async(req,res) =>{
-  try {
+  const exportPDFclients = async (req, res) => {
+    try {
+      const clients = await Client.find({typeClient:"coupure"});
+      const doc = new PDFDocument();
+      const filename = 'client_list.pdf';
+      const filePath = `./pdfs/${filename}`;
+  
+      doc.pipe(fs.createWriteStream(filePath));
+  
+      // Add image
+      doc.image('./public/myImage.png', { width: 450, align: 'center' }).moveDown(15); // Adjust vertical spacing if needed
+  
+      // Add horizontal line
+      doc.moveTo(50, doc.y)
+        .lineTo(550, doc.y)
+        .stroke()
+        .moveDown(0.5); // Adjust vertical spacing if needed
+  
+      // Add title
+      doc.fontSize(14).text('La liste des coupures', { align: 'center' }).moveDown();
+  
+      // Add table headers
+      doc.font('Helvetica-Bold');
+      const headerY = doc.y;
+      doc.text('Reference', 50, headerY);
+      doc.text('Nom', 150, headerY);
+      doc.text('Etat', 250, headerY);
+      doc.text('Cause', 450, headerY);
+      doc.moveDown();
+  
+      // Add table rows
+      doc.font('Helvetica');
+      clients.forEach((client) => {
+        const dividerY = doc.y;
+        doc.moveTo(50, dividerY)
+          .lineTo(550, dividerY)
+          .stroke()
+          .moveDown(1);
+        
 
-    const clients = await Client.find();
+          // Position the text elements horizontally
+          const line = doc.y
+          doc.text(client.referenceClient, 50, line );
+          doc.text(client.nomClient, 150,line );
+          doc.text(client.etat, 250, line );
+          doc.text(client.cause, 400, line );
+          doc.moveDown();
+  
+        // Add divider after each row
 
-
-    const doc = new PDFDocument();
-    const filename = 'client_list.pdf';
-    const filePath = `./pdfs/${filename}`; 
-
-    doc.pipe(fs.createWriteStream(filePath)); 
-
-
-    doc.fontSize(14).text('Client List', { align: 'center' }).moveDown();
-
-    clients.forEach((client, index) => {
-      doc.text(`${index + 1}. ${client.nomClient}`);
-    });
-
-
-    doc.end();
-
-    res.status(200).send('PDF exported successfully');
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
-  }
-}
+      });
+  
+      doc.end();
+  
+      res.status(200).send('PDF exported successfully');
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    }
+  };
+  
+  
  
 
 module.exports={
