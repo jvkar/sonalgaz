@@ -3,24 +3,23 @@ import { useEtablissementContext } from '../hooks/useEtablissementContext';
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 const BlackListDetails=({blacklist})=>{
-  // const {dispatch}=useEtablissementContext()
+  const timestamp = `${blacklist.createdAt}`;
+  const date = new Date(timestamp);
+  
 
-// const handleClick=async ()=>{
-//   const response = await fetch (`api/Etablissements/BlackListDel/${blackList._id}`,{
-//     method:'DELETE'
-//   });
-//   const json =await response.json()
-//   if(response.ok){
-//     dispatch({type: 'DELETE_ETABLISSEMENT', payload: json})
-//     window.location.reload()
-//   }
-// }
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); 
+  const day = String(date.getDate()).padStart(2, '0'); 
+  
+
+  const dateString = `${year}-${month}-${day}`;
 return(
   <React.Fragment>
           <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell align="center">{blacklist?.NumeroEtablissement}</TableCell>
         <TableCell align="center">{blacklist?.Nom} </TableCell>
         <TableCell align="center">{blacklist?.Adresse}</TableCell>
+        <TableCell align="center">{dateString}</TableCell>
         
         <TableCell align="center"></TableCell>
 

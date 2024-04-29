@@ -27,10 +27,11 @@ import ClientForme from "../components/ClientForm";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useParams } from "react-router-dom";
 import ModelAddClient from "../components/models/modeAddClient";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 const Client = () => {
   const { user } = useAuthContext();
   const Nom = user?.nom;
@@ -39,6 +40,7 @@ const Client = () => {
   const [open, setOpen] = React.useState(false);
   const [filterType, setFilterType] = useState("all");
   const [stateFilterType, setStateFilterType] = useState("all");
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,7 +73,58 @@ const Client = () => {
 
     fetchData();
   }, [dispatch]);
-
+  const downloadPDFcoupure = () => {
+    setDownloading(true);
+    fetch("/api/Clients/exportcoupure-pdf", {
+      method: "GET",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "coupure_liste.pdf";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setDownloading(false);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        setDownloading(false);
+      });
+  };
+  const downloadPDFretablissement = () => {
+    setDownloading(true);
+    fetch("/api/Clients/exportretablissement-pdf", {
+      method: "GET",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "retablissement-liste.pdf";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setDownloading(false);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        setDownloading(false);
+      });
+  };
   const filterClients = (client) => {
     if (filterType === "archiver") {
       return client.archived === "archiver";
@@ -86,9 +139,8 @@ const Client = () => {
       return client.etat === "valider";
     } else if (filterType === "invalider") {
       return client.etat === "invalider";
-  
-    } else if (filterType === "en attente"){
-        return client.etat ==="en attente"
+    } else if (filterType === "en attente") {
+      return client.etat === "en attente";
     } else {
       return true;
     }
@@ -106,7 +158,6 @@ const Client = () => {
           </div>
         </div>
 
-
         <FormControl>
           <InputLabel id="demo-simple-select-label">Archive</InputLabel>
           <Select
@@ -116,23 +167,9 @@ const Client = () => {
             label="archive"
             onChange={handleChange}
           >
-            <MenuItem value={"all"}>
-              {" "}
-
-                All Clients
-            </MenuItem>
-            <MenuItem value={"archiver"}>
-              {" "}
-             
-                Archived Clients
-
-            </MenuItem>
-            <MenuItem value={"Non Archiver"}>
-              {" "}
-
-                Not Archived Clients
-
-            </MenuItem>
+            <MenuItem value={"all"}> All Clients</MenuItem>
+            <MenuItem value={"archiver"}> Archived Clients</MenuItem>
+            <MenuItem value={"Non Archiver"}> Not Archived Clients</MenuItem>
           </Select>
         </FormControl>
         <FormControl>
@@ -144,30 +181,10 @@ const Client = () => {
             label="en attente"
             onChange={handleChange}
           >
-            <MenuItem value={"all"}>
-              {" "}
-
-                All Clients
-            </MenuItem>
-            <MenuItem value={"en attente"}>
-              {" "}
-
-                en attente Clients
-
-            </MenuItem>
-            <MenuItem value={"valider"}>
-              {" "}
-             
-                valide Clients
-
-            </MenuItem>
-            <MenuItem value={"invalider"}>
-              {" "}
-
-                Non valide Clients
-
-            </MenuItem>
-
+            <MenuItem value={"all"}> All Clients</MenuItem>
+            <MenuItem value={"en attente"}> en attente Clients</MenuItem>
+            <MenuItem value={"valider"}> valide Clients</MenuItem>
+            <MenuItem value={"invalider"}> Non valide Clients</MenuItem>
           </Select>
         </FormControl>
 
@@ -179,7 +196,10 @@ const Client = () => {
           >
             Les coupure de l'agence
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails style={{display:"flex",flexDirection:"column",alignItems:"flex-end"}}>
+          <Button variant="contained" endIcon={<FileUploadIcon/>} onClick={downloadPDFcoupure} disabled={downloading} style={{width:"200px"}}>
+            {downloading ? "Downloading..." : "Telecharger PDF"}
+            </Button>
             <Table size="small" aria-label="purchases">
               <TableHead>
                 <TableRow>
@@ -189,8 +209,9 @@ const Client = () => {
                   <TableCell>Adresse</TableCell>
                   <TableCell>Numero compteur</TableCell>
                   <TableCell>Type client</TableCell>
-                  <TableCell>Etat</TableCell>
                   <TableCell>Archiver</TableCell>
+                  <TableCell>Etat</TableCell>
+                  <TableCell>Cause</TableCell>
                 </TableRow>
               </TableHead>
 
@@ -214,7 +235,10 @@ const Client = () => {
           >
             Les retablissements de l'agence
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails style={{display:"flex",flexDirection:"column",alignItems:"flex-end"}}>
+          <Button variant="contained" endIcon={<FileUploadIcon/>} onClick={downloadPDFcoupure} disabled={downloading} style={{width:"200px"}}>
+            {downloading ? "Downloading..." : "Download PDF"}
+            </Button>
             <Table size="small" aria-label="purchases">
               <TableHead>
                 <TableRow>
@@ -224,8 +248,9 @@ const Client = () => {
                   <TableCell>Adresse</TableCell>
                   <TableCell>Numero compteur</TableCell>
                   <TableCell>Type client</TableCell>
-                  <TableCell>Etat</TableCell>
                   <TableCell>Archiver</TableCell>
+                  <TableCell>Etat</TableCell>
+                  <TableCell>Cause</TableCell>
                 </TableRow>
               </TableHead>
 

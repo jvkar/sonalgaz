@@ -54,6 +54,7 @@ const BlackList = ({ etablissement }) => {
                   <TableCell align="center">Numéro de l'entreprise</TableCell>
                   <TableCell align="center">Nom de l'entreprise</TableCell>
                   <TableCell align="center">Adresse De l'entreprise</TableCell>
+                  <TableCell align="center">Ajouter le</TableCell>
 
                   <TableCell align="center"></TableCell>
                 </TableRow>

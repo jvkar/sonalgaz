@@ -33,15 +33,18 @@ import CircularProgress from "@mui/material/CircularProgress";
 const EtablissementDetails = ({ etablissement }) => {
   const { user } = useAuthContext();
   const userType = user.userType;
-  const [etablissements,setEtablissements]= useState(etablissement)
+  const [etablissements, setEtablissements] = useState(etablissement);
+  const [blackList, setBlackList] = useState(etablissement);
   const [assignedCoupure, setassignedCoupure] = React.useState([]);
   const [assignedRetab, setassignedRetab] = React.useState([]);
   const [error, setError] = useState(undefined);
-  const [isLoading , setIsLoading] = useState(true)
-
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [affect, setAffect] = useState(false);
+  const [affect2, setAffect2] = useState(false);
+  const [message,setMessage] = useState(undefined)
   const [open, setOpen] = React.useState(false);
   const affecterCoupure = async () => {
+    setAffect(true);
     const response = await fetch(
       `/api/Clients/affecterCoupure/${etablissement._id}`,
       {
@@ -50,7 +53,11 @@ const EtablissementDetails = ({ etablissement }) => {
     );
     const json = await response.json();
     if (response.ok) {
-      alert("coupure affecter");
+      setMessage("affectation avec succes")
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+      setAffect(false);
     }
     if (!response.ok) {
       setError(json.error);
@@ -60,6 +67,7 @@ const EtablissementDetails = ({ etablissement }) => {
     }
   };
   const affecterRetablissement = async () => {
+    setAffect2(true);
     const response = await fetch(
       `/api/Clients/affecterRetab/${etablissement._id}`,
       {
@@ -68,13 +76,18 @@ const EtablissementDetails = ({ etablissement }) => {
     );
     const json = await response.json();
     if (response.ok) {
-      alert("retablissement affecter");
+      setMessage("affectation avec succes")
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+      setAffect2(false);
     }
     if (!response.ok) {
       setError(json.error);
       setTimeout(() => {
         setError("");
       }, 3000);
+      setAffect2(false);
     }
   };
   const addToBlackList = async (e) => {
@@ -93,7 +106,7 @@ const EtablissementDetails = ({ etablissement }) => {
     );
     const json = response.json();
     if (response.ok) {
-      window.location.reload();
+      setBlackList(json);
     }
     if (!response.ok) {
       setError(json.error);
@@ -119,15 +132,11 @@ const EtablissementDetails = ({ etablissement }) => {
       if (response.ok) {
         const allClients = json.flatMap((enterprise) => enterprise.clients);
         setassignedCoupure(allClients);
-        setIsLoading(false)
-        
+        setIsLoading(false);
       }
     };
     if (user) {
-
-
-        fetchCoupureData();
-
+      fetchCoupureData();
     }
   }, [assignedCoupure, user]);
   useEffect(() => {
@@ -142,23 +151,17 @@ const EtablissementDetails = ({ etablissement }) => {
       if (response.ok) {
         const allClients = json.flatMap((enterprise) => enterprise.clients);
         setassignedRetab(allClients);
-        setIsLoading(false)
-
-
+        setIsLoading(false);
       }
     };
     if (user) {
-
-
-        fetchRetabData();
-
+      fetchRetabData();
     }
   }, [assignedRetab, user]);
 
   const { dispatch } = useEtablissementContext();
 
   const handleClick = async () => {
-
     if (!user) {
       return;
     }
@@ -170,15 +173,14 @@ const EtablissementDetails = ({ etablissement }) => {
       }
     );
     const json = await response.json();
-    
+
     if (response.ok) {
       dispatch({ type: "DELETE_ETABLISSEMENT", payload: json });
-      setEtablissements(json)
+      setEtablissements(json);
     }
-    if(!response.ok){
-      setError(json.error)
+    if (!response.ok) {
+      setError(json.error);
     }
-    
   };
   const archiveList = async (event) => {
     event.preventDefault();
@@ -203,26 +205,6 @@ const EtablissementDetails = ({ etablissement }) => {
   const updateUrl = (id) => {
     navigate(`?id=${id}`);
   };
-
-  const icon3 = (
-    <Button
-      component="label"
-      variant="contained"
-      endIcon={<BsArrowRightCircleFill />}
-    >
-      Coupures
-    </Button>
-  );
-
-  const icon5 = (
-    <Button
-      component="label"
-      variant="outlined"
-      endIcon={<BsArrowRightCircle />}
-    >
-      Retablissement
-    </Button>
-  );
 
   const icon1 = (
     <button
@@ -256,23 +238,20 @@ const EtablissementDetails = ({ etablissement }) => {
     </button>
   );
   useEffect(() => {
-
     const timeoutDuration = 3000;
-
 
     if (error) {
       const timeoutId = setTimeout(() => {
         setError(null);
       }, timeoutDuration);
 
-
       return () => clearTimeout(timeoutId);
     }
   }, [error]);
   return (
     <React.Fragment>
-
       {error && <div className="error">{error}</div>}
+      {message && <div className="message">{message}</div>}
 
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         {userType === "CadreAgence" ? (
@@ -311,15 +290,25 @@ const EtablissementDetails = ({ etablissement }) => {
         {userType === "CadreAgence" ? (
           <TableCell align="center">
             <div style={{ paddingRight: "10px" }}>
-              <Button style={{ margin: "2px" }} onClick={affecterCoupure}>
-                {" "}
-                {icon3}{" "}
+              <Button
+                style={{ margin: "2px" }}
+                onClick={affecterCoupure}
+                component="label"
+                variant="contained"
+                endIcon={<BsArrowRightCircleFill />}
+                disabled={affect}
+              >
+                {affect ? "affecting..." : "coupure"}
               </Button>
               <Button
                 style={{ margin: "2px" }}
                 onClick={affecterRetablissement}
+                component="label"
+                variant="contained"
+                endIcon={<BsArrowRightCircleFill />}
+                disabled={affect2}
               >
-                {icon5}{" "}
+                {affect2 ? "affecting..." : "retablissement"}
               </Button>
               <Button style={{ margin: "2px" }} onClick={addToBlackList}>
                 {" "}
@@ -369,9 +358,20 @@ const EtablissementDetails = ({ etablissement }) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                      {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
-
-                        assignedCoupure.length!==0 ? ( assignedCoupure?.map((coupure, index) => (
+                        {isLoading == true ? (
+                          <TableRow
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: "100%",
+                            }}
+                          >
+                            {" "}
+                            <CircularProgress style={{ margin: "15px" }} />{" "}
+                          </TableRow>
+                        ) : assignedCoupure.length !== 0 ? (
+                          assignedCoupure?.map((coupure, index) => (
                             <TableRow key={index}>
                               <TableCell component="th" scope="row">
                                 {coupure.codeClient}
@@ -381,11 +381,10 @@ const EtablissementDetails = ({ etablissement }) => {
                                 {coupure.adresseClient}
                               </TableCell>
                             </TableRow>
-                          )))
-                        :
-                        (<h1>thers no data</h1>)
+                          ))
+                        ) : (
+                          <h1>thers no data</h1>
                         )}
-
                       </TableBody>
                     </Table>
                   </AccordionDetails>
@@ -408,10 +407,20 @@ const EtablissementDetails = ({ etablissement }) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                      {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
-
-                        assignedRetab.length!==0?
-                          (assignedRetab?.map((retablissement, index) => (
+                        {isLoading == true ? (
+                          <TableRow
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: "100%",
+                            }}
+                          >
+                            {" "}
+                            <CircularProgress style={{ margin: "15px" }} />{" "}
+                          </TableRow>
+                        ) : assignedRetab.length !== 0 ? (
+                          assignedRetab?.map((retablissement, index) => (
                             <TableRow key={index}>
                               <TableCell component="th" scope="row">
                                 {retablissement.codeClient}
@@ -421,11 +430,10 @@ const EtablissementDetails = ({ etablissement }) => {
                                 {retablissement.adresseClient}
                               </TableCell>
                             </TableRow>
-                          )))
-                          :
-                          (<h1>there s no data</h1>)
+                          ))
+                        ) : (
+                          <h1>there s no data</h1>
                         )}
-
                       </TableBody>
                     </Table>
                   </AccordionDetails>

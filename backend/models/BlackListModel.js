@@ -18,6 +18,10 @@ const BlackListSchema= new Schema({
     ref:'Agence',
     default : null    
   },
+  timesInBlackList:{
+    type:Number,
+    default:null,
+  },
   entreprise:{
     type: Schema.Types.ObjectId,
     ref:'Etablissement',

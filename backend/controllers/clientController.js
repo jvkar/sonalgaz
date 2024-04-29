@@ -337,9 +337,10 @@ const createClient= async (req, res) => {
   
   const invaliderClient = async (req, res) => {
     const { id } = req.params;
+    const {cause} = req.body
     try {
 
-      const client = await Client.findOne({ _id: id, etat: "en attente" });
+      const client = await Client.findOne({ _id: id, etat: "en attente",cause:null });
   
       if (!client) {
         return res.status(404).json({ message: "Client not found or not in 'en attente' state" });
@@ -363,7 +364,7 @@ const createClient= async (req, res) => {
       
 
   
-      await Client.findByIdAndUpdate(client._id, { etat: "invalider" });
+      await Client.findByIdAndUpdate(client._id, { etat: "invalider",cause:cause });
   
       return res.status(200).json({ message: "Client invalidated successfully" });
     } catch (error) {
@@ -446,28 +447,27 @@ const createClient= async (req, res) => {
       res.status(400).json({error:error.message})
     }
   }
-  const exportPDFclients = async (req, res) => {
+  const exportPDFcoupures = async (req, res) => {
     try {
       const clients = await Client.find({typeClient:"coupure"});
       const doc = new PDFDocument();
-      const filename = 'client_list.pdf';
+      const filename = 'Liste_coupures.pdf';
       const filePath = `./pdfs/${filename}`;
   
-      doc.pipe(fs.createWriteStream(filePath));
+      const writeStream = fs.createWriteStream(filePath);
+      doc.pipe(writeStream);
+
+ 
+      doc.image('./public/myImage.png', { width: 450, align: 'center' }).moveDown(10);
   
-      // Add image
-      doc.image('./public/myImage.png', { width: 450, align: 'center' }).moveDown(15); // Adjust vertical spacing if needed
-  
-      // Add horizontal line
+    
       doc.moveTo(50, doc.y)
         .lineTo(550, doc.y)
         .stroke()
-        .moveDown(0.5); // Adjust vertical spacing if needed
+        .moveDown(5); 
   
-      // Add title
       doc.fontSize(14).text('La liste des coupures', { align: 'center' }).moveDown();
   
-      // Add table headers
       doc.font('Helvetica-Bold');
       const headerY = doc.y;
       doc.text('Reference', 50, headerY);
@@ -476,38 +476,108 @@ const createClient= async (req, res) => {
       doc.text('Cause', 450, headerY);
       doc.moveDown();
   
-      // Add table rows
       doc.font('Helvetica');
+      
+    let currentY = doc.y;
+    const lineHeight = 20;
       clients.forEach((client) => {
-        const dividerY = doc.y;
-        doc.moveTo(50, dividerY)
-          .lineTo(550, dividerY)
-          .stroke()
-          .moveDown(1);
-        
-
-          // Position the text elements horizontally
-          const line = doc.y
-          doc.text(client.referenceClient, 50, line );
-          doc.text(client.nomClient, 150,line );
-          doc.text(client.etat, 250, line );
-          doc.text(client.cause, 400, line );
-          doc.moveDown();
+        const newRowHeight = lineHeight * 2;
+        if (currentY + newRowHeight > doc.page.height - 50) { 
+          doc.addPage();
+          currentY = 50; 
+        }
   
-        // Add divider after each row
-
+        doc.moveTo(50, currentY)
+          .lineTo(550, currentY)
+          .stroke()
+        doc.text(client.referenceClient, 50, currentY);
+        doc.text(client.nomClient, 150, currentY);
+        doc.text(client.etat, 250, currentY);
+        doc.text(client.cause, 400, currentY);
+  
+        currentY += newRowHeight;
       });
   
       doc.end();
-  
-      res.status(200).send('PDF exported successfully');
-    } catch (err) {
+      writeStream.on('finish', () => {
+        res.status(200).download(filePath, filename);
+      });
+      } catch (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
     }
   };
+  const exportPDFretablissement = async (req, res) => {
+    try {
+      const clients = await Client.find({typeClient:"retablissement"});
+      const doc = new PDFDocument();
+      const filename = 'Liste_retablissements.pdf';
+      const filePath = `./pdfs/${filename}`;
   
+      const writeStream = fs.createWriteStream(filePath);
+      doc.pipe(writeStream);
+
+ 
+      doc.image('./public/myImage.png', { width: 450, align: 'center' }).moveDown(10);
   
+    
+      doc.moveTo(50, doc.y)
+        .lineTo(550, doc.y)
+        .stroke()
+        .moveDown(5); 
+  
+      doc.fontSize(14).text('La liste des retablissements', { align: 'center' }).moveDown();
+  
+      doc.font('Helvetica-Bold');
+      const headerY = doc.y;
+      doc.text('Reference', 50, headerY);
+      doc.text('Nom', 150, headerY);
+      doc.text('Etat', 250, headerY);
+      doc.text('Cause', 450, headerY);
+      doc.moveDown();
+  
+      doc.font('Helvetica');
+      
+    let currentY = doc.y;
+    const lineHeight = 20;
+      clients.forEach((client) => {
+        const newRowHeight = lineHeight * 2;
+        if (currentY + newRowHeight > doc.page.height - 50) { 
+          doc.addPage();
+          currentY = 50; 
+        }
+  
+        doc.moveTo(50, currentY)
+          .lineTo(550, currentY)
+          .stroke()
+        doc.text(client.referenceClient, 50, currentY);
+        doc.text(client.nomClient, 150, currentY);
+        doc.text(client.etat, 250, currentY);
+        doc.text(client.cause, 400, currentY);
+  
+        currentY += newRowHeight;
+      });
+  
+      doc.end();
+      writeStream.on('finish', () => {
+        res.status(200).download(filePath, filename);
+      });
+      } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    }
+  };
+  const showClientCause = async(req,res)=>{
+    const {id}=req.params
+    try  {
+        const clientCause = await Client.findOne({_id:id})
+        res.status(200).json(clientCause)
+
+    }catch(error){
+      res.status(500).json({error:error.message});
+
+    }
+  }
  
 
 module.exports={
@@ -533,6 +603,7 @@ module.exports={
   getCoupureLenghtPerEntreprise,
   getRetablissementsLenghtPerEntreprise,
   getClientLengthPerEntreprise,
-  exportPDFclients
-
+  exportPDFcoupures,
+  exportPDFretablissement,
+  showClientCause
 }

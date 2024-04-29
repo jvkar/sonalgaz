@@ -12,9 +12,11 @@ const ClientSchema= new Schema({
     codeClient:{
         type : Number,
         // required: true,
+        unique:true
     },
     referenceClient : {
         type : Number,
+        unique:true
     },
     numeroCompteur:{
         type : Number ,

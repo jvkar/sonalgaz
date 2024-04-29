@@ -3,12 +3,16 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { useClientContext } from '../hooks/useClientContext'
 import { useAuthContext } from '../hooks/useAuthContext';
-
+import CauseModal from './models/causeModal';
+import { useNavigate } from 'react-router-dom';
 
 const CoupureDetails = ({ coupure }) => {
   const {user} = useAuthContext()
   const userType = user.userType
-
+  const navigate = useNavigate();
+  const updateUrl = (id) => {
+    navigate(`?id=${id}`);
+  };
 
   return (
 
@@ -37,9 +41,6 @@ const CoupureDetails = ({ coupure }) => {
           
         <TableCell >{coupure?.typeClient}</TableCell>
         )}
-        <TableCell style={{ color: coupure?.etat === 'valider' ? 'green' : coupure?.etat === 'invalider' ? 'red' : 'blue' }} >
-          {coupure?.etat}
-          </TableCell>
         {userType==="CadreAgence"?
         <TableCell style={{ color: coupure?.archived === 'archiver' ? 'green' : 'red' }}>
           {coupure?.archived}
@@ -48,7 +49,20 @@ const CoupureDetails = ({ coupure }) => {
         <>
         </>
         }
+        <TableCell style={{ color: coupure?.etat === 'valider' ? 'green' : coupure?.etat === 'invalider' ? 'red' : 'blue' }} >
+          {coupure?.etat}
+          </TableCell>
+        {coupure.etat==="invalider"&&(
 
+        <TableCell>
+                        {
+                <CauseModal
+                  clientId={coupure._id}
+                  updateUrl={updateUrl}
+                />
+              }
+        </TableCell>
+        )}
       </TableRow>
 
     </React.Fragment>

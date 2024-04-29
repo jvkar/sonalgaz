@@ -132,33 +132,47 @@ const addToBlackList = async (req, res) => {
   }
 
   const agenceName = await Agence.findOne({ _id: etablissement.agence });
-  const { Nom, NumeroEtablissement, Adresse, agence } = etablissement.toObject();
+  const { Nom, NumeroEtablissement, Adresse, agence,timesInBlackList } = etablissement.toObject();
 
+  let newBlackListEntry;
 
   const blackListEntry = await BlackList.findOne({ entreprise: id });
 
   if (blackListEntry) {
-
-    const etab = await Etablissement.findOne({_id:blackListEntry.entreprise})
+    const etab = await Etablissement.findOne({ _id: blackListEntry.entreprise });
     const newTimesInBlackList = etab.timesInBlackList + 1;
-    await Etablissement.updateOne({ _id: id }, { timesInBlackList:newTimesInBlackList });
+    await Etablissement.updateOne({ _id: id }, { timesInBlackList: newTimesInBlackList });
+    newBlackListEntry = await BlackList.findOneAndUpdate(
+      { entreprise: id },
+      {
+        Nom,
+        NumeroEtablissement,
+        Adresse,
+        agence,
+        timesInBlackList,
+        agenceName: agenceName?.nom,
+        entreprise: id
+      },
+      { new: true } // To return the modified document
+    );
+    return res.status(200).json(newBlackListEntry);
   } else {
-
- 
     await BlackList.create({
       Nom,
       NumeroEtablissement,
       Adresse,
       agence,
+      timesInBlackList,
       agenceName: agenceName?.nom,
       entreprise: id
     });
     await Etablissement.updateOne({ _id: id }, { timesInBlackList: 1 });
-    return res.json({message: "added"})
+    newBlackListEntry = await BlackList.findOne({ entreprise: id });
+    return res.status(200).json(newBlackListEntry);
   }
 
-  res.json({ message: "Operation completed successfully" });
 };
+
 const getBlackList =async(req,res)=>{
   const {id} = req.params
   try{
