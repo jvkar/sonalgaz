@@ -157,7 +157,7 @@ const Client = () => {
             <ModelAddClient />
           </div>
         </div>
-
+      <div style={{display:"flex" }}>
         <FormControl>
           <InputLabel id="demo-simple-select-label">Archive</InputLabel>
           <Select
@@ -187,6 +187,7 @@ const Client = () => {
             <MenuItem value={"invalider"}> Non valide Clients</MenuItem>
           </Select>
         </FormControl>
+        </div>
 
         <Accordion style={{ backgroundColor: "#FFFFFF" }}>
           <AccordionSummary
@@ -198,7 +199,7 @@ const Client = () => {
           </AccordionSummary>
           <AccordionDetails style={{display:"flex",flexDirection:"column",alignItems:"flex-end"}}>
           <Button variant="contained" endIcon={<FileUploadIcon/>} onClick={downloadPDFcoupure} disabled={downloading} style={{width:"200px"}}>
-            {downloading ? "Downloading..." : "Telecharger PDF"}
+            {downloading ? "Telechargement..." : "Telecharger PDF"}
             </Button>
             <Table size="small" aria-label="purchases">
               <TableHead>
@@ -236,8 +237,8 @@ const Client = () => {
             Les retablissements de l'agence
           </AccordionSummary>
           <AccordionDetails style={{display:"flex",flexDirection:"column",alignItems:"flex-end"}}>
-          <Button variant="contained" endIcon={<FileUploadIcon/>} onClick={downloadPDFcoupure} disabled={downloading} style={{width:"200px"}}>
-            {downloading ? "Downloading..." : "Download PDF"}
+          <Button variant="contained" endIcon={<FileUploadIcon/>} onClick={downloadPDFretablissement} disabled={downloading} style={{width:"200px"}}>
+            {downloading ? "Telechargement..." : "Telecharger PDF"}
             </Button>
             <Table size="small" aria-label="purchases">
               <TableHead>

@@ -8,11 +8,14 @@ import { useAuthContext } from '../../hooks/useAuthContext'
 import { useParams } from 'react-router-dom';
 export default function FormAddClientCSV ({closeEvent }) {
     const { user }= useAuthContext()
-    const { dispatch } = useClientContext()
+
     const [file, setFile] = useState(undefined)
     const [error, setError] = useState(null)
+    const [clients ,setClients] = useState([])
+    const [importing,setImporting] = useState(false)
     const {id} = useParams()
     const handleSubmit = async (e) => {
+      setImporting(true)
         e.preventDefault()
         if (!user) {
           setError('You must be logged in')
@@ -25,14 +28,10 @@ export default function FormAddClientCSV ({closeEvent }) {
         }else{
           const formData = new FormData();
           formData.append("file", file);
-    
-        
         const response = await fetch(`/api/Clients/addClients/${id}`, {
           method: 'POST',
           body: formData,
-    
-          headers:{'Authorization': `Bearer ${user.token}`}
-        
+          headers:{'Authorization': `Bearer ${user.token}`}       
         })
         const json = await response.json()
     
@@ -41,11 +40,10 @@ export default function FormAddClientCSV ({closeEvent }) {
         }
         if (response.ok) {
           setError(null)
-
           setFile(undefined)
-          dispatch({type: 'CREATE_CLIENT', payload: json})
-    
-          window.location.reload();
+          setClients(json)
+          setImporting(false)
+       
          
           
         }
@@ -74,7 +72,9 @@ export default function FormAddClientCSV ({closeEvent }) {
                 </Grid>
                 <Grid item xs={6}>
                     <Typography variant="h5" style={{marginTop:"11px", marginLeft:"30px"}}>
-                        <Button type='submit' variant="contained" size="medium">Ajouter</Button>
+                        <Button type='submit' variant="contained" size="medium">
+                          {importing ? "Importing..." : "Ajouter"}
+                          </Button>
                     </Typography>
                 </Grid>
             </Grid>

@@ -31,14 +31,14 @@ const BlackList = ({ etablissement }) => {
         setIsLoading(false)
       }
     }
-    if(user && user.userType == "CadreAgence"){
+    if(user && user.userType === "CadreAgence"){
 
 
         fetchBlackListData()
 
     }
      
-  },[dispatch]);
+  },[id,user,dispatch]);
 
 
   return (

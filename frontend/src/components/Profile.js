@@ -49,8 +49,9 @@ const Profile = () => {
             }}
             open={Boolean(anchorEl)}
             onClose={handleClose}
+            style={{top:"48px"}}
           >
-            <MenuItem onClick={goToChangePassword}>Changer le mot de pass</MenuItem>
+            <MenuItem  onClick={goToChangePassword}>Changer le mot de pass</MenuItem>
 
           </Menu>
         </div>

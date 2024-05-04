@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import FormAddEntrepriseCSV from '../forms/formAddEntrepriseCSV';
 import FormAddEntreprise from '../forms/formAddEntreprise';
 import AddButtonEntreprise from '../buttons/addBtnEntreprise';
-
+import { useAuthContext} from '../../hooks/useAuthContext';
+import { useAgenceContext } from '../../hooks/useAgenceContext';
 const style = {
   position: 'absolute',
   top: '50%',

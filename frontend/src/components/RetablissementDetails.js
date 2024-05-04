@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { useClientContext } from "../hooks/useClientContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import CauseModal from "./models/causeModal";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +9,7 @@ const RetablissementDetails = ({ retablissement }) => {
   const userType = user.userType;
   const navigate = useNavigate();
   const updateUrl = (id) => {
-    navigate(`/?id=${id}`);
+    navigate(`?id=${id}`);
   };
   return (
     <React.Fragment>
@@ -18,17 +17,17 @@ const RetablissementDetails = ({ retablissement }) => {
         <TableCell component="th" scope="row">
           {retablissement?.codeClient}
         </TableCell>
-        {userType != "technicien" && (
+        {userType !== "technicien" && (
           <TableCell>{retablissement?.referenceClient}</TableCell>
         )}
         <TableCell>{retablissement?.nomClient}</TableCell>
-        {userType != "technicien" && (
+        {userType !== "technicien" && (
           <TableCell>{retablissement?.adresseClient}</TableCell>
         )}
-        {userType != "technicien" && (
+        {userType !== "technicien" && (
           <TableCell>{retablissement?.numeroCompteur}</TableCell>
         )}
-        {userType != "technicien" && (
+        {userType !== "technicien" && (
           <TableCell>{retablissement?.typeClient}</TableCell>
         )}
 

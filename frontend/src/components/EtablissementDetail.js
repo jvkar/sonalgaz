@@ -30,6 +30,8 @@ import Archiver from "../components/buttons/archiveButton";
 import ModelUpdateEntreprise from "./models/modelUpdateEntreprise";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import ModelArchive from "./models/modelArchive";
+import ModelArchiveEntreprise from "./models/modelArchiveEntreprise";
 const EtablissementDetails = ({ etablissement }) => {
   const { user } = useAuthContext();
   const userType = user.userType;
@@ -64,6 +66,8 @@ const EtablissementDetails = ({ etablissement }) => {
       setTimeout(() => {
         setError("");
       }, 3000);
+      setAffect(false);
+
     }
   };
   const affecterRetablissement = async () => {
@@ -182,24 +186,7 @@ const EtablissementDetails = ({ etablissement }) => {
       setError(json.error);
     }
   };
-  const archiveList = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await fetch(
-        `/api/Clients/archiver/${etablissement._id}`,
-        {
-          method: "PATCH",
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      );
-      const json = await response.json();
-      if (!response.ok) {
-        setError(json.error);
-      }
-    } catch (error) {
-      setError(error);
-    }
-  };
+
 
   const navigate = useNavigate();
   const updateUrl = (id) => {
@@ -326,7 +313,10 @@ const EtablissementDetails = ({ etablissement }) => {
                 />
               }
 
-              {icon2}
+              {
+              <ModelArchiveEntreprise
+              etablissementId={etablissement._id}
+              />}
             </div>
           </TableCell>
         )}
@@ -336,10 +326,8 @@ const EtablissementDetails = ({ etablissement }) => {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Button style={{ margin: "2px" }} onClick={archiveList}>
-                  {" "}
-                  <Archiver />{" "}
-                </Button>
+              <ModelArchive etablissementId={etablissement._id}/>
+
                 <Accordion style={{ backgroundColor: "#EEEEEE" }}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -353,8 +341,10 @@ const EtablissementDetails = ({ etablissement }) => {
                       <TableHead>
                         <TableRow>
                           <TableCell>Code</TableCell>
+                          <TableCell>Reference</TableCell>
                           <TableCell>Nom</TableCell>
-                          <TableCell align="right">Adresse</TableCell>
+                          <TableCell>Adresse</TableCell>
+                          <TableCell>etat</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -376,9 +366,15 @@ const EtablissementDetails = ({ etablissement }) => {
                               <TableCell component="th" scope="row">
                                 {coupure.codeClient}
                               </TableCell>
+                              <TableCell>
+                                {coupure.referenceClient}
+                              </TableCell>
                               <TableCell>{coupure.nomClient}</TableCell>
-                              <TableCell align="right">
+                              <TableCell>
                                 {coupure.adresseClient}
+                              </TableCell>
+                              <TableCell>
+                                {coupure.etat}
                               </TableCell>
                             </TableRow>
                           ))
@@ -402,8 +398,10 @@ const EtablissementDetails = ({ etablissement }) => {
                       <TableHead>
                         <TableRow>
                           <TableCell>Code</TableCell>
+                          <TableCell>Reference</TableCell>
                           <TableCell>Nom</TableCell>
-                          <TableCell align="right">Adresse</TableCell>
+                          <TableCell>Adresse</TableCell>
+                          <TableCell>Etat</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -425,9 +423,15 @@ const EtablissementDetails = ({ etablissement }) => {
                               <TableCell component="th" scope="row">
                                 {retablissement.codeClient}
                               </TableCell>
+                              <TableCell>
+                                {retablissement.referenceClient}
+                              </TableCell>
                               <TableCell>{retablissement.nomClient}</TableCell>
-                              <TableCell align="right">
+                              <TableCell>
                                 {retablissement.adresseClient}
+                              </TableCell>
+                              <TableCell>
+                                {retablissement.etat}
                               </TableCell>
                             </TableRow>
                           ))

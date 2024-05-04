@@ -95,6 +95,9 @@ const getCoupurePerTechnicien = async (req, res) => {
     if (coupures.length !== 0) {
       return res.status(200).json(coupures);
     }
+    else{
+      return res.status(500).json({message:"there s no data"})
+   }
   } catch (error) {
     return res.status(500).json({ error: "An error occurred while fetching coupures for the technician" });
   }
@@ -107,6 +110,9 @@ const getRetablissementPerTechnicien = async (req, res) => {
     if (retablissements.length !== 0) {
       return res.status(200).json(retablissements);
     }
+    else{
+      return res.status(500).json({message:"there s no data"})
+   }
   } catch (error) {
     return res.status(500).json({ error: "An error occurred while fetching retablissements for the technician" });
   }

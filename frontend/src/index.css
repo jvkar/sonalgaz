@@ -78,7 +78,7 @@ div.error {
    color: #e7195a;
    border-radius: 4px;
    margin: 20px;
-   width: 60%;
+   width: auto;
  }
  input.error {
    border: 1px solid  #e7195a;
@@ -90,7 +90,7 @@ div.message {
    color: #00c900;
    border-radius: 4px;
    margin: 20px;
-   width: 60%;
+   width: auto;
  }
  input.message {
    border: 1px solid  #00c900;

@@ -13,9 +13,11 @@ const UpdateAgence = ({closeEvent}) => {
     const [numeroAgence, setNumeroAgence] = useState('')
     const [adresseAgence, setAdresseAgence] = useState('')
     const [error, setError] = useState('')
+    const [isLoading,setIsLoading] = useState(false)
     const [searchParams] = useSearchParams();
     const id = searchParams.get('id');
     const handleSubmit = async (event) => {
+        setIsLoading(true)
         event.preventDefault();
         if (!user) {
             setError('you must be logged in')
@@ -32,6 +34,7 @@ const UpdateAgence = ({closeEvent}) => {
 
         const json = await response.json()
         if (response.ok) {
+            setIsLoading(false)
             setNom('')
             setNumeroAgence('')
             setAdresseAgence('')
@@ -39,7 +42,9 @@ const UpdateAgence = ({closeEvent}) => {
             window.location.reload()
         }
         if (!response.ok) {
+            setIsLoading(false)
             setError(json.error);
+
 
         }
     }
@@ -68,7 +73,7 @@ const UpdateAgence = ({closeEvent}) => {
                         <TextField  label="adresse d'agence" variant="outlined" value={adresseAgence} onChange={(e) => setAdresseAgence(e.target.value)}style={{minWidth:"100%"}} />
                     </Grid>
                     <Grid item xs={12} style={{paddingTop:"5%",paddingBottom:'5%'}}>
-                        <Button type="submit" variant="contained">Mettre a jour</Button>
+                        <Button type="submit" variant="contained">{isLoading? "entrain de mettre a jour....." :"Mettre a jour"}</Button>
                     </Grid>
                 </Grid>
                 {error && <div className="error">{error}</div>}

@@ -22,6 +22,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import ModelAffiche from "../components/models/modelAffichage";
 
 import { useAgenceContext } from "../hooks/useAgenceContext";
 import { useEtablissementContext } from "../hooks/useEtablissementContext"
@@ -270,6 +271,7 @@ const CreerCompteForm = () => {
                   {" "}
                   Créer{" "}
                 </Button>
+                <ModelAffiche/>
               </Stack>
             </FormControl>
           </Grid>

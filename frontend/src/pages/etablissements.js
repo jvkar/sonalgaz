@@ -15,31 +15,15 @@ import { MdDelete } from "react-icons/md";
 import { LuPencilLine } from "react-icons/lu";
 import CircularProgress from "@mui/material/CircularProgress";
 import ModelAddEntreprise from "../components/models/modelAddEntreprise";
+import ArchiveIcon from '@mui/icons-material/Archive';
+import ModelArchiveEntrep from "../components/models/modelArchiveEntrep";
 const Etablissement = ({ etablissement }) => {
   const { user } = useAuthContext()
   const userType = user.userType
   const { etablissements, dispatch } = useEtablissementContext()
   const [error, setError] = useState(undefined)
   const [isLoading,setIsLoading] = useState(true)
-  const handleDelete = async () => {
-    if (!user) {
-      setError("you must be logged in")
-      return
-    }
-    const response = await fetch('/api/Etablissements/delAll', {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${user.token}` }
-    })
-    const json = response.json()
-    if (!response.ok) {
-      setError(json.error)
-    }
-    if (response.ok) {
-      dispatch({ type: 'DELETE_ETABLISSEMENT', payload: json })
-
-    }
-    window.location.reload();
-  }
+ 
   useEffect(() => {
     const fetchEtablissement = async () => {
       const response = await fetch('/api/Etablissements/', {
@@ -63,7 +47,7 @@ const Etablissement = ({ etablissement }) => {
       <div className='Title'>
         <h1>La Liste des Entreprises </h1>
         <div className='AddBtt'>
-          <Button onClick={handleDelete} style={{ marginRight: "15px" }} className="DeleteAll" variant="outlined" startIcon={<MdDelete />}>Delete ALL</Button>
+          <ModelArchiveEntrep/>
           <ModelAddEntreprise />
         </div>
       </div>

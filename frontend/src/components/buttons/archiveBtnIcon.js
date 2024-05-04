@@ -4,7 +4,7 @@ import Snackbar from '@mui/material/Snackbar';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import Alert from '@mui/material/Alert';
 
-export default function Archiver({openModal}) {
+export default function ArchiverBtn({openModal}) {
   const [open, setOpen] = React.useState(false);
 
 
@@ -19,7 +19,7 @@ export default function Archiver({openModal}) {
 
   return (
     <div>
-      <Button onClick={openModal} style={{marginRight:"10px",marginBottom:"20px"}} variant='outlined' startIcon={<ArchiveIcon />}>Archiver</Button>
+      <Button onClick={openModal} ><ArchiveIcon style={{color:"black"}}/></Button>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} style={{backgroundColor:"#323232"}}>
         <Alert
             style={{backgroundColor:"#323232"}}

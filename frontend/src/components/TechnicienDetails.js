@@ -34,13 +34,18 @@ import CircularProgress from "@mui/material/CircularProgress";
 const TechnicienDetails = ({ technicien }) => {
   const { user } = useAuthContext();
   const userType = user.userType;
-  const [isLoading , setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
   const [assignedCoupures, setAssignedCoupures] = useState([]);
   const [assignedRetablissements, setAssignedRetablissements] = useState([]);
   const [error, setError] = useState(undefined);
   const [open, setOpen] = React.useState(false);
+  const [affect, setAffect] = useState(false);
+  const [affect2, setAffect2] = useState(false);
+  const [message, setMessage] = useState(undefined);
+
   const { id } = useParams();
   const affecterCoupure = async () => {
+    setAffect(true);
     const response = await fetch(
       `/api/Techniciens/affecterCoupure/${id}/${technicien._id}`,
       {
@@ -50,7 +55,11 @@ const TechnicienDetails = ({ technicien }) => {
     );
     const json = await response.json();
     if (response.ok) {
-      alert("coupure affecter");
+      setMessage("affectation avec succes");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+      setAffect(false);
     }
     if (!response.ok) {
       setError(json.error);
@@ -60,6 +69,7 @@ const TechnicienDetails = ({ technicien }) => {
     }
   };
   const affecterRetablissement = async () => {
+    setAffect2(true);
     const response = await fetch(
       `/api/Techniciens/affecterRetablissment/${id}/${technicien._id}`,
       {
@@ -69,7 +79,11 @@ const TechnicienDetails = ({ technicien }) => {
     );
     const json = await response.json();
     if (response.ok) {
-      alert("retablissement affecter");
+      setMessage("affectation avec succes");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+      setAffect2(false);
     }
     if (!response.ok) {
       setError(json.error);
@@ -89,19 +103,18 @@ const TechnicienDetails = ({ technicien }) => {
       const json = await response.json();
       if (response.ok) {
         setAssignedCoupures(json);
-        setIsLoading(false)
+        setIsLoading(false);
       }
       if (!response.ok) {
         setError(json.error);
       }
     };
     if (user) {
-
-        fetchCoupureData();
-
+      fetchCoupureData();
     }
   }, [assignedCoupures, user]);
   useEffect(() => {
+
     const fetchRetabData = async () => {
       const response = await fetch(
         `/api/Techniciens/retabPerEtab/${technicien._id}`,
@@ -112,16 +125,14 @@ const TechnicienDetails = ({ technicien }) => {
       const json = await response.json();
       if (response.ok) {
         setAssignedRetablissements(json);
-        setIsLoading(false)
+        setIsLoading(false);
       }
       if (!response.ok) {
         setError(json.error);
       }
     };
     if (user) {
-
-        fetchRetabData();
-
+      fetchRetabData();
     }
   }, [assignedRetablissements, user]);
 
@@ -136,42 +147,7 @@ const TechnicienDetails = ({ technicien }) => {
       return () => clearTimeout(timeoutId);
     }
   }, [error]);
-  const icon3 = (
-    <Button
-      component="label"
-      variant="contained"
-      endIcon={<BsArrowRightCircleFill />}
-    >
-      Coupures
-    </Button>
-  );
 
-  const icon5 = (
-    <Button
-      component="label"
-      variant="outlined"
-      endIcon={<BsArrowRightCircle />}
-    >
-      Retablissement
-    </Button>
-  );
-  // const icon2 = (
-  //   <button
-  //     onClick={handleClick}
-  //     style={{
-  //       backgroundColor: "transparent",
-  //       borderColor: "transparent",
-  //       cursor: "pointer",
-  //     }}
-  //   >
-  //     <img
-  //       width="24px"
-  //       height="24px"
-  //       src="https://img.icons8.com/material-rounded/24/filled-trash.png"
-  //       alt="filled-trash"
-  //     />{" "}
-  //   </button>
-  // );
   const navigate = useNavigate();
   const updateUrl = (id) => {
     navigate(`?id=${id}`);
@@ -179,6 +155,7 @@ const TechnicienDetails = ({ technicien }) => {
   return (
     <React.Fragment>
       {error && <div className="error">{error}</div>}
+      {message && <div className="message">{message}</div>}
 
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
@@ -197,12 +174,25 @@ const TechnicienDetails = ({ technicien }) => {
 
         <TableCell align="center">
           <div style={{ paddingRight: "10px" }}>
-            <Button style={{ margin: "2px" }} onClick={affecterCoupure}>
-              {" "}
-              {icon3}{" "}
+            <Button
+              style={{ margin: "2px" }}
+              onClick={affecterCoupure}
+              component="label"
+              variant="contained"
+              endIcon={<BsArrowRightCircleFill />}
+              disabled={affect}
+            >
+              {affect ? "affecting..." : "coupure"}
             </Button>
-            <Button style={{ margin: "2px" }} onClick={affecterRetablissement}>
-              {icon5}{" "}
+            <Button
+              style={{ margin: "2px" }}
+              onClick={affecterRetablissement}
+              component="label"
+              variant="contained"
+              endIcon={<BsArrowRightCircleFill />}
+              disabled={affect2}
+            >
+              {affect2 ? "affecting..." : "retablissement"}
             </Button>
           </div>
         </TableCell>
@@ -214,8 +204,6 @@ const TechnicienDetails = ({ technicien }) => {
                 updateUrl={updateUrl}
               />
             }
-
-
           </div>
         </TableCell>
       </TableRow>
@@ -224,7 +212,6 @@ const TechnicienDetails = ({ technicien }) => {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-
               <Accordion style={{ backgroundColor: "#EEEEEE" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
@@ -243,22 +230,34 @@ const TechnicienDetails = ({ technicien }) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                    
-                    {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
-                      assignedCoupures.length !== 0 ? (
-                        assignedCoupures?.map((coupure) => (
-                          <TableRow key={coupure._id}>
-                            <TableCell component="th" scope="row">
-                              {coupure.codeClient}
-                            </TableCell>
-                            <TableCell>{coupure.nomClient}</TableCell>
-                            <TableCell align="right">
-                              {coupure.adresseClient}
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (<h1>there s no data</h1>)
-                    )}
+                      {isLoading ? (
+                        <TableRow
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "100%",
+                          }}
+                        >
+                          <CircularProgress style={{ margin: "15px" }} />
+                        </TableRow>
+                      ) : assignedCoupures.length !== 0 ? (
+                        <>
+                          {assignedCoupures.map((coupure) => (
+                            <TableRow key={coupure._id}>
+                              <TableCell component="th" scope="row">
+                                {coupure.codeClient}
+                              </TableCell>
+                              <TableCell>{coupure.nomClient}</TableCell>
+                              <TableCell align="right">
+                                {coupure.adresseClient}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </>
+                      ) : (
+                        <h1>There's no data</h1>
+                      )}
                     </TableBody>
                   </Table>
                 </AccordionDetails>
@@ -281,23 +280,34 @@ const TechnicienDetails = ({ technicien }) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                    {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
-
-                      assignedRetablissements.length !== 0 ? (
-                        assignedRetablissements?.map((retablissement) => (
-                          <TableRow key={retablissement._id}>
-                            <TableCell component="th" scope="row">
-                              {retablissement.codeClient}
-                            </TableCell>
-                            <TableCell>{retablissement.nomClient}</TableCell>
-                            <TableCell align="right">
-                              {retablissement.adresseClient}
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (<h1>there s no data</h1>)
-                    )}
-
+                      {isLoading ? (
+                        <TableRow
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "100%",
+                          }}
+                        >
+                          <CircularProgress style={{ margin: "15px" }} />
+                        </TableRow>
+                      ) : assignedRetablissements.length !== 0 ? (
+                        <>
+                          {assignedRetablissements.map((retablissement) => (
+                            <TableRow key={retablissement._id}>
+                              <TableCell component="th" scope="row">
+                                {retablissement.codeClient}
+                              </TableCell>
+                              <TableCell>{retablissement.nomClient}</TableCell>
+                              <TableCell align="right">
+                                {retablissement.adresseClient}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </>
+                      ) : (
+                        <h1>There's no data</h1>
+                      )}
                     </TableBody>
                   </Table>
                 </AccordionDetails>

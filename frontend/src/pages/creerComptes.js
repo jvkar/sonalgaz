@@ -2,6 +2,7 @@ import CreerCompteForm from "../components/CreerCompteForm";
 import React from 'react'
 import { Box } from '@mui/material'
 import Paper from '@mui/material/Paper';
+import {Button} from "@mui/material";
 const CreerCompte = () => {
     return (
         <div>
@@ -21,6 +22,7 @@ const CreerCompte = () => {
                     <CreerCompteForm />
                 </Paper>
             </Box>
+
         </div>
       );
 }

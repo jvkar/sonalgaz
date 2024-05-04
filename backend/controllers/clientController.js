@@ -58,7 +58,7 @@ const addManyClient = async (req,res)=>{
     //   etablissementIndex++;
     // }
 
-    res.json({ success: "success" });
+    res.json(clients);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -291,11 +291,13 @@ const createClient= async (req, res) => {
         );
   
         const clients = await Client.find({ listId: interventionId });
-  
+        if(clients.length!==0){
         await Client.updateMany(
           { listId: interventionId },
           { archived: "archiver" }
         );
+        return res.status(400).json({error:"il n ya pas des clients a archiver"})
+      }
       }
   
       return res.status(200).json({ success: true });

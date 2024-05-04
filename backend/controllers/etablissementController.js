@@ -88,7 +88,7 @@ const addManyEtablissements = async (req, res) => {
       return res.status(500).json({ error: "Il faut insérer la liste des agences." });
     }
 
-    await Etablissement.insertMany(csvData);
+    const etablissements=await Etablissement.insertMany(csvData);
 
     const agenceOne = await Agence.findOne();
     const nbr = agenceOne ? agenceOne.numeroEntreprisesParAgence : null;
@@ -117,7 +117,7 @@ const addManyEtablissements = async (req, res) => {
       agenceIndex++;
     }
 
-    res.json({ success: "success" });
+    res.json(etablissements);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -229,7 +229,7 @@ const getFromBlackList=async(req,res)=>{
 const agencePerEntreprise= async(req,res)=>{
   const {id}=req.params
   try{
-  const etablissement=await Etablissement.find({agence:id}).sort({NumeroEtablissement:1})
+  const etablissement=await Etablissement.find({agence:id,etat:"Non Archiver"}).sort({NumeroEtablissement:1})
   res.status(200).json(etablissement)
   }catch(error){
    res.status(400).json({error:'the error is here'})
@@ -238,7 +238,7 @@ const agencePerEntreprise= async(req,res)=>{
 //get all Etablissements
 const getAllEtablissement = async (req, res) => {
   try {
-    const etablissements = await Etablissement.find({}).sort({ NumeroEtablissement: 1 });
+    const etablissements = await Etablissement.find({etat:"Non Archiver"}).sort({ NumeroEtablissement: 1 });
     res.status(200).json(etablissements);
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
@@ -247,10 +247,11 @@ const getAllEtablissement = async (req, res) => {
 
 //create etablissement
 const createEtablissement= async (req, res) => {
-    const {Nom,NumeroEtablissement,Adresse,NombreDesCoupures} = req.body
+    const {Nom,NumeroEtablissement,Adresse,NombreDesCoupures,numeroAgence} = req.body
     
     try {
-      const etablissement = await Etablissement.create({Nom,NumeroEtablissement,Adresse,NombreDesCoupures})
+      const agence = await Agence.findOne({numeroAgence:numeroAgence})
+      const etablissement = await Etablissement.create({Nom,NumeroEtablissement,Adresse,NombreDesCoupures,agence:agence._id})
       res.status(200).json(etablissement)
     } catch (error) {
       res.status(400).json({error: error.message})
@@ -388,6 +389,7 @@ const deleteEtablissement = async (req, res) => {
     await Client.findByIdAndUpdate(client._id,
       {archived:"archiver"})
   }
+  await ResponsableEntreprise.findOneAndDelete({etablissement:id});
   res.status(200).json(entreprise)
    }catch(error){
     res.status(400).json({error:error.message})
@@ -396,7 +398,7 @@ const deleteEtablissement = async (req, res) => {
   }
   const archiverToutLesEntreprises = async (req, res) => {
     try {
-      await Etablissement.updateMany({ etat: "Non Archiver" }, { etat: "archiver" });
+      updatedEntreprises= await Etablissement.updateMany({ etat: "Non Archiver" }, { etat: "archiver" });
   
 
       const entreprises = await Etablissement.find({ etat: "archiver" });
@@ -405,7 +407,7 @@ const deleteEtablissement = async (req, res) => {
       });
       await Promise.all(updatePromises);
   
-      res.status(200).json({ message: "All the entreprises updated successfully" });
+      res.status(200).json(updatedEntreprises);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

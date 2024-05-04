@@ -45,7 +45,7 @@ const addManyAgences = async (req,res)=>{
       // }
     }
     
-    res.json({ success: "success" });
+    res.json(agences);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -227,6 +227,7 @@ const deleteAgence =async(req,res)=>{
   };
   const changePassword  = async (req,res) =>{
     const { username, password,newPassword,confirmedPassword } = req.body;
+    
     try { 
        const user = await CadreAgence.changePassword(username,password,newPassword,confirmedPassword)
 

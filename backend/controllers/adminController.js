@@ -99,7 +99,22 @@ const createToken = (_id) => {
         return res.status(400).json({error:error.message})
     }
   }
-  
+  const afficherLesCadres= async(req,res)=>{
+    try { 
+        const cadres= await CadreAgence.find({});
+        res.status(200).json(cadres);
+    }catch(error){
+        res.status(500).json({error:error.message});
+    }
+  }
+  const afficherLesResponsables= async(req,res)=>{
+    try { 
+        const respos= await ResponsableEntreprise.find({});
+        res.status(200).json(respos);
+    }catch(error){
+        res.status(500).json({error:error.message});
+    }
+  }
   module.exports={
-    createAccount,loginUser,changePassword
+    createAccount,loginUser,changePassword,afficherLesCadres,afficherLesResponsables
   }

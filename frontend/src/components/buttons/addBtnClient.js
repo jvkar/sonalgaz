@@ -38,7 +38,7 @@ const options = [btt1];
         variant="contained"
         ref={anchorRef}
         >
-        <Button >Add</Button>
+        <Button >Ajouter</Button>
         <Button
           size="small"
           aria-controls={open ? 'split-button-menu' : undefined}
