@@ -18,6 +18,10 @@ const BlackListSchema= new Schema({
     ref:'Agence',
     default : null    
   },
+  etat:{
+    type:String,
+    default:'Non Archiver'
+  },
   timesInBlackList:{
     type:Number,
     default:null,

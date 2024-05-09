@@ -1,4 +1,5 @@
 const express=require ('express');
+const compression = require('compression'); 
 const app= express();
 const mongoose= require('mongoose');
 const cors=require('cors')
@@ -17,6 +18,7 @@ const agenceRoutes=require ('./routes/Agences');
 const adminRoutes = require ('./routes/Admin')
 const technicienRoutes = require ('./routes/Technicien')
 app.use(cors());
+app.use(compression()); 
 app.use(express.json());
 app.use((req,res,next)=>{
   next();

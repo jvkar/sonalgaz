@@ -60,6 +60,7 @@ export default function TableAffiche() {
             const json = await response.json();
             if(response.ok){
                 setCadre(json)
+                console.log(json)
 
             }
             else{

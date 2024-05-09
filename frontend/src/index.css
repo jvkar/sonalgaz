@@ -1,14 +1,17 @@
-
-  @import url('https://fonts.googleapis.com/css2?family=Work+Sans&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 body {
-   font-family: 'Work Sans', sans-serif;
+   font-family: "Poppins", sans-serif;
+   font-weight: 400;
+   font-style: normal;
    margin :0;
 }
 .App{
    display: flex;
    flex-direction: row;
    justify-content: flex-start;
+   font-family: "Poppins", sans-serif;
+   font-weight: 400;
+   font-style: normal;
 }
 
 
@@ -100,9 +103,26 @@ div.message {
    display: flex;
    flex-direction: column;
  }
+ 
+ .Container{
+   background-image: url(./images/Agence.jpg);
+   height: 100vh;
+   background-size: cover;
+   padding: 20px;
+ }
+ .prof{
+   display: flex;
+   justify-content:space-between;
+   align-items:  center;
+   margin: 0 10px 0 50px
+ }
  @media only screen and (max-width: 600px) {
    body {
       font-size: 14px; 
+    }
+    .prof{
+      display: flex;
+      justify-content: flex-end;
     }
 
 

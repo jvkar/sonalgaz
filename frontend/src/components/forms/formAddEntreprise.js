@@ -28,6 +28,7 @@ const FormAddEntreprise=({closeEvent})=>{
     const [isLoading,setIsLoading] = useState(false)
     const [agence, setAgence] = useState(true);
     const [numeroAgence, setNumeroAgence] = useState("");
+    const [adding,setAdding] = useState(false)
 
     const { agences, dispatch:AgenceDispatch } = useAgenceContext();
     useEffect(() => {
@@ -49,6 +50,7 @@ const FormAddEntreprise=({closeEvent})=>{
 
     }, [AgenceDispatch, user]);
 const handleSubmit2 = async (e) => {
+  setAdding(true)
     e.preventDefault()
     if (!user) {
       setError('you must be logged in')
@@ -65,8 +67,11 @@ const handleSubmit2 = async (e) => {
     const json = await response.json()
     if (!response.ok) {
       setError(json.error)
+      setAdding(false)
+
     }
     if (response.ok) {
+      setAdding(false)
       setError(null)
       setNom('')
       setNumeroEtablissement('')
@@ -134,11 +139,16 @@ const handleSubmit2 = async (e) => {
 
         <Grid item xs={6}>
             <Typography variant="h5" style={{marginTop:"11px", marginLeft:"30px"}}>
-                <Button type='submit'variant="contained" size="medium">Ajouter</Button>
+                <Button type='submit'variant="contained" size="medium" disabled={adding}>
+                  {
+                    adding ? " entrain d'ajout ..." : " Ajouter"
+                  }
+                </Button>
             </Typography>
         </Grid>
     </Grid>
     <Box sx={{m:4}}/>
+    {error && <div className='error'>{error}</div>}
     </form>
 </div>
   )

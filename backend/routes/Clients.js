@@ -24,7 +24,10 @@ const {getAllClient,
     getClientLengthPerEntreprise,
     exportPDFcoupures,
     exportPDFretablissement,
-    showClientCause
+    showClientCause,
+    nombreCoupureAffecterPerAgence,
+    nombreRetablissementAffecterPerAgence,
+    nombreClientsNonArchiver
     
 }=require("../controllers/clientController");
 router.get('/ByFacture/:NumClient',getClientByFacture);
@@ -51,4 +54,7 @@ router.get('/retablissementLengthPerEntreprise/:id',getRetablissementsLenghtPerE
 router.get('/exportcoupure-pdf',exportPDFcoupures);
 router.get('/exportretablissement-pdf',exportPDFretablissement);
 router.get('/cause/:id',showClientCause);
+router.get('/affectedCoupureNumberPerAgence/:id',nombreCoupureAffecterPerAgence);
+router.get('/affectedRetablissementNumberPerAgence/:id',nombreRetablissementAffecterPerAgence);
+router.get('/NotArchivedClients/:id',nombreClientsNonArchiver);
 module.exports=router

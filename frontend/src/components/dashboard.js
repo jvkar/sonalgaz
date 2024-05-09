@@ -21,7 +21,7 @@ const Dashboard = () => {
     const fetchClientData = async () => {
       try {
         const response = await fetch(
-          `/api/Clients/clientsLengthPerAgence/${id}`,
+          `/api/Clients/clientsLengthPerAgence/${user.agence}`,
           {
             headers: { Authorization: `Bearer ${user.token}` },
           }
@@ -32,13 +32,16 @@ const Dashboard = () => {
         console.error("Error fetching data:", error);
       }
     };
+    {(userType==="CadreAgence" )&&
+
     fetchClientData();
+  }
   }, [id, user.token]);
   useEffect(() => {
     const fetchCoupureLengthData = async () => {
       try {
         const response = await fetch(
-          `/api/Clients/coupureLengthPerAgence/${id}`,
+          `/api/Clients/coupureLengthPerAgence/${user.agence}`,
           {
             headers: { Authorization: `Bearer ${user.token}` },
           }
@@ -53,14 +56,16 @@ const Dashboard = () => {
         setError(error.message);
       }
     };
+    {(userType==="CadreAgence"  )&&
 
     fetchCoupureLengthData();
+  }
   }, [id, user.token]);
   useEffect(() => {
     const fetchRetablissementLengthData = async () => {
       try {
         const response = await fetch(
-          `/api/Clients/retablissementLengthPerAgence/${id}`,
+          `/api/Clients/retablissementLengthPerAgence/${user.agence}`,
           {
             headers: { Authorization: `Bearer ${user.token}` },
           }
@@ -75,15 +80,18 @@ const Dashboard = () => {
         setError(error.message);
       }
     };
-
+    {(userType==="CadreAgence" )&&
     fetchRetablissementLengthData();
+
+    }
+
   }, [id, user.token]);
 
   useEffect(() => {
     const fetchEntrepriseLengthData = async () => {
       try {
         const response = await fetch(
-          `/api/Etablissements/lengthEtablissementsPerAgence/${id}`,
+          `/api/Etablissements/lengthEtablissementsPerAgence/${user.agence}`,
           {
             headers: { Authorization: `Bearer ${user.token}` },
           }
@@ -98,17 +106,19 @@ const Dashboard = () => {
         setError(error.message);
       }
     };
+    {(userType==="CadreAgence" )&&
 
     fetchEntrepriseLengthData();
+  }
   }, [id, user.token]);
 
   return (
     <React.Fragment>
     {error && <div className="error">{error}</div>}
-      {userType==="CadreAgence"? (
+      {userType==="CadreAgence"&&(
         <>
-        <h1>Bienvenue au portail d'agence de {userName}</h1>
-      <div style={{ display: "flex", flexDirection: "row" }}>
+        <h1 style={{color:"white",marginBottom:"10px",textAlign:"center"}}>Bienvenue au portail d'agence de {userName}</h1>
+      <div style={{ display: "flex", flexDirection: "row",justifyContent:"center" }}>
 
         <CoupureCard coupure={coupureLength} />
         <RetablissementCard retablissement={retablissementLength} />
@@ -116,18 +126,22 @@ const Dashboard = () => {
         <ClientCard client={clientLength}/>
       </div>
       </>
-      ):(userType==="responsableEntreprise"?(
+      )}
+      {userType==="responsableEntreprise"&&(
         <>
-        <h1>Bienvenue au portail d' {userName}</h1>
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <h1 style={{color:"white",marginBottom:"10px",textAlign:"center"}}>Bienvenue au portail d'entreprise de {userName}</h1>
+        <div style={{ display: "flex", flexDirection: "row",justifyContent:"center" }}>
 
-        <CoupureCard coupure={coupureLength} />
-        <RetablissementCard retablissement={retablissementLength} />
-        <EntrepriseCard entreprise={entrepriseLength} />
-        <ClientCard client={clientLength}/>
       </div>
       </>
-      ):(<></>))}
+      )}
+    {userType==="admin"&&(
+        <>
+        <h1 style={{color:"white",marginBottom:"10px",textAlign:"center"}}>Bienvenue au portail d'Admin</h1>
+        <div style={{ display: "flex", flexDirection: "row",justifyContent:"center" }}></div>
+      </>
+      )}
+
 
     </React.Fragment>
   );

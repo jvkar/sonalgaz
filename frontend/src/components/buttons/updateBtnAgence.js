@@ -1,17 +1,25 @@
-import React from 'react'
+import React from "react";
 import { LuPencilLine } from "react-icons/lu";
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
-const UpdateBtnAgence = ({openModal }) => {
+import Tooltip from "@mui/material/Tooltip";
 
-
+const UpdateBtnAgence = ({ openModal }) => {
   return (
     <div>
-       <button onClick={openModal} style={{  backgroundColor: "transparent", borderColor: "transparent", cursor: "pointer" }}><LuPencilLine style={{ width: "24px", height: "24px" }} /></button>
-
+      <Tooltip title="modifier" placement="top">
+        <button
+          onClick={openModal}
+          style={{
+            backgroundColor: "transparent",
+            borderColor: "transparent",
+            cursor: "pointer",
+          }}
+        >
+          <LuPencilLine style={{ width: "24px", height: "24px" }} />
+        </button>
+      </Tooltip>
     </div>
-  )
-}
+  );
+};
 
-export default UpdateBtnAgence
+export default UpdateBtnAgence;

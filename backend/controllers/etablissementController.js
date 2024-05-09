@@ -2,13 +2,15 @@ const { default: mongoose } = require('mongoose');
 const Etablissement =require('../models/etablissementModel')
 const Client = require('../models/clientModel')
 const BlackList=require('../models/BlackListModel')
+const Technicien = require('../models/technicienModel')
 const Agence=require('../models/agenceModel')
 const ResponsableEntreprise= require('../models/responsableEntreprise')
 const ListInterventions = require('../models/ListeInterventionModel')
 const csvtojson =require ('csvtojson');
 const multer = require('multer');
 const path = require('path');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const BlackListModel = require('../models/BlackListModel');
 const createToken = (_id) => {
   return jwt.sign({_id}, process.env.SECRET, { expiresIn: '3d' })
 }
@@ -132,7 +134,7 @@ const addToBlackList = async (req, res) => {
   }
 
   const agenceName = await Agence.findOne({ _id: etablissement.agence });
-  const { Nom, NumeroEtablissement, Adresse, agence,timesInBlackList } = etablissement.toObject();
+  const { Nom, NumeroEtablissement, Adresse, agence,etat,timesInBlackList } = etablissement.toObject();
 
   let newBlackListEntry;
 
@@ -149,6 +151,7 @@ const addToBlackList = async (req, res) => {
         NumeroEtablissement,
         Adresse,
         agence,
+        etat,
         timesInBlackList,
         agenceName: agenceName?.nom,
         entreprise: id
@@ -162,6 +165,7 @@ const addToBlackList = async (req, res) => {
       NumeroEtablissement,
       Adresse,
       agence,
+      etat,
       timesInBlackList,
       agenceName: agenceName?.nom,
       entreprise: id
@@ -176,7 +180,7 @@ const addToBlackList = async (req, res) => {
 const getBlackList =async(req,res)=>{
   const {id} = req.params
   try{
-    const blackList=await BlackList.find({agence:id})
+    const blackList=await BlackList.find({agence:id,etat:"Non Archiver"})
     if(!blackList){
       return res.status(400).json("Empty List")
     }
@@ -384,6 +388,11 @@ const deleteEtablissement = async (req, res) => {
     {etat:"archiver"},
     { new: true }
   )
+  await BlackList.findOneAndUpdate({entreprise:id,etat:"Non Archiver"},
+  {etat:"archiver"},
+  { new: true }
+  )
+  await Technicien.findOneAndDelete({entrepriseId:id})
   const clients= await Client.find({entrepriseId:id,archived:"Non Archiver"})
   for(const client of clients){
     await Client.findByIdAndUpdate(client._id,
@@ -399,7 +408,8 @@ const deleteEtablissement = async (req, res) => {
   const archiverToutLesEntreprises = async (req, res) => {
     try {
       updatedEntreprises= await Etablissement.updateMany({ etat: "Non Archiver" }, { etat: "archiver" });
-  
+      await BlackList.updateMany({ etat: "Non Archiver" }, { etat: "archiver" })
+      await Technicien.deleteMany({})
 
       const entreprises = await Etablissement.find({ etat: "archiver" });
       const updatePromises = entreprises.map(async (entreprise) => {
@@ -412,6 +422,28 @@ const deleteEtablissement = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
+  const nombreDesEntreprisesListeNoire=async(req,res)=>{
+    const {id} = req.params
+    try{
+      const Blacklist = await BlackList.find({agence:id})
+      const BlackListNumber= Blacklist.length
+      res.status(200).json(BlackListNumber);
+
+    }catch(error){
+      res.status(500).json({error:error.message});
+
+    }
+  }
+  const nombreEntreprisesArchiver= async(req,res)=>{
+    const {id} = req.params
+
+    try{
+      const EntrepriseArchiver = await Etablissement.find({agence:id,etat:"archiver"}) 
+      res.status(200).json(EntrepriseArchiver)
+    }catch(error){
+      res.status(500).json({error:error.message})
+    } 
+  }
   
 module.exports={
     getAllEtablissement,
@@ -430,5 +462,7 @@ module.exports={
     ,getNumberOfEtablissementsPerAgence
     ,archiverEntreprise
     ,archiverToutLesEntreprises
+    ,nombreDesEntreprisesListeNoire
+    ,nombreEntreprisesArchiver
 
 }

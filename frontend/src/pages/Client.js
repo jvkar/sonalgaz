@@ -259,6 +259,7 @@ const Client = () => {
                 {clients?.retablissements &&
                   clients?.retablissements
                     .filter(filterClients)
+                    .filter(filterClients2)
                     .map((client) => (
                       <RetablissementDetails
                         key={client._id}

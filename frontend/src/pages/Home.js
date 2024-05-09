@@ -6,9 +6,12 @@ const Home = () => {
     const Nom = user?.nom
     let dashboardContent
     switch (userType){
-    case "admin": dashboardContent= <h1>admin dashboard</h1>; break;
-    case "CadreAgence": dashboardContent=<h1>cadreAgence dashboard</h1> ; break;
-    case "responsableEntreprise": dashboardContent=<h1>responsableEntreprise dashboard</h1>  ; break;
+    case "admin": dashboardContent= <Dashboard/>; break;
+    case "CadreAgence": dashboardContent=
+
+    <Dashboard/>
+     ; break;
+    case "responsableEntreprise": dashboardContent=  <Dashboard/>  ; break;
     case "technicien" : dashboardContent = <h1>technicien dashboard</h1> ; break;
     default :dashboardContent=<h1>404 not found</h1> ; break;
     

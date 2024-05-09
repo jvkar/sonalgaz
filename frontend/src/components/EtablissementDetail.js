@@ -43,7 +43,7 @@ const EtablissementDetails = ({ etablissement }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [affect, setAffect] = useState(false);
   const [affect2, setAffect2] = useState(false);
-  const [message,setMessage] = useState(undefined)
+  const [message, setMessage] = useState(undefined);
   const [open, setOpen] = React.useState(false);
   const affecterCoupure = async () => {
     setAffect(true);
@@ -55,7 +55,7 @@ const EtablissementDetails = ({ etablissement }) => {
     );
     const json = await response.json();
     if (response.ok) {
-      setMessage("affectation avec succes")
+      setMessage("affectation avec succes");
       setTimeout(() => {
         setMessage("");
       }, 3000);
@@ -67,7 +67,6 @@ const EtablissementDetails = ({ etablissement }) => {
         setError("");
       }, 3000);
       setAffect(false);
-
     }
   };
   const affecterRetablissement = async () => {
@@ -80,7 +79,7 @@ const EtablissementDetails = ({ etablissement }) => {
     );
     const json = await response.json();
     if (response.ok) {
-      setMessage("affectation avec succes")
+      setMessage("affectation avec succes");
       setTimeout(() => {
         setMessage("");
       }, 3000);
@@ -186,7 +185,6 @@ const EtablissementDetails = ({ etablissement }) => {
       setError(json.error);
     }
   };
-
 
   const navigate = useNavigate();
   const updateUrl = (id) => {
@@ -313,10 +311,7 @@ const EtablissementDetails = ({ etablissement }) => {
                 />
               }
 
-              {
-              <ModelArchiveEntreprise
-              etablissementId={etablissement._id}
-              />}
+              {<ModelArchiveEntreprise etablissementId={etablissement._id} />}
             </div>
           </TableCell>
         )}
@@ -326,7 +321,7 @@ const EtablissementDetails = ({ etablissement }) => {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-              <ModelArchive etablissementId={etablissement._id}/>
+                <ModelArchive etablissementId={etablissement._id} />
 
                 <Accordion style={{ backgroundColor: "#EEEEEE" }}>
                   <AccordionSummary
@@ -348,7 +343,7 @@ const EtablissementDetails = ({ etablissement }) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {isLoading == true ? (
+                        {isLoading === true ? (
                           <TableRow
                             style={{
                               display: "flex",
@@ -357,29 +352,33 @@ const EtablissementDetails = ({ etablissement }) => {
                               width: "100%",
                             }}
                           >
-                            {" "}
-                            <CircularProgress style={{ margin: "15px" }} />{" "}
+                            <CircularProgress style={{ margin: "15px" }} />
                           </TableRow>
-                        ) : assignedCoupure.length !== 0 ? (
-                          assignedCoupure?.map((coupure, index) => (
-                            <TableRow key={index}>
-                              <TableCell component="th" scope="row">
-                                {coupure.codeClient}
-                              </TableCell>
-                              <TableCell>
-                                {coupure.referenceClient}
-                              </TableCell>
-                              <TableCell>{coupure.nomClient}</TableCell>
-                              <TableCell>
-                                {coupure.adresseClient}
-                              </TableCell>
-                              <TableCell>
-                                {coupure.etat}
-                              </TableCell>
-                            </TableRow>
-                          ))
                         ) : (
-                          <h1>thers no data</h1>
+                          <>
+
+                            {assignedCoupure.length !== 0 ? (
+                              assignedCoupure.map((coupure, index) => (
+                                <TableRow key={index}>
+                                  <TableCell component="th" scope="row">
+                                    {coupure.codeClient}
+                                  </TableCell>
+                                  <TableCell>
+                                    {coupure.referenceClient}
+                                  </TableCell>
+                                  <TableCell>{coupure.nomClient}</TableCell>
+                                  <TableCell>{coupure.adresseClient}</TableCell>
+                                  <TableCell>{coupure.etat}</TableCell>
+                                </TableRow>
+                              ))
+                            ) : (
+                              <TableRow>
+                                <TableCell colSpan={5}>
+                                  <h1>There's no data</h1>
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </>
                         )}
                       </TableBody>
                     </Table>
@@ -430,9 +429,7 @@ const EtablissementDetails = ({ etablissement }) => {
                               <TableCell>
                                 {retablissement.adresseClient}
                               </TableCell>
-                              <TableCell>
-                                {retablissement.etat}
-                              </TableCell>
+                              <TableCell>{retablissement.etat}</TableCell>
                             </TableRow>
                           ))
                         ) : (

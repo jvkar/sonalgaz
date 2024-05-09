@@ -580,7 +580,40 @@ const createClient= async (req, res) => {
 
     }
   }
- 
+ const nombreCoupureAffecterPerAgence=async(req,res)=>{
+    const {id} = req.params
+  try{
+
+    const clients= await Client.find({agence:id,typeClient:"coupure",listId:!null})
+    const affectedCoupureNumber = clients.length
+    res.status(200).json(affectedCoupureNumber);
+  }catch(error){
+    res.status(400).json({error:error.message})
+  }
+ }
+ const nombreRetablissementAffecterPerAgence=async(req,res)=>{
+    const {id} = req.params
+  try{
+
+    const clients= await Client.find({agence:id,typeClient:"retablissement",listId:!null})
+    const affectedRetablissementNumber = clients.length
+    res.status(200).json(affectedRetablissementNumber);
+  }catch(error){
+    res.status(400).json({error:error.message})
+  }
+ }
+ const nombreClientsNonArchiver = async(req,res)=>{
+    const {id} = req.params
+
+  try{
+      const clients = await Client.find({agence:id,archived:'Non Archiver'})
+      const NotArchivedClientsNumber = clients.length
+      res.status(200).json(NotArchivedClientsNumber);
+
+  }catch(error){
+    res.status(500).json({error:error.message});
+  }
+ }
 
 module.exports={
   deleteClient,
@@ -607,5 +640,8 @@ module.exports={
   getClientLengthPerEntreprise,
   exportPDFcoupures,
   exportPDFretablissement,
-  showClientCause
+  showClientCause,
+  nombreCoupureAffecterPerAgence,
+  nombreRetablissementAffecterPerAgence,
+  nombreClientsNonArchiver
 }

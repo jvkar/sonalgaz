@@ -52,8 +52,8 @@ const EtabAgence = ({etablissement}) => {
                   <TableCell align="center">Nom de l'entreprise</TableCell>
                   <TableCell align="center">Adresse De l'entreprise</TableCell>
                   <TableCell align="center">Nombre de fois dans la liste noire</TableCell>
-                  <TableCell align="center">nombre de coupure/annee</TableCell>
-                  <TableCell align="center">nombre de retablissements/annee</TableCell>
+                  <TableCell align="center">nombre de coupures dans {new Date().getFullYear()}</TableCell>
+                  <TableCell align="center">nombre de retablissements dans {new Date().getFullYear()}</TableCell>
                   <TableCell align="center"></TableCell>
                 </TableRow>
               </TableHead>
