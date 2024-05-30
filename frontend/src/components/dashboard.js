@@ -117,7 +117,7 @@ const Dashboard = () => {
     {error && <div className="error">{error}</div>}
       {userType==="CadreAgence"&&(
         <>
-        <h1 style={{color:"white",marginBottom:"10px",textAlign:"center"}}>Bienvenue au portail d'agence de {userName}</h1>
+        <h1 style={{marginBottom:"10px",textAlign:"center"}}>Bienvenue au portail d'agence de {userName}</h1>
       <div style={{ display: "flex", flexDirection: "row",justifyContent:"center" }}>
 
         <CoupureCard coupure={coupureLength} />
@@ -129,7 +129,7 @@ const Dashboard = () => {
       )}
       {userType==="responsableEntreprise"&&(
         <>
-        <h1 style={{color:"white",marginBottom:"10px",textAlign:"center"}}>Bienvenue au portail d'entreprise de {userName}</h1>
+        <h1 style={{marginBottom:"10px",textAlign:"center"}}>Bienvenue au portail d'entreprise de {userName}</h1>
         <div style={{ display: "flex", flexDirection: "row",justifyContent:"center" }}>
 
       </div>
@@ -137,7 +137,7 @@ const Dashboard = () => {
       )}
     {userType==="admin"&&(
         <>
-        <h1 style={{color:"white",marginBottom:"10px",textAlign:"center"}}>Bienvenue au portail d'Admin</h1>
+        <h1 style={{marginBottom:"10px",textAlign:"center"}}>Bienvenue au portail d'Admin</h1>
         <div style={{ display: "flex", flexDirection: "row",justifyContent:"center" }}></div>
       </>
       )}

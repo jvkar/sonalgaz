@@ -13,6 +13,10 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 const Navbar = () => {
     const { user } = useAuthContext()
@@ -40,17 +44,17 @@ const Navbar = () => {
             {
                 path: "/agences",
                 name: "Gestion des Agences",
-                icon: <ManageAccountsIcon />,
+                icon: <CorporateFareIcon />,
             },
             {
                 path: "/etablissements",
                 name: "Gestion Des Entreprises",
-                icon: <ManageAccountsIcon />,
+                icon: <ApartmentIcon />,
             },
             {
                 path: "/creerCompte",
                 name: "Creer Des Comptes",
-                icon: <AddBoxIcon />,
+                icon: <PersonAddIcon />,
             },
             {
                 path: "/ArchiveListeEntreprise",
@@ -93,7 +97,7 @@ const Navbar = () => {
             {
                 path: `/clients/${id}`,
                 name: "Liste des clients",
-                icon: <FormatListBulletedIcon />,
+                icon: <RecentActorsIcon />,
             },
             {
                 path: `/BlackList/${id}`,
@@ -132,7 +136,7 @@ const Navbar = () => {
             {
                 path: `/listClientsEntreprise/${id}`,
                 name: "Liste Clients",
-                icon: <FormatListBulletedIcon />,
+                icon: <RecentActorsIcon />,
             },
 
             {
