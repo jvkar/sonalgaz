@@ -3,6 +3,8 @@ const compression = require('compression');
 const app= express();
 const mongoose= require('mongoose');
 const cors=require('cors')
+const path = require('path')
+
 require('dotenv').config()
 mongoose.connect(process.env.MONG_URI)
 .then((result)=>{
@@ -11,6 +13,7 @@ mongoose.connect(process.env.MONG_URI)
 .catch((err)=>{
      console.error("err",err.message);
 })
+
 const factureRoutes=require('./routes/Factures');
 const clientRoutes=require ('./routes/Clients');
 const etablissementRoutes=require ('./routes/Etablissements');

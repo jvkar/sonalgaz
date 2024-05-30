@@ -22,14 +22,15 @@ const {getAllClient,
     getRetablissementsLenghtPerEntreprise,
     getCoupureLenghtPerEntreprise,
     getClientLengthPerEntreprise,
-    exportPDFcoupures,
-    exportPDFretablissement,
     showClientCause,
     nombreCoupureAffecterPerAgence,
     nombreRetablissementAffecterPerAgence,
     nombreClientsNonArchiver
-    
+    ,getArchivedClients
+    ,exportArchivedClientsPDF
+
 }=require("../controllers/clientController");
+const {generateClientListPDF}=require("../gen/pdfgenerator")
 router.get('/ByFacture/:NumClient',getClientByFacture);
 router.get('/',getAllClient);
 router.delete('/delete/:id',deleteClient);
@@ -51,10 +52,10 @@ router.get('/retablissementLengthPerAgence/:id',getRetablissementsLenghtPerAgenc
 router.get('/clientsLengthPerEntreprise/:id',getClientLengthPerEntreprise)
 router.get('/coupureLengthPerEntreprise/:id',getCoupureLenghtPerEntreprise)
 router.get('/retablissementLengthPerEntreprise/:id',getRetablissementsLenghtPerEntreprise)
-router.get('/exportcoupure-pdf',exportPDFcoupures);
-router.get('/exportretablissement-pdf',exportPDFretablissement);
+router.get('/export-pdf/:id',exportArchivedClientsPDF);
 router.get('/cause/:id',showClientCause);
 router.get('/affectedCoupureNumberPerAgence/:id',nombreCoupureAffecterPerAgence);
 router.get('/affectedRetablissementNumberPerAgence/:id',nombreRetablissementAffecterPerAgence);
 router.get('/NotArchivedClients/:id',nombreClientsNonArchiver);
+router.get('/getArchived/:id',getArchivedClients)
 module.exports=router

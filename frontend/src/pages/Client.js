@@ -73,31 +73,35 @@ const Client = () => {
 
     fetchData();
   }, [dispatch]);
-  const downloadPDFcoupure = () => {
-    setDownloading(true);
-    fetch("/api/Clients/exportcoupure-pdf", {
-      method: "GET",
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.blob();
-      })
-      .then((blob) => {
+  const [message, setMessage] = useState('');
+  const downloadPDFcoupure = async(e) => {
+    e.preventDefault();
+    setMessage('');
+
+    try {
+      const response = await fetch(`/api/Clients/export-pdf/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/pdf',
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
+        const a = document.createElement('a');
         a.href = url;
-        a.download = "coupure_liste.pdf";
+        a.download = 'archived-clients.pdf';
         document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
-        setDownloading(false);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-        setDownloading(false);
-      });
+        a.remove();
+      } else {
+        const errorData = await response.json();
+        setMessage(errorData.message || 'Failed to generate PDF');
+      }
+    } catch (error) {
+      setMessage('An error occurred while generating the PDF');
+    }
   };
   const downloadPDFretablissement = () => {
     setDownloading(true);
@@ -154,40 +158,62 @@ const Client = () => {
         <div className="Title" style={{ marginBottom: "20px" }}>
           <h1>la liste des clients de l'agence de {Nom}</h1>
           <div className="AddBtt">
+            <Button variant="contained" endIcon={<FileUploadIcon/>} onClick={downloadPDFcoupure} disabled={downloading} style={{width:"250px",marginRight:"40px"}}>
+            {downloading ? "Telechargement..." : "Exporter le rapport"}
+            </Button>
             <ModelAddClient />
           </div>
         </div>
-      <div style={{display:"flex" }}>
-        <FormControl>
-          <InputLabel id="demo-simple-select-label">Archive</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={filterType}
-            label="archive"
-            onChange={handleChange}
-          >
-            <MenuItem value={"all"}> All Clients</MenuItem>
-            <MenuItem value={"archiver"}> Archived Clients</MenuItem>
-            <MenuItem value={"Non Archiver"}> Not Archived Clients</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl>
-          <InputLabel id="demo-simple-select-label">Etat</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={filterType}
-            label="en attente"
-            onChange={handleChange}
-          >
-            <MenuItem value={"all"}> All Clients</MenuItem>
-            <MenuItem value={"en attente"}> en attente Clients</MenuItem>
-            <MenuItem value={"valider"}> valide Clients</MenuItem>
-            <MenuItem value={"invalider"}> Non valide Clients</MenuItem>
-          </Select>
-        </FormControl>
-        </div>
+        <div style={{ marginBottom: "20px" , display:"flex",alignItems:"center"}}>
+        <label htmlFor="year">Filtrer par Archive : </label>
+
+        <FormControl sx={{ m: 1, minWidth: 180}}>
+        <InputLabel id="demo-simple-select-helper-label">archive</InputLabel>
+        <Select
+          labelId="demo-simple-select-helper-label"
+          id="demo-simple-select-helper"
+          value={filterType}
+          label="archive"
+          onChange={(e) => setFilterType(e.target.value)}
+        >
+          <MenuItem  value={"archiver"}>         
+            archiver
+        </MenuItem>
+          <MenuItem  value={"Non Archiver"}>         
+            non archiver
+        </MenuItem>
+         
+
+        </Select>
+      </FormControl>
+      </div>
+
+      <div style={{ marginBottom: "20px" , display:"flex",alignItems:"center"}}>
+        <label htmlFor="type">Filtrer par etat : </label>
+        <FormControl sx={{ m: 1, minWidth: 180 }}>
+        <InputLabel id="demo-simple-select-helper-label">etat</InputLabel>
+        <Select
+          labelId="demo-simple-select-helper-label"
+          id="demo-simple-select-helper"
+          value={filterType}
+          label="etat"
+          onChange={(e) => setFilterType(e.target.value)}
+        >
+
+          <MenuItem  value={"en attente"}>         
+            en attente
+        </MenuItem>
+          <MenuItem  value={"valider"}>         
+            valider
+        </MenuItem>
+          <MenuItem  value={"invalider"}>         
+            Invalider
+        </MenuItem>
+
+
+        </Select>
+      </FormControl>
+      </div>
 
         <Accordion style={{ backgroundColor: "#FFFFFF" }}>
           <AccordionSummary
@@ -198,9 +224,7 @@ const Client = () => {
             Les coupure de l'agence
           </AccordionSummary>
           <AccordionDetails style={{display:"flex",flexDirection:"column",alignItems:"flex-end"}}>
-          <Button variant="contained" endIcon={<FileUploadIcon/>} onClick={downloadPDFcoupure} disabled={downloading} style={{width:"200px"}}>
-            {downloading ? "Telechargement..." : "Telecharger PDF"}
-            </Button>
+
             <Table size="small" aria-label="purchases">
               <TableHead>
                 <TableRow>
@@ -237,9 +261,7 @@ const Client = () => {
             Les retablissements de l'agence
           </AccordionSummary>
           <AccordionDetails style={{display:"flex",flexDirection:"column",alignItems:"flex-end"}}>
-          <Button variant="contained" endIcon={<FileUploadIcon/>} onClick={downloadPDFretablissement} disabled={downloading} style={{width:"200px"}}>
-            {downloading ? "Telechargement..." : "Telecharger PDF"}
-            </Button>
+
             <Table size="small" aria-label="purchases">
               <TableHead>
                 <TableRow>

@@ -53,7 +53,7 @@ export default function FormAddClientCSV ({closeEvent }) {
     return (
         
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
             <Box sx={{m:2}}/>
             <Typography variant="h5" align="center" >
                 Ajouter Une liste clients CSV

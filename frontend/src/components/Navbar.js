@@ -13,6 +13,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 const Navbar = () => {
     const { user } = useAuthContext()
 
@@ -50,6 +51,11 @@ const Navbar = () => {
                 path: "/creerCompte",
                 name: "Creer Des Comptes",
                 icon: <AddBoxIcon />,
+            },
+            {
+                path: "/ArchiveListeEntreprise",
+                name: "Archive",
+                icon: <BookmarkIcon />,
             },
             {
 
@@ -93,6 +99,11 @@ const Navbar = () => {
                 path: `/BlackList/${id}`,
                 name: "Liste noire",
                 icon: <RemoveCircleIcon />,
+            },
+            {
+                path: `/ArchiveAgence/${id}`,
+                name: "Archive",
+                icon: <BookmarkIcon />,
             },
 
             {

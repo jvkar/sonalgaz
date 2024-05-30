@@ -41,9 +41,17 @@ const ModelArchive = ({etablissementId}) => {
           }
           if (!response.ok) {
             setError(json.error);
+            setIsLoading(false)
+            setTimeout(() => {
+              setError("");
+            }, 5000);
           }
         } catch (error) {
+          setIsLoading(false)
           setError(error);
+          setTimeout(() => {
+            setError("");
+          }, 5000);
         }
       };
  const handleOpen = () =>{ setOpen(true)}
@@ -67,7 +75,7 @@ const ModelArchive = ({etablissementId}) => {
           </Typography>
           <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
             {error ? (
-              <p>Error: {error}</p>
+             <div className="error">{error}</div>
             ) : (
                   <p>Etes-vous sur d'archiver la liste des coupures et retablissements</p>
             )}

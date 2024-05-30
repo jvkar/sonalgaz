@@ -1,6 +1,6 @@
 import React from 'react'
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Box, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
+import { Box, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material'
 import { useState } from "react";
 import { useLogin } from "../../hooks/useLogin";
 import Button from '@mui/material/Button';
@@ -23,7 +23,6 @@ const LoginForm = () => {
     };
     return (
         <form style={{display:"flex",justifyContent:"center",flexDirection:"column",alignItems:"center",textAlign:"center"}} onSubmit={handleLogin}>
-
             <div>
                 <img style={{ display: "block", paddingLeft: "40%", paddingTop: '8%' }} src={sonelgaz} alt="sonelgaz logo" width="20%" height="30%" />
             </div>
@@ -32,6 +31,7 @@ const LoginForm = () => {
             <Grid container spacing={2} sx={{ padding: "35px", paddingBottom: "95px" }}>
             <Grid item xs={12} style={{width: "70%"}}>
                 <TextField
+                style={{width:"60%"}}
                     id="username"
                     label="Username"
                     variant="outlined"
@@ -42,7 +42,7 @@ const LoginForm = () => {
                 />
             </Grid>
             <Grid item xs={12} style={{width: "70%"}}>
-                <FormControl variant="outlined" size="small" fullWidth>
+                <FormControl variant="outlined" size="small" style={{width:"60%"}}>
                     <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                     <OutlinedInput
                         id="outlined-adornment-password"

@@ -20,6 +20,7 @@ const {getAllEtablissement,
     ,archiverToutLesEntreprises
     ,nombreEntreprisesArchiver
     ,nombreDesEntreprisesListeNoire
+    ,getArchivedEntreprises
 }=require("../controllers/etablissementController");
 const requireAuth = require('../middleware/requireAuth')
 router.use(requireAuth)
@@ -41,4 +42,5 @@ router.patch('/archiverEntreprise/:id',archiverEntreprise)
 router.patch('/archiveAll',archiverToutLesEntreprises);
 router.get('/ListeNoireNumber/:id',nombreDesEntreprisesListeNoire)
 router.get('/nombreArchiver/:id',nombreEntreprisesArchiver)
+router.get('/getArchived',getArchivedEntreprises)
 module.exports=router

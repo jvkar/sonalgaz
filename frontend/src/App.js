@@ -10,6 +10,8 @@ import EtabAgence from './pages/etablissementAgence';
 import ClientEntrep from './pages/ClientEntrep';
 import ClientTech from './pages/ClientTechnicien';
 import CoupureTech from './pages/CoupuresTechnicien';
+import ArchiveClientPage from './pages/archiveClientPage';
+import ArchiveEntreprisePage from './pages/ArchiveEntreprisePage';
 import RetablissementTech from './pages/RetablissementsTechnicien';
 import Technicien from './pages/Technicien';
 import Login from './pages/Login';
@@ -17,6 +19,7 @@ import Password from './pages/Password';
 import Navbar from './components/Navbar'
 import AjoutTechnicien from './pages/ajoutTechnicien';
 import { useAuthContext } from './hooks/useAuthContext';
+
 
 import Footer from './components/Footer';
 
@@ -34,8 +37,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
 
-    
+        {user&&
         <Navbar />
+        }
         <div className='leftSide'>
         <Profile/>
         <div className='pages'>
@@ -56,10 +60,13 @@ function App() {
             <Route path='/agences' element={!user && userType !=='Admin' ? <Login /> : <Agences/>} />
             <Route path='/etablissements' element={!user &&  userType !=='Admin' ? <Login /> : <Etablissement/>} />
             <Route path='/creerCompte' element={!user  && userType !=='Admin' ? <Login /> : <CreerCompte/> } />
+            <Route path='/ArchiveListeEntreprise' element={!user && userType!=="Admin" ? <Login/> :<ArchiveEntreprisePage/>} />
+
             {/* partieAgence */}
             <Route path='/entreprises/:id' element ={ !user && userType!=="CadreAgence" ? <Login/> : <EtabAgence/>} />
             <Route path='/clients/:id' element={!user && userType!=="CadreAgence" ? <Login/>  : <Client />} />
             <Route path='/BlackList/:id' element={!user && userType!=="CadreAgence" ? <Login/> :<BlackList/>} />
+            <Route path='/ArchiveAgence/:id' element={!user && userType!=="CadreAgence" ? <Login/> :<ArchiveClientPage/>} />
             {/* partieEntreprise */}
             <Route path='/listClientsEntreprise/:id' element={!user && userType !== 'responsableEntreprise' ? <Login />:<ClientEntrep/>} />
             <Route path='/listTechnicienEntreprise/:id' element={!user && userType !== 'responsableEntreprise' ?<Login />:<Technicien/>} />

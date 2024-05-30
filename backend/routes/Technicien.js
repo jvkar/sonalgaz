@@ -9,6 +9,7 @@ const {
     ,getRetablissementPerTechnicien
     ,updateTechnicien
     ,changePassword
+    ,deleteTechnicien
 }= require('../controllers/technicienController')
 const requireAuth = require('../middleware/requireAuth')
 router.use(requireAuth)
@@ -20,4 +21,5 @@ router.get ('/coupurePerEtab/:id',getCoupurePerTechnicien)
 router.get ('/retabPerEtab/:id',getRetablissementPerTechnicien)
 router.patch ('/updateTechnicien/:id',updateTechnicien)
 router.patch('/passwordChanged',changePassword)
+router.delete('/delTechnicien',deleteTechnicien)
 module.exports=router

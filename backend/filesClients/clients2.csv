@@ -1,4 +1,4 @@
-nomClient,adresseClient,codeClient,referenceClient,numeroCompteur,typeClient,etat,listId,agence
+nomClient,adresseClient,codeClient,referenceClient,numeroCompteur,typeClient,etat,date_signale,cause,listId,agence
 John Doe,123 Main Street,1,912402000101871,00911001,coupure
 Jane Smith,456 Oak Avenue,2,912402000101872,00911002,coupure
 Alice Johnson,789 Elm Drive,3,912402000101873,00911003,coupure

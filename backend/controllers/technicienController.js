@@ -162,7 +162,23 @@ const changePassword  = async (req,res) =>{
       return res.status(400).json({error:error.message})
   }
 }
-
+const deleteTechnicien = async(req,res)=>{
+  const id= req.params
+  try { 
+        const client = await Client.findOne({technicienId:id})
+        if(!client){
+        const technicien  = await Technicien.find({_id:id})
+        if(technicien){
+          return res.status(200).json({message:"technicien deleted with success"})
+        }
+        }
+        else{
+          return res.status(500).json({message:"you can't delete this technicien"})
+        }
+  }catch(error){
+          return res.status(500).json({error:message.error})
+  }
+}
   module.exports={
     createAccount
     ,getTechnicienById
@@ -172,4 +188,5 @@ const changePassword  = async (req,res) =>{
     ,getRetablissementPerTechnicien
     ,updateTechnicien
     ,changePassword
+    ,deleteTechnicien
   }

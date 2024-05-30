@@ -1,5 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const Client=require('../models/clientModel');
+const Agence= require('../models/agenceModel')
+const cadreAgence= require('../models/cadreAgenceModel')
 const Etablissement=require('../models/etablissementModel')
 const ListIntervention= require('../models/ListeInterventionModel')
 const Facture=require('../models/factureModel')
@@ -281,31 +283,47 @@ const createClient= async (req, res) => {
     const { id } = req.params;
     try {
       const listInterventions = await ListIntervention.find({ entrepriseId: id });
-  
+
+      if (!listInterventions || listInterventions.length === 0) {
+        return res.status(404).json({ error: "No interventions found for the given entrepriseId" });
+      }
+      
       for (const intervention of listInterventions) {
         const interventionId = intervention._id;
-  
-        await ListIntervention.updateMany(
+      
+
+        const updateInterventionResult = await ListIntervention.updateOne(
           { _id: interventionId, archive: "Non Archiver" },
           { archive: "archiver" }
         );
-  
-        const clients = await Client.find({ listId: interventionId });
-        if(clients.length!==0){
-        await Client.updateMany(
-          { listId: interventionId },
+
+        if (updateInterventionResult.nModified === 0) {
+          continue;
+        }
+      
+
+        const updateClientsResult = await Client.updateMany(
+          { listId: interventionId, archived: "Non Archiver" },
           { archived: "archiver" }
         );
-        return res.status(400).json({error:"il n ya pas des clients a archiver"})
+      
+
+        if (!updateClientsResult) {
+          return res.status(500).json({ error: "There's no client to archive" });
+        }
       }
-      }
-  
+      
       return res.status(200).json({ success: true });
+      
+
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
   };
   const validerClient = async (req, res) => {
+    const currentDate= new Date();
+    const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+
     const { id } = req.params;
     try {
       const client = await Client.findOne({ _id: id, etat: "en attente" });
@@ -329,7 +347,7 @@ const createClient= async (req, res) => {
       await list.save();
 
 
-      await Client.findByIdAndUpdate(client._id, { etat: "valider" });
+      await Client.findByIdAndUpdate(client._id, { etat: "valider",date_signale:formattedDate });
   
       return res.status(200).json({ message: "Client validated successfully" });
     } catch (error) {
@@ -338,6 +356,9 @@ const createClient= async (req, res) => {
   };
   
   const invaliderClient = async (req, res) => {
+    const currentDate= new Date();
+    const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+
     const { id } = req.params;
     const {cause} = req.body
     try {
@@ -366,7 +387,7 @@ const createClient= async (req, res) => {
       
 
   
-      await Client.findByIdAndUpdate(client._id, { etat: "invalider",cause:cause });
+      await Client.findByIdAndUpdate(client._id, { etat: "invalider",cause:cause,date_signale:formattedDate });
   
       return res.status(200).json({ message: "Client invalidated successfully" });
     } catch (error) {
@@ -449,126 +470,7 @@ const createClient= async (req, res) => {
       res.status(400).json({error:error.message})
     }
   }
-  const exportPDFcoupures = async (req, res) => {
-    try {
-      const clients = await Client.find({typeClient:"coupure"});
-      const doc = new PDFDocument();
-      const filename = 'Liste_coupures.pdf';
-      const filePath = `./pdfs/${filename}`;
-  
-      const writeStream = fs.createWriteStream(filePath);
-      doc.pipe(writeStream);
 
- 
-      doc.image('./public/myImage.png', { width: 450, align: 'center' }).moveDown(10);
-  
-    
-      doc.moveTo(50, doc.y)
-        .lineTo(550, doc.y)
-        .stroke()
-        .moveDown(5); 
-  
-      doc.fontSize(14).text('La liste des coupures', { align: 'center' }).moveDown();
-  
-      doc.font('Helvetica-Bold');
-      const headerY = doc.y;
-      doc.text('Reference', 50, headerY);
-      doc.text('Nom', 150, headerY);
-      doc.text('Etat', 250, headerY);
-      doc.text('Cause', 450, headerY);
-      doc.moveDown();
-  
-      doc.font('Helvetica');
-      
-    let currentY = doc.y;
-    const lineHeight = 20;
-      clients.forEach((client) => {
-        const newRowHeight = lineHeight * 2;
-        if (currentY + newRowHeight > doc.page.height - 50) { 
-          doc.addPage();
-          currentY = 50; 
-        }
-  
-        doc.moveTo(50, currentY)
-          .lineTo(550, currentY)
-          .stroke()
-        doc.text(client.referenceClient, 50, currentY);
-        doc.text(client.nomClient, 150, currentY);
-        doc.text(client.etat, 250, currentY);
-        doc.text(client.cause, 400, currentY);
-  
-        currentY += newRowHeight;
-      });
-  
-      doc.end();
-      writeStream.on('finish', () => {
-        res.status(200).download(filePath, filename);
-      });
-      } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal Server Error');
-    }
-  };
-  const exportPDFretablissement = async (req, res) => {
-    try {
-      const clients = await Client.find({typeClient:"retablissement"});
-      const doc = new PDFDocument();
-      const filename = 'Liste_retablissements.pdf';
-      const filePath = `./pdfs/${filename}`;
-  
-      const writeStream = fs.createWriteStream(filePath);
-      doc.pipe(writeStream);
-
- 
-      doc.image('./public/myImage.png', { width: 450, align: 'center' }).moveDown(10);
-  
-    
-      doc.moveTo(50, doc.y)
-        .lineTo(550, doc.y)
-        .stroke()
-        .moveDown(5); 
-  
-      doc.fontSize(14).text('La liste des retablissements', { align: 'center' }).moveDown();
-  
-      doc.font('Helvetica-Bold');
-      const headerY = doc.y;
-      doc.text('Reference', 50, headerY);
-      doc.text('Nom', 150, headerY);
-      doc.text('Etat', 250, headerY);
-      doc.text('Cause', 450, headerY);
-      doc.moveDown();
-  
-      doc.font('Helvetica');
-      
-    let currentY = doc.y;
-    const lineHeight = 20;
-      clients.forEach((client) => {
-        const newRowHeight = lineHeight * 2;
-        if (currentY + newRowHeight > doc.page.height - 50) { 
-          doc.addPage();
-          currentY = 50; 
-        }
-  
-        doc.moveTo(50, currentY)
-          .lineTo(550, currentY)
-          .stroke()
-        doc.text(client.referenceClient, 50, currentY);
-        doc.text(client.nomClient, 150, currentY);
-        doc.text(client.etat, 250, currentY);
-        doc.text(client.cause, 400, currentY);
-  
-        currentY += newRowHeight;
-      });
-  
-      doc.end();
-      writeStream.on('finish', () => {
-        res.status(200).download(filePath, filename);
-      });
-      } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal Server Error');
-    }
-  };
   const showClientCause = async(req,res)=>{
     const {id}=req.params
     try  {
@@ -614,6 +516,102 @@ const createClient= async (req, res) => {
     res.status(500).json({error:error.message});
   }
  }
+ const getArchivedClients = async (req,res)=>{
+  const {id}  = req.params
+  try{
+    const clients= await Client.find({agence:id,archived:"archiver"});
+    if(clients){
+      return res.status(200).json(clients);
+    }
+    else{
+      return res.status(500).json({message:"il n ya pas des clients archives"});
+    }
+  }catch(error){
+      return res.status(500).json({error:error.message});
+  }
+}
+
+const { generateClientListPDF } = require('../gen/pdfgenerator');
+
+const exportArchivedClientsPDF = async (req, res) => {
+  const {id} = req.params;
+  const currentDate = new Date();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+
+  try {
+    // Query for coupure clients
+    const coupure = await Client.find({
+      typeClient: "coupure",
+      agence: id,
+      $expr: { $eq: [{ $month: "$date_signale" }, month] }
+    });
+
+    const retablissement = await Client.find({
+      typeClient: "retablissement",
+      agence: id,
+      $expr: { $eq: [{ $month: "$date_signale" }, month] }
+    });
+
+    const totalCoupure = await Client.find({
+      typeClient: "coupure",
+      agence: id,
+      $expr: { $eq: [{ $month: "$createdAt" }, month] }
+    });
+
+    const totalRetablissement = await Client.find({
+      typeClient: "retablissement",
+      agence: id,
+      $expr: { $eq: [{ $month: "$createdAt" }, month] }
+    });
+
+    const clients = await Client.find({
+      agence: id,
+      $expr: { $eq: [{ $month: "$date_signale" }, month] }
+    });
+
+    const totalClients = await Client.find({
+      agence: id,
+      $expr: { $eq: [{ $month: "$createdAt" }, month] }
+    });
+    const coupureResult = await Client.find({agence:id,typeClient:"coupure",
+      $expr: { $eq: [{ $month: "$createdAt" }, month] }
+    })
+    const retablissementResult = await Client.find({agence:id,typeClient:"retablissement",
+      $expr: { $eq: [{ $month: "$createdAt" }, month] }
+    })
+    const agence = await Agence.findOne({_id:id})
+    const nomAgence= agence.nom;
+    const cadre = await cadreAgence.findOne({agence:id})
+    const nomCadre= cadre.nomCadre;
+    const pdfPath = await generateClientListPDF(coupureResult,retablissementResult,clients.length, totalClients.length,nomAgence,nomCadre);
+
+    if (pdfPath) {
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename=mypdf.pdf');
+      const pdfStream = fs.createReadStream(pdfPath);
+
+      pdfStream.on('error', (error) => {
+        console.error('Error reading PDF file:', error);
+        res.status(500).send('Error reading PDF file.');
+      });
+
+      pdfStream.pipe(res);
+    } else {
+      res.status(500).send('Error generating PDF.');
+    }
+  } catch (error) {
+    console.error('Error exporting PDF:', error);
+    res.status(500).send('Error exporting PDF.');
+  }
+};
+
+
+
+
+
+
+
+
 
 module.exports={
   deleteClient,
@@ -638,10 +636,11 @@ module.exports={
   getCoupureLenghtPerEntreprise,
   getRetablissementsLenghtPerEntreprise,
   getClientLengthPerEntreprise,
-  exportPDFcoupures,
-  exportPDFretablissement,
   showClientCause,
   nombreCoupureAffecterPerAgence,
   nombreRetablissementAffecterPerAgence,
-  nombreClientsNonArchiver
+  nombreClientsNonArchiver,
+  getArchivedClients,
+  exportArchivedClientsPDF,
+
 }

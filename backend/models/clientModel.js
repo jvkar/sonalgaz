@@ -28,6 +28,11 @@ const ClientSchema= new Schema({
         type : String,
         default:"en attente"
     },
+    date_signale:{
+        type : Date,
+        default:null
+
+    },
     cause:{
         type:String,
         default:null

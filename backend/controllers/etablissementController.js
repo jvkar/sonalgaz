@@ -444,6 +444,19 @@ const deleteEtablissement = async (req, res) => {
       res.status(500).json({error:error.message})
     } 
   }
+  const getArchivedEntreprises = async (req,res)=>{
+    try{
+      const entreprises= await Etablissement.find({etat:"archiver"});
+      if(entreprises){
+        return res.status(200).json(entreprises);
+      }
+      else{
+        return res.status(500).json({message:"il n ya pas des entreprises archives"});
+      }
+    }catch(error){
+        return res.status(500).json({error:error.message});
+    }
+  }
   
 module.exports={
     getAllEtablissement,
@@ -464,5 +477,6 @@ module.exports={
     ,archiverToutLesEntreprises
     ,nombreDesEntreprisesListeNoire
     ,nombreEntreprisesArchiver
+    ,getArchivedEntreprises
 
 }
