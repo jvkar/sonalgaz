@@ -1,6 +1,10 @@
 const mongoose=require('mongoose');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
+const notificationSchema = new mongoose.Schema({
+  message: String,
+  date: { type: Date, default: Date.now }
+});
 const ResponsableEntrepriseSchema =new Schema({
     nomResponsable : {
         type : String ,
@@ -21,6 +25,10 @@ const ResponsableEntrepriseSchema =new Schema({
     etablissement :{
       type: Schema.Types.ObjectId,
         ref:'Etablissement',
+    },
+    notfications:{
+      type : [notificationSchema],
+      default:[]
     }
 
 

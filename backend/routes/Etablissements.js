@@ -21,6 +21,7 @@ const {getAllEtablissement,
     ,nombreEntreprisesArchiver
     ,nombreDesEntreprisesListeNoire
     ,getArchivedEntreprises
+    ,getNotfications
 }=require("../controllers/etablissementController");
 const requireAuth = require('../middleware/requireAuth')
 router.use(requireAuth)
@@ -43,4 +44,5 @@ router.patch('/archiveAll',archiverToutLesEntreprises);
 router.get('/ListeNoireNumber/:id',nombreDesEntreprisesListeNoire)
 router.get('/nombreArchiver/:id',nombreEntreprisesArchiver)
 router.get('/getArchived',getArchivedEntreprises)
+router.get('/getNotification/:id',getNotfications)
 module.exports=router

@@ -16,6 +16,7 @@ import RetablissementTech from './pages/RetablissementsTechnicien';
 import Technicien from './pages/Technicien';
 import Login from './pages/Login';
 import Password from './pages/Password';
+import NotificationsList from './pages/NotificationPage';
 import Navbar from './components/Navbar'
 import AjoutTechnicien from './pages/ajoutTechnicien';
 import { useAuthContext } from './hooks/useAuthContext';
@@ -71,6 +72,7 @@ function App() {
             <Route path='/listClientsEntreprise/:id' element={!user && userType !== 'responsableEntreprise' ? <Login />:<ClientEntrep/>} />
             <Route path='/listTechnicienEntreprise/:id' element={!user && userType !== 'responsableEntreprise' ?<Login />:<Technicien/>} />
             <Route path='/ajouterTechnicien/:id' element={!user && userType !== 'responsableEntreprise' ? <Login/>:<AjoutTechnicien/>}/>
+            <Route path='/notifications/:id' element={!user && userType !== 'responsableEntreprise' ? <Login/>:<NotificationsList/>}/>
             {/* partieTechnicien*/}
             <Route path='/listClientsTechnicien/:id' element={!user && userType !== 'technicien' ? <Login />:<ClientTech/>} />
             <Route path='/Coupures/:id' element={!user && userType !== 'technicien' ? <Login />:<CoupureTech/>} />

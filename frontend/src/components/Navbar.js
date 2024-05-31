@@ -18,6 +18,7 @@ import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 const Navbar = () => {
     const { user } = useAuthContext()
 
@@ -148,6 +149,11 @@ const Navbar = () => {
                 path: `/ajouterTechnicien/${id}`,
                 name: "Ajouter Technicien",
                 icon: <AddCircleIcon />,
+            },
+            {
+                path: `/notifications/${id}`,
+                name: "Notifications",
+                icon: <NotificationsIcon />,
             },
             {
                 name: "Logout",

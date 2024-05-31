@@ -457,6 +457,44 @@ const deleteEtablissement = async (req, res) => {
         return res.status(500).json({error:error.message});
     }
   }
+    const notifications = async (entrepriseId) => {
+      try {
+        const limit = await Client.find({ typeClient: "coupure", entrepriseId, etat: { $ne: "en attente" } });
+        const totalCoupures = await Client.find({ typeClient: "coupure", entrepriseId });
+    
+        if (limit.length === totalCoupures.length) {
+          const entreprise = await ResponsableEntreprise.findOne({etablissement:entrepriseId});
+          if (!entreprise) {
+            throw new Error('Entreprise not found');
+          }
+    
+          entreprise.notfications.push({ message: "Limit reached notification message" });
+          await entreprise.save();
+          console.log("success")
+          return { success: true, message: "Notification added" };
+        } else {
+          return { success: false, message: "Limit not reached, no notification added" };
+        }
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    };
+    
+  const getNotfications = async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const responsable = await ResponsableEntreprise.findOne({etablissement:id});
+      
+      if (!responsable) {
+        return res.status(404).send('responsable not found');
+      }
+  
+      res.json(responsable.notfications);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  };
   
 module.exports={
     getAllEtablissement,
@@ -478,5 +516,6 @@ module.exports={
     ,nombreDesEntreprisesListeNoire
     ,nombreEntreprisesArchiver
     ,getArchivedEntreprises
-
+    ,notifications
+    ,getNotfications
 }

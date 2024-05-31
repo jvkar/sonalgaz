@@ -8,6 +8,7 @@ const Facture=require('../models/factureModel')
 const csvtojson =require ('csvtojson');
 const multer = require('multer');
 const path = require('path');
+const {notifications} = require('../controllers/etablissementController')
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const { isNull } = require('util');
@@ -349,7 +350,12 @@ const createClient= async (req, res) => {
 
       await Client.findByIdAndUpdate(client._id, { etat: "valider",date_signale:formattedDate });
   
-      return res.status(200).json({ message: "Client validated successfully" });
+      try {
+        const notificationResponse = await notifications(client.entrepriseId);
+        return res.status(200).json({ message: "Client validated successfully", notification: notificationResponse.message });
+      } catch (notificationError) {
+        return res.status(500).json({ message: "Client validated, but notification failed", error: notificationError.message });
+      }
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
@@ -389,7 +395,12 @@ const createClient= async (req, res) => {
   
       await Client.findByIdAndUpdate(client._id, { etat: "invalider",cause:cause,date_signale:formattedDate });
   
-      return res.status(200).json({ message: "Client invalidated successfully" });
+      try {
+        const notificationResponse = await notifications(client.entrepriseId);
+        return res.status(200).json({ message: "Client validated successfully", notification: notificationResponse.message });
+      } catch (notificationError) {
+        return res.status(500).json({ message: "Client validated, but notification failed", error: notificationError.message });
+      }
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
