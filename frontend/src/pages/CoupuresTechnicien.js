@@ -7,7 +7,6 @@ const CoupureTech = () => {
   const Nom = user?.nom;
   const { id } = useParams();
   const [assignedCoupure, setassignedCoupure] = useState([]);
-  const [assignedRetab, setassignedRetab] = useState([]);
 
   useEffect(() => {
     const fetchCoupureData = async () => {

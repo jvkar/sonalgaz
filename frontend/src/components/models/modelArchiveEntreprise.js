@@ -5,6 +5,7 @@ import ArchiverBtn from "../buttons/archiveBtnIcon";
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useAuthContext } from "../../hooks/useAuthContext";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -17,40 +18,49 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const ModelArchiveEntreprise = ({etablissementId}) => {
-    const { user } = useAuthContext()
-    const [error,setError] = useState(undefined)
-    const [open ,setOpen] = useState(false)
-    const [entreprise , setEntreprise] = useState(etablissementId)
 
-    const [isLoading ,setIsLoading] = useState(false)
-    const handleArchive = async () => {
-      setIsLoading(true)
-      if (!user) {
-        setError("you must be logged in")
-        return
-      }
+const ModelArchiveEntreprise = ({ etablissementId }) => {
+  const { user } = useAuthContext();
+  const [error, setError] = useState(undefined);
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleArchive = async () => {
+    setIsLoading(true);
+    setError(undefined);
+
+    if (!user) {
+      setError("You must be logged in");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
       const response = await fetch(`/api/Etablissements/archiverEntreprise/${etablissementId}`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${user.token}` }
-      })
-      const json = response.json()
+      });
+
+      const json = await response.json();
+
       if (!response.ok) {
-        setError(json.error)
+        setError(json.error);
+      } else {
+        setIsLoading(false);
+        setOpen(false); // Close the modal on success
       }
-      if (response.ok) {
-        setIsLoading(false)
-        setEntreprise(json)
-      }
+    } catch (err) {
+      setError("An error occurred");
+    } finally {
+      setIsLoading(false);
     }
- const handleOpen = () =>{ setOpen(true)}
-  const handleClose = () => {
-    setOpen(false);
   };
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <div>
-
       <Modal
         keepMounted
         open={open}
@@ -59,24 +69,23 @@ const ModelArchiveEntreprise = ({etablissementId}) => {
         aria-describedby="keep-mounted-modal-description"
       >
         <Box sx={style}>
-        <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
+          <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
             Avertissement
           </Typography>
           <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
             {error ? (
               <p>Error: {error}</p>
             ) : (
-                  <p>Etes-vous sur d'archiver cette entreprise</p>
+              <p>Etes-vous sur d'archiver cette entreprise?</p>
             )}
           </Typography>
           <Button onClick={handleArchive} variant='outlined' disabled={isLoading}>
-            {isLoading ? "Archiver..." :"Confirmer" }
+            {isLoading ? "Archiver..." : "Confirmer"}
           </Button>
-          <Button onClick={handleClose}  variant='outlined'>Non</Button>
+          <Button onClick={handleClose} variant='outlined'>Non</Button>
         </Box>
       </Modal>
       <ArchiverBtn openModal={handleOpen} />
-
     </div>
   );
 };

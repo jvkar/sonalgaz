@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import TechnicienDetails from "../components/TechnicienDetails";
 import { useTechnicienContext } from "../hooks/useTechnicienContext";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -13,66 +13,63 @@ import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useParams } from 'react-router-dom';
 
+const Technicien = () => {
+    const { user } = useAuthContext();
+    const [isLoading , setIsLoading] = useState(true);
+    const { techniciens, dispatch } = useTechnicienContext();
+    const [error, setError] = useState(undefined);
+    const { id } = useParams();
 
-const Technicien = ({technicien}) => {
-    const { user } = useAuthContext()
-    const [technicienD,setTechnicien] = useState([])
-    const [isLoading , setIsLoading] = useState(true)
-    const { techniciens, dispatch } = useTechnicienContext()
-    const [error, setError] = useState(undefined)
-    const { id } = useParams()
     useEffect(() => {
         const fetchTechniciens = async () => {
           const response = await fetch(`/api/Techniciens/getTechniciens/${id}`, {
             headers: { 'Authorization': `Bearer ${user.token}` },
-          })
-          const json = await response.json()
+          });
+          const json = await response.json();
     
           if (response.ok) {
-            dispatch({ type: 'SET_TECHNICIENS', payload: json })
-            setTechnicien(json)
-            setIsLoading(false)
+            dispatch({ type: 'SET_TECHNICIENS', payload: json });
+            setIsLoading(false);
+          } else {
+            setError(json.error);
           }
-          if(!response.ok){
-            setError(json.error)
-          }
+        };
+        if (user && user.userType === "responsableEntreprise") {
+          fetchTechniciens();
         }
-        if (user && user.userType == "responsableEntreprise") {
-          fetchTechniciens()
-        }
-      }, [dispatch, user])
+      }, [dispatch, id, user]);
+
       return (
         <div className="list">
           {error && <div className="error"> {error} </div>}
           <div className='Title'>
             <h1>La Liste des Techniciens</h1>
-
           </div>
           <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
               <TableHead>
                 <TableRow>
-                <TableCell align="center"></TableCell>
-
-                  <TableCell align="center" >Code Technicien</TableCell>
-                  <TableCell  align="center">Nom de Technicien</TableCell>
+                  <TableCell align="center"></TableCell>
+                  <TableCell align="center">Code Technicien</TableCell>
+                  <TableCell align="center">Nom de Technicien</TableCell>
                   <TableCell align="center">Username Technicien</TableCell>
-
                   <TableCell align="center"></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-              {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
-              techniciens && techniciens.map(technicien => (
-              <TechnicienDetails key={technicien._id} technicien={technicien} />
-            ))
-          )}
+              {isLoading ? (
+                <TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>
+                  <CircularProgress style={{margin:"15px"}}/>
+                </TableRow>
+              ) : (
+                techniciens && techniciens.map(technicien => (
+                  <TechnicienDetails key={technicien._id} technicien={technicien} />
+                ))
+              )}
               </TableBody>
             </Table>
           </TableContainer>
-    
         </div>
-
     );
 }
  

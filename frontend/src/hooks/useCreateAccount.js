@@ -5,7 +5,6 @@ export const useCreateAccount = () => {
   const {user}=useAuthContext();
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(null)
-  const { dispatch } = useAuthContext()
   const {id} = useParams()
 
   const agenceCreateAccount = async (nomCadre,numeroAgence,username, password,headers) => {

@@ -150,11 +150,7 @@ const Navbar = () => {
                 name: "Ajouter Technicien",
                 icon: <AddCircleIcon />,
             },
-            {
-                path: `/notifications/${id}`,
-                name: "Notifications",
-                icon: <NotificationsIcon />,
-            },
+
             {
                 name: "Logout",
                 icon: (

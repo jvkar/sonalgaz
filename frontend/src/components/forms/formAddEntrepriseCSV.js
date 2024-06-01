@@ -1,56 +1,59 @@
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { IoIosClose } from "react-icons/io";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
-import { useEtablissementContext } from "../../hooks/useEtablissementContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
-import { Input } from '@mui/material';
 
 const FormAddEntrepriseCSV = ({ closeEvent }) => {
-  const { dispatch } = useEtablissementContext();
   const { user } = useAuthContext();
   const [NombreDesCoupures, setNombreDesCoupures] = useState("");
   const [file, setFile] = useState(undefined);
   const [error, setError] = useState(null);
   const [importing, setImporting] = useState(false);
-  const [etablissement, setEtablissement] = useState([]);
 
   const handleSubmit = async (e) => {
     setImporting(true);
     e.preventDefault();
     if (!user) {
-      setError("you must be logged in");
+      setError("You must be logged in");
+      setImporting(false);
       return;
     }
-    const etablissement = { file };
-    if (file === null || file === undefined) {
-      console.log("Veuillez choisir un fichier");
-    } else {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("NombreDesCoupures", NombreDesCoupures);
 
+    if (!file) {
+      setError("Veuillez choisir un fichier");
+      setImporting(false);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("NombreDesCoupures", NombreDesCoupures);
+
+    try {
       const response = await fetch("/api/Etablissements/add", {
         method: "POST",
         body: formData,
-
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
+
       const json = await response.json();
 
       if (!response.ok) {
         setError(json.error);
-      }
-      if (response.ok) {
+      } else {
         setError(null);
-        setEtablissement(json);
         setFile(undefined);
-        setImporting(false);
+        setNombreDesCoupures("");
+        window.location.reload()
+
       }
+    } catch (err) {
+      setError("An error occurred while uploading the file");
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -76,11 +79,11 @@ const FormAddEntrepriseCSV = ({ closeEvent }) => {
             <TextField
               id="NombreDesCoupures"
               value={NombreDesCoupures}
-              type="number "
+              type="number"
               onChange={(e) => setNombreDesCoupures(e.target.value)}
-              label="le nombre des coupures/ retablissement par entreprise "
+              label="Le nombre des coupures/retraitements par entreprise"
               variant="outlined"
-              siz="small"
+              size="small"
               sx={{ minWidth: "100%" }}
             />
           </Grid>

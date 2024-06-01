@@ -48,46 +48,82 @@ const getTechnicienById = async(req,res)=>{
         res.status(404).json({error:error.message})
     }
 };
-const affecterCoupureTechnicien = async(req,res) =>{
+const affecterCoupureTechnicien = async (req, res) => {
   const { entrepriseId, technicianId } = req.params;
-  const technicien = await Technicien.findOne({_id:technicianId})
-  const nbrInterventionsTechnicien = technicien.nbrInterventions
-    try {
-        const clients = await Client.find({entrepriseId:entrepriseId,archived:"Non Archiver",typeClient:"coupure",technicienId:null}).limit(nbrInterventionsTechnicien)
-        if(clients.length===0){
-          return res.status(500).json({error:"there s no clients with this cratirias"})
-        }
-        if(clients.length!==0){
-        for(const client of clients){
-        await Client.findByIdAndUpdate(client._id,{technicienId:technicianId})
-        }
-        return res.status(200).json(clients)
-      }
-        
-      }catch(error){
-        return res.status(400).json({error:error.message})
+
+  try {
+    const technicien = await Technicien.findOne({ _id: technicianId });
+    if (!technicien) {
+      return res.status(404).json({ error: "Technician not found" });
     }
-}
-const affecterRetabTechnicien = async(req,res) =>{
+
+    const nbrInterventionsTechnicien = technicien.nbrInterventions;
+    const clients = await Client.find({
+      entrepriseId: entrepriseId,
+      archived: "Non Archiver",
+      typeClient: "coupure",
+      technicienId: null
+    }).limit(nbrInterventionsTechnicien);
+
+    if (clients.length === 0) {
+      return res.status(500).json({ error: "No clients with these criteria" });
+    }
+
+    for (const client of clients) {
+      await Client.findByIdAndUpdate(client._id, { technicienId: technicianId });
+    }
+
+    // Add a notification to the technician's notifications array
+    const notificationMessage = `Vous avez été assigné à ${nbrInterventionsTechnicien} nouvelles coupures`;
+    technicien.notfications.push({ message: notificationMessage, date: new Date().toISOString() });
+
+    await technicien.save();
+
+    return res.status(200).json(clients);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+
+
+
+const affecterRetabTechnicien = async (req, res) => {
   const { entrepriseId, technicianId } = req.params;
-  const technicien = await Technicien.findOne({_id:technicianId})
-  const nbrInterventionsTechnicien = technicien.nbrInterventions
-    try {
-        const clients = await Client.find({entrepriseId:entrepriseId,archived:"Non Archiver",typeClient:"retablissement",technicienId:null}).limit(nbrInterventionsTechnicien)
-        if(clients.length===0){
-          return res.status(500).json({error:"there s no clients with this cratirias"})
-        }
-        if(clients.length!==0){
-        for(const client of clients){
-        await Client.findByIdAndUpdate(client._id,{technicienId:technicianId})
-        }
-        return res.status(200).json(clients)
-      }
-        
-      }catch(error){
-        return res.status(400).json({error:error.message})
+
+  try {
+    const technicien = await Technicien.findOne({ _id: technicianId });
+    if (!technicien) {
+      return res.status(404).json({ error: "Technician not found" });
     }
-}
+
+    const nbrInterventionsTechnicien = technicien.nbrInterventions;
+    const clients = await Client.find({
+      entrepriseId: entrepriseId,
+      archived: "Non Archiver",
+      typeClient: "retablissement",
+      technicienId: null
+    }).limit(nbrInterventionsTechnicien);
+
+    if (clients.length === 0) {
+      return res.status(500).json({ error: "No clients with these criteria" });
+    }
+
+    for (const client of clients) {
+      await Client.findByIdAndUpdate(client._id, { technicienId: technicianId });
+    }
+
+    const notificationMessage = `Vous avez été assigné à ${nbrInterventionsTechnicien} nouveaux retablissements`;
+    technicien.notfications.push({ message: notificationMessage, date: new Date().toISOString() });
+
+    await technicien.save();
+
+    return res.status(200).json(clients);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
 const getCoupurePerTechnicien = async (req, res) => {
   const { id } = req.params;
   try {
@@ -169,7 +205,7 @@ const deleteTechnicien = async(req,res)=>{
         if(!client){
         const technicien  = await Technicien.find({_id:id})
         if(technicien){
-          return res.status(200).json({message:"technicien deleted with success"})
+          return res.status(200).json(technicien.notfications)
         }
         }
         else{
@@ -179,6 +215,71 @@ const deleteTechnicien = async(req,res)=>{
           return res.status(500).json({error:message.error})
   }
 }
+
+const getNotfications = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const technicien = await Technicien.findOne({_id:id});
+    
+    if (!technicien) {
+      return res.status(404).send('technicien not found');
+    }
+
+    res.json(technicien.notfications);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+const deleteTechnicianNotification = async (req, res) => {
+  const { technicianId, notificationId } = req.params;
+
+  try {
+    const technicien = await Technicien.findById(technicianId);
+    if (!technicien) {
+      return res.status(404).json({ error: "Technician not found" });
+    }
+
+    const notificationIndex = technicien.notfications.findIndex(
+      (notification) => notification._id.toString() === notificationId
+    );
+
+    if (notificationIndex === -1) {
+      return res.status(404).json({ error: "Notification not found" });
+    }
+
+    technicien.notfications.splice(notificationIndex, 1); // Remove the notification
+
+    await technicien.save(); // Save the updated technician
+
+    return res.status(200).json(technicien.notfications);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+const deleteAllTechnicianNotifications = async (req, res) => {
+  const { technicianId } = req.params;
+
+  try {
+    const technicien = await Technicien.findById(technicianId);
+    if (!technicien) {
+      return res.status(404).json({ error: "Technician not found" });
+    }
+
+    // Clear the notifications array
+    technicien.notfications = [];
+
+    await technicien.save(); // Save the updated technician
+
+    return res.status(200).json({ message: "All notifications deleted successfully" });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+
+
   module.exports={
     createAccount
     ,getTechnicienById
@@ -189,4 +290,7 @@ const deleteTechnicien = async(req,res)=>{
     ,updateTechnicien
     ,changePassword
     ,deleteTechnicien
+    ,getNotfications
+    ,deleteTechnicianNotification
+    ,deleteAllTechnicianNotifications
   }

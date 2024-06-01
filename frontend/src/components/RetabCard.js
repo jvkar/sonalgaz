@@ -1,5 +1,4 @@
 import * as React from "react";
-import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
@@ -186,6 +185,7 @@ export default function RetabCard({ retablissement }) {
           confirmer
           </Button>
         </DialogActions>
+        {error && <div className='error'>{error}</div>}
       </Dialog>
       <Dialog
         open={open2}
@@ -215,6 +215,8 @@ export default function RetabCard({ retablissement }) {
             confirmer
           </Button>
         </DialogActions>
+        
+        {error && <div className='error'>{error}</div>}     
       </Dialog>
     </React.Fragment>
   );

@@ -13,27 +13,42 @@ import TableRow from "@mui/material/TableRow";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import CircularProgress from "@mui/material/CircularProgress";
-import { LuFileJson, LuPencilLine } from "react-icons/lu";
-import UpdateBtnAgence from "./buttons/updateBtnAgence";
 import ModelUpdateAgence from "./models/modelUpdateAgence";
+import { Button, FormControlLabel, Switch } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ToggleOffIcon from "@mui/icons-material/ToggleOff";
-import ToggleOnIcon from "@mui/icons-material/ToggleOn";
-import { Button } from "@mui/material";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import { useAgenceContext } from "../hooks/useAgenceContext";
+
 const AgenceDetails = ({ agence }) => {
-  const { dispatch } = useAgenceContext();
   const [agenceDetails, setAgenceDetails] = useState(agence);
   const [isLoading, setIsLoading] = useState(true);
-  const { user, userType } = useAuthContext();
+  const { user } = useAuthContext();
   const [open, setOpen] = React.useState(false);
-  const [assignedEtablissements, setassignedEtablissements] = React.useState(
-    []
-  );
+  const [assignedEtablissements, setAssignedEtablissements] = React.useState([]);
+  const [error, setError] = React.useState(null);
+  const navigate = useNavigate();
 
-  const [error, setError] = React.useState(undefined);
+  useEffect(() => {
+    const fetchEtablissementsData = async () => {
+      try {
+        const response = await fetch(`/api/Etablissements/etablissement/${agence._id}`, {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+        const json = await response.json();
+        if (response.ok) {
+          setAssignedEtablissements(json);
+        } else {
+          setError(json.error);
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (user) {
+      fetchEtablissementsData();
+    }
+  }, [agence._id, user]);
 
   const updateState = async (event) => {
     event.preventDefault();
@@ -42,92 +57,45 @@ const AgenceDetails = ({ agence }) => {
         method: "PATCH",
         headers: { Authorization: `Bearer ${user.token}` },
       });
-      if (!response.ok) {
-        const json = await response.json();
-        setError(json.error);
-      }
-      if (response.ok) {
-        const json = await response.json();
-        setAgenceDetails(json);
-      }
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  useEffect(() => {
-    const fetchEtablissementsData = async () => {
-
-      const response = await fetch(
-        `/api/Etablissements/etablissement/${agence._id}`,
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      );
       const json = await response.json();
       if (response.ok) {
-        setassignedEtablissements(json);
-        setIsLoading(false);
+        setAgenceDetails(json);
+      } else {
+        setError(json.error);
       }
-      if(!response.ok){
-        setError(json.error)
-      }
-    };
-    if (user) {
-      fetchEtablissementsData();
+    } catch (err) {
+      setError(err.message);
     }
-  }, [agence._id, user]);
-
-  const navigate = useNavigate();
-  const updateUrl = (id) => {
-    navigate(`?id=${id}`);
   };
 
   useEffect(() => {
-
-    const timeoutDuration = 3000;
-
-
     if (error) {
-      const timeoutId = setTimeout(() => {
-        setError(null);
-      }, timeoutDuration);
-
-
+      const timeoutId = setTimeout(() => setError(null), 3000);
       return () => clearTimeout(timeoutId);
     }
   }, [error]);
+  const updateUrl = (id) => {
+    navigate(`?id=${id}`);
+  };
   return (
     <React.Fragment>
-      
-      
       {error && <div className="error">{error}</div>}
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell align="center" component="th" scope="row">
-          {agence?.numeroAgence}{" "}
-        </TableCell>
+        <TableCell align="center">{agence?.numeroAgence}</TableCell>
         <TableCell align="center">{agence?.nom}</TableCell>
         <TableCell align="center">{agence?.adresseAgence}</TableCell>
-
         <TableCell align="center">
           <div style={{ paddingRight: "10px" }}>
-            {<ModelUpdateAgence agenceId={agence._id} updateUrl={updateUrl} />}
-
+            <ModelUpdateAgence agenceId={agence._id} updateUrl={updateUrl} />
             <FormControlLabel
               control={
                 <Button onClick={updateState} disableRipple>
-                  <Switch
-                    checked={agenceDetails.state === "active" ? true : false}
-                  />
+                  <Switch checked={agenceDetails.state === "active"} />
                 </Button>
               }
               label={agenceDetails.state === "active" ? "active" : "inactive"}
@@ -136,14 +104,7 @@ const AgenceDetails = ({ agence }) => {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell
-          style={{
-            paddingBottom: 0,
-            paddingTop: 0,
-            backgroundColor: "#eeeeee",
-          }}
-          colSpan={6}
-        >
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: "#eeeeee" }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
@@ -152,28 +113,32 @@ const AgenceDetails = ({ agence }) => {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center">Numéro </TableCell>
+                    <TableCell align="center">Numéro</TableCell>
                     <TableCell align="center">Nom</TableCell>
-                    <TableCell align="center">Adresse </TableCell>
+                    <TableCell align="center">Adresse</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody className="entreprise">
-                {isLoading == true ? (<TableRow style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>    <CircularProgress style={{margin:"15px"}}/>          </TableRow>) :( 
-
-                    assignedEtablissements &&
+                <TableBody>
+                  {isLoading ? (
+                    <TableRow>
+                      <TableCell colSpan={3} align="center">
+                        <CircularProgress />
+                      </TableCell>
+                    </TableRow>
+                  ) : assignedEtablissements.length ? (
                     assignedEtablissements.map((etablissement) => (
                       <TableRow key={etablissement.id}>
-                        <TableCell align="center" component="th" scope="row">
-                          {etablissement.NumeroEtablissement}
-                        </TableCell>
-                        <TableCell align="center">
-                          {etablissement.Nom}
-                        </TableCell>
-                        <TableCell align="center">
-                          {etablissement.Adresse}
-                        </TableCell>
+                        <TableCell align="center">{etablissement.NumeroEtablissement}</TableCell>
+                        <TableCell align="center">{etablissement.Nom}</TableCell>
+                        <TableCell align="center">{etablissement.Adresse}</TableCell>
                       </TableRow>
                     ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={3} align="center">
+                        Pas de données disponibles
+                      </TableCell>
+                    </TableRow>
                   )}
                 </TableBody>
               </Table>
@@ -184,4 +149,5 @@ const AgenceDetails = ({ agence }) => {
     </React.Fragment>
   );
 };
+
 export default AgenceDetails;

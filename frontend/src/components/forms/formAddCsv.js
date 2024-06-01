@@ -1,57 +1,57 @@
-import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
-import React from "react";
+import { Box, Button, Grid, IconButton, Typography, TextField } from "@mui/material";
+import React, { useState } from "react";
 import { IoIosClose } from "react-icons/io";
-import TextField from "@mui/material/TextField";
-import { useState } from "react";
-import { useAgenceContext } from "../../hooks/useAgenceContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
 export default function FormAddCSV({ closeEvent }) {
   const { user } = useAuthContext();
-  const { dispatch } = useAgenceContext();
-  const [numeroEntreprisesParAgence, setNumeroEntreprisesParAgence] =
-    useState("");
+  const [numeroEntreprisesParAgence, setNumeroEntreprisesParAgence] = useState("");
   const [file, setFile] = useState(undefined);
   const [error, setError] = useState(null);
-  const [agence, setAgence] = useState([]);
   const [importing, setImporting] = useState(false);
 
   const handleSubmit = async (e) => {
-    setImporting(true);
     e.preventDefault();
+    setImporting(true);
+
     if (!user) {
       setError("You must be logged in");
+      setImporting(false);
       return;
     }
 
-    const agence = { file };
-    if (file === null || file === undefined) {
-      console.log("Veuillez choisir un fichier");
-    } else {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("numeroEntreprisesParAgence", numeroEntreprisesParAgence);
+    if (!file) {
+      setError("Veuillez choisir un fichier");
+      setImporting(false);
+      return;
+    }
 
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("numeroEntreprisesParAgence", numeroEntreprisesParAgence);
+
+    try {
       const response = await fetch("/api/Agences/add", {
         method: "POST",
         body: formData,
-
         headers: { Authorization: `Bearer ${user.token}` },
       });
       const json = await response.json();
 
       if (!response.ok) {
         setError(json.error);
-      }
-      if (response.ok) {
+      } else {
         setError(null);
         setNumeroEntreprisesParAgence("");
         setFile(undefined);
-        setAgence(json);
-        setImporting(false);
       }
+    } catch (err) {
+      setError("An error occurred while importing the file");
+    } finally {
+      setImporting(false);
     }
   };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -74,11 +74,11 @@ export default function FormAddCSV({ closeEvent }) {
             <TextField
               id="NumeroEntreprise"
               value={numeroEntreprisesParAgence}
-              type="number "
+              type="number"
               onChange={(e) => setNumeroEntreprisesParAgence(e.target.value)}
-              label="le nombres des entreprises par agence "
+              label="le nombres des entreprises par agence"
               variant="outlined"
-              siz="small"
+              size="small"
               sx={{ minWidth: "100%" }}
             />
           </Grid>
@@ -94,6 +94,7 @@ export default function FormAddCSV({ closeEvent }) {
           </Grid>
         </Grid>
         <Box sx={{ m: 4 }} />
+        {error && <div className="error">{error}</div>}
       </form>
     </div>
   );

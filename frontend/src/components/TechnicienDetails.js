@@ -224,9 +224,11 @@ const TechnicienDetails = ({ technicien }) => {
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
-                        <TableCell>Code</TableCell>
-                        <TableCell>Nom</TableCell>
-                        <TableCell align="right">Adresse</TableCell>
+                      <TableCell>Code</TableCell>
+                          <TableCell>Reference</TableCell>
+                          <TableCell>Nom</TableCell>
+                          <TableCell>Adresse</TableCell>
+                          <TableCell>etat</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -246,12 +248,14 @@ const TechnicienDetails = ({ technicien }) => {
                           {assignedCoupures.map((coupure) => (
                             <TableRow key={coupure._id}>
                               <TableCell component="th" scope="row">
-                                {coupure.codeClient}
-                              </TableCell>
-                              <TableCell>{coupure.nomClient}</TableCell>
-                              <TableCell align="right">
-                                {coupure.adresseClient}
-                              </TableCell>
+                              {coupure.codeClient}
+                                  </TableCell>
+                                  <TableCell>
+                                    {coupure.referenceClient}
+                                  </TableCell>
+                                  <TableCell>{coupure.nomClient}</TableCell>
+                                  <TableCell>{coupure.adresseClient}</TableCell>
+                                  <TableCell>{coupure.etat}</TableCell>
                             </TableRow>
                           ))}
                         </>
@@ -274,9 +278,11 @@ const TechnicienDetails = ({ technicien }) => {
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
-                        <TableCell>Code</TableCell>
-                        <TableCell>Nom</TableCell>
-                        <TableCell align="right">Adresse</TableCell>
+                      <TableCell>Code</TableCell>
+                          <TableCell>Reference</TableCell>
+                          <TableCell>Nom</TableCell>
+                          <TableCell>Adresse</TableCell>
+                          <TableCell>etat</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -295,14 +301,16 @@ const TechnicienDetails = ({ technicien }) => {
                         <>
                           {assignedRetablissements.map((retablissement) => (
                             <TableRow key={retablissement._id}>
-                              <TableCell component="th" scope="row">
-                                {retablissement.codeClient}
-                              </TableCell>
-                              <TableCell>{retablissement.nomClient}</TableCell>
-                              <TableCell align="right">
-                                {retablissement.adresseClient}
-                              </TableCell>
-                            </TableRow>
+                            <TableCell component="th" scope="row">
+                            {retablissement.codeClient}
+                                </TableCell>
+                                <TableCell>
+                                  {retablissement.referenceClient}
+                                </TableCell>
+                                <TableCell>{retablissement.nomClient}</TableCell>
+                                <TableCell>{retablissement.adresseClient}</TableCell>
+                                <TableCell>{retablissement.etat}</TableCell>
+                          </TableRow>
                           ))}
                         </>
                       ) : (

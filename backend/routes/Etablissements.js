@@ -22,6 +22,7 @@ const {getAllEtablissement,
     ,nombreDesEntreprisesListeNoire
     ,getArchivedEntreprises
     ,getNotfications
+    ,deleteAllEntrepriseNotifications
 }=require("../controllers/etablissementController");
 const requireAuth = require('../middleware/requireAuth')
 router.use(requireAuth)
@@ -45,4 +46,6 @@ router.get('/ListeNoireNumber/:id',nombreDesEntreprisesListeNoire)
 router.get('/nombreArchiver/:id',nombreEntreprisesArchiver)
 router.get('/getArchived',getArchivedEntreprises)
 router.get('/getNotification/:id',getNotfications)
+router.delete('/:entrepriseId/notifications', deleteAllEntrepriseNotifications);
+
 module.exports=router

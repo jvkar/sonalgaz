@@ -37,31 +37,9 @@ const addManyClient = async (req,res)=>{
     for ( const client of clients){
       await Client.findByIdAndUpdate(client._id,{agence:id})
     }
-    // const etablissements = await Etablissement.find({});
-
-    // if (clients.length === 0 || (etablissements.length > 0 && etablissements[0].clients?.length === 0)) {
-    //   etablissementIndex = 0;
-    //   usedEtablissementId.clear();
-    // }
-
-
-    // etablissementIndex = etablissementIndex || 0;
-    // for (let i = 0; i < clients.length; i+=10) {
-    //   const EtablissementId = etablissements[etablissementIndex % etablissements.length]._id
-
-    //   while (usedEtablissementId.has(EtablissementId)) {
-    //     etablissementIndex++;
-    //   }
-    //   const clientsToUpdate = await Client.find({ etablissement: null}).limit(10);
-
-    //   for (const client of clientsToUpdate) {
-    //     await Client.findByIdAndUpdate(client._id, { etablissement: EtablissementId });
-    //     usedEtablissementId.add(EtablissementId);
-    //   }
-    //   etablissementIndex++;
-    // }
-
-    res.json(clients);
+tablissementIndex = 0; 
+ 
+    res.status(200).json(clients);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

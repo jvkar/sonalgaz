@@ -11,6 +11,7 @@ const multer = require('multer');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const BlackListModel = require('../models/BlackListModel');
+const responsableEntreprise = require('../models/responsableEntreprise');
 const createToken = (_id) => {
   return jwt.sign({_id}, process.env.SECRET, { expiresIn: '3d' })
 }
@@ -255,6 +256,9 @@ const createEtablissement= async (req, res) => {
     
     try {
       const agence = await Agence.findOne({numeroAgence:numeroAgence})
+      if(agence.state==="inactive"){
+        return res.status(500).json({error:"changer vers une agence active"})
+      }
       const etablissement = await Etablissement.create({Nom,NumeroEtablissement,Adresse,NombreDesCoupures,agence:agence._id})
       res.status(200).json(etablissement)
     } catch (error) {
@@ -457,29 +461,62 @@ const deleteEtablissement = async (req, res) => {
         return res.status(500).json({error:error.message});
     }
   }
-    const notifications = async (entrepriseId) => {
-      try {
-        const limit = await Client.find({ typeClient: "coupure", entrepriseId, etat: { $ne: "en attente" } });
-        const totalCoupures = await Client.find({ typeClient: "coupure", entrepriseId });
-    
-        if (limit.length === totalCoupures.length) {
-          const entreprise = await ResponsableEntreprise.findOne({etablissement:entrepriseId});
-          if (!entreprise) {
-            throw new Error('Entreprise not found');
-          }
-    
-          entreprise.notfications.push({ message: "Limit reached notification message" });
-          await entreprise.save();
-          console.log("success")
-          return { success: true, message: "Notification added" };
-        } else {
-          return { success: false, message: "Limit not reached, no notification added" };
-        }
-      } catch (error) {
-        throw new Error(error.message);
+  const notifications = async (entrepriseId) => {
+    try {
+      const coupureLimit = await Client.find({ typeClient: "coupure", entrepriseId, etat: { $ne: "en attente" } });
+      const totalCoupures = await Client.find({ typeClient: "coupure", entrepriseId });
+      const retablissementLimit = await Client.find({ typeClient: "retablissement", entrepriseId, etat: { $ne: "en attente" } });
+      const totalRetablissements = await Client.find({ typeClient: "retablissement", entrepriseId });
+  
+      const entreprise = await ResponsableEntreprise.findOne({ etablissement: entrepriseId });
+      if (!entreprise) {
+        throw new Error('Entreprise not found');
       }
-    };
-    
+  
+      let notificationsAdded = false;
+      const currentDateTime = new Date().toISOString(); // Current timestamp
+  
+      // Check if the coupure notification already exists with the current date
+      const coupureNotificationExists = entreprise.notfications.some(
+        (notification) => notification.message.includes("Les techniciens ont signalé toutes les coupures") &&
+                          notification.date && new Date(notification.date).toDateString() === new Date().toDateString()
+      );
+  
+      if (!coupureNotificationExists && coupureLimit.length === totalCoupures.length) {
+        entreprise.notfications.push({
+          message: "Les techniciens ont signalé toutes les coupures",
+          date: currentDateTime
+        });
+        notificationsAdded = true;
+      }
+  
+      // Check if the retablissement notification already exists with the current date
+      const retablissementNotificationExists = entreprise.notfications.some(
+        (notification) => notification.message.includes("Les techniciens ont signalé tous les retablissements") &&
+                          notification.date && new Date(notification.date).toDateString() === new Date().toDateString()
+      );
+  
+      if (!retablissementNotificationExists && retablissementLimit.length === totalRetablissements.length) {
+        entreprise.notfications.push({
+          message: "Les techniciens ont signalé tous les retablissements",
+          date: currentDateTime
+        });
+        notificationsAdded = true;
+      }
+  
+      if (notificationsAdded) {
+        await entreprise.save();
+        return { success: true, message: "Notifications added" };
+      } else {
+        return { success: false, message: "Limits not reached, no notifications added" };
+      }
+  
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  };
+  
+  
   const getNotfications = async (req, res) => {
     const { id } = req.params;
   
@@ -493,6 +530,25 @@ const deleteEtablissement = async (req, res) => {
       res.json(responsable.notfications);
     } catch (error) {
       res.status(500).send(error);
+    }
+  };
+  const deleteAllEntrepriseNotifications = async (req, res) => {
+    const { entrepriseId } = req.params;
+  
+    try {
+      const responsable = await responsableEntreprise.findOne({etablissement:entrepriseId});
+      if (!responsable) {
+        return res.status(404).json({ error: "responsable not found" });
+      }
+  
+      // Clear the notifications array
+      responsable.notfications = [];
+  
+      await responsable.save(); // Save the updated technician
+  
+      return res.status(200).json({ message: "All notifications deleted successfully" });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
     }
   };
   
@@ -518,4 +574,5 @@ module.exports={
     ,getArchivedEntreprises
     ,notifications
     ,getNotfications
+    ,deleteAllEntrepriseNotifications
 }

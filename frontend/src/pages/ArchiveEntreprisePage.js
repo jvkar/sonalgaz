@@ -10,14 +10,11 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import ArchiveListeEntreprise from "../components/ArchiveListeEntreprise";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useParams } from "react-router-dom";
+import Select from '@mui/material/Select';
 
 const ArchiveEntreprisePage = () => {
   const { user } = useAuthContext();
-  const { id } = useParams();
   const [entreprises, setEntreprise] = useState([]);
   const [filtredEntreprises, setFiltredEntreprises] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

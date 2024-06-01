@@ -83,6 +83,8 @@ const ClientTech = () => {
                         <TableCell>Nom</TableCell>
 
                         <TableCell >Etat</TableCell>
+                        <TableCell >cause</TableCell>
+
                       </TableRow>
                     </TableHead>
 
@@ -111,6 +113,7 @@ const ClientTech = () => {
                         <TableCell>Nom</TableCell>
 
                         <TableCell >Etat</TableCell>
+                        <TableCell >cause</TableCell>
                       </TableRow>
                     </TableHead>
 

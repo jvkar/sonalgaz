@@ -6,19 +6,13 @@ import IconButton from "@mui/material/IconButton";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
-import Typography from "@mui/material/Typography";
 import TableHead from "@mui/material/TableHead";
-import { BsArrowRightCircle } from "react-icons/bs";
 import { BsArrowRightCircleFill } from "react-icons/bs";
 import "../index.css";
-import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
-import { LuPencilLine } from "react-icons/lu";
-import { Margin } from "@mui/icons-material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -26,7 +20,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SnackBar from "./SnackBar";
-import Archiver from "../components/buttons/archiveButton";
 import ModelUpdateEntreprise from "./models/modelUpdateEntreprise";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -115,14 +108,7 @@ const EtablissementDetails = ({ etablissement }) => {
       setError(json.error);
     }
   };
-  const handleUpdate = async () => {
-    if (!user) {
-      setError("You must be logged in");
-      return;
-    }
 
-    window.location.href = `/UpdateFormEtablissement/${etablissement._id}`;
-  };
   useEffect(() => {
     const fetchCoupureData = async () => {
       const response = await fetch(
@@ -162,66 +148,14 @@ const EtablissementDetails = ({ etablissement }) => {
     }
   }, [assignedRetab, user]);
 
-  const { dispatch } = useEtablissementContext();
 
-  const handleClick = async () => {
-    if (!user) {
-      return;
-    }
-    const response = await fetch(
-      `/api/Etablissements/del/${etablissement._id}`,
-      {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${user.token}` },
-      }
-    );
-    const json = await response.json();
-
-    if (response.ok) {
-      dispatch({ type: "DELETE_ETABLISSEMENT", payload: json });
-      setEtablissements(json);
-    }
-    if (!response.ok) {
-      setError(json.error);
-    }
-  };
 
   const navigate = useNavigate();
   const updateUrl = (id) => {
     navigate(`?id=${id}`);
   };
 
-  const icon1 = (
-    <button
-      onClick={handleUpdate}
-      style={{
-        marginRight: "25px",
-        backgroundColor: "transparent",
-        borderColor: "transparent",
-        cursor: "pointer",
-      }}
-    >
-      <LuPencilLine style={{ width: "24px", height: "24px" }} />
-    </button>
-  );
 
-  const icon2 = (
-    <button
-      onClick={handleClick}
-      style={{
-        backgroundColor: "transparent",
-        borderColor: "transparent",
-        cursor: "pointer",
-      }}
-    >
-      <img
-        width="24px"
-        height="24px"
-        src="https://img.icons8.com/material-rounded/24/filled-trash.png"
-        alt="filled-trash"
-      />{" "}
-    </button>
-  );
   useEffect(() => {
     const timeoutDuration = 3000;
 

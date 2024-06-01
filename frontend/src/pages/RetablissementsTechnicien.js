@@ -6,7 +6,6 @@ const RetablissementTech = () => {
   const { user } = useAuthContext();
   const Nom = user?.nom;
   const { id } = useParams();
-  const [assignedCoupure, setassignedCoupure] = useState([]);
   const [assignedRetab, setassignedRetab] = useState([]);
 
   useEffect(() => {

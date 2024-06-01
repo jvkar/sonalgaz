@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
+const notificationSchema = new mongoose.Schema({
+  message: String,
+  date: { type: Date, default: Date.now }
+});
 const TechnicienSchema = new Schema({
     nomTechnicien: {
         type: String,
@@ -25,6 +29,10 @@ const TechnicienSchema = new Schema({
     }
     , password: {
         type: String,
+    }
+    ,notfications:{
+      type : [notificationSchema],
+      default:[]
     }
 })
 //signup

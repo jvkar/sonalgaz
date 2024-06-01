@@ -113,6 +113,20 @@ div.message {
    align-items:  center;
    margin: 0 10px 0 50px
  }
+ .notification{
+   display: flex;
+    justify-content: center;
+    align-items: center;
+ }
+ .coupureLogo{
+   width:67px;
+   margin: 0 19px 0px 18px
+
+ }
+ .retablissementLogo{
+   width:66px;
+   margin: 0 19px 0px 18px
+ }
  @media only screen and (max-width: 600px) {
    body {
       font-size: 14px; 
@@ -121,6 +135,15 @@ div.message {
       display: flex;
       justify-content: flex-end;
     }
-
+    .notification{
+      display: flex;
+       justify-content: center;
+       align-items: center;
+       flex-direction: column;
+       background-color: white;
+       padding: 10px;
+       border-radius: 10px;
+       margin: 5px;
+    }
 
   }

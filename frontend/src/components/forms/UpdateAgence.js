@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
 import { useSearchParams } from 'react-router-dom';
 import { useAuthContext } from "../../hooks/useAuthContext";
 import {  Grid,Divider,IconButton, Typography } from '@mui/material'
