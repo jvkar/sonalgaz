@@ -78,9 +78,9 @@ const ClientEntrep = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {assignedCoupure && assignedCoupure.map((coupure, index) => (
+              {assignedCoupure.length!==0 ?( assignedCoupure.map((coupure, index) => (
                 <CoupureDetails key={index} coupure={coupure} />
-              ))}
+              ))):(<h1>There's no data</h1>)}
             </TableBody>
           </Table>
         </AccordionDetails>
@@ -108,9 +108,9 @@ const ClientEntrep = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {assignedRetab && assignedRetab.map((retablissement, index) => (
+              {assignedRetab.length!==0 ? (assignedRetab.map((retablissement, index) => (
                 <RetablissementDetails key={index} retablissement={retablissement} />
-              ))}
+              ))):(<h1>There's no data</h1>)}
             </TableBody>
           </Table>
         </AccordionDetails>

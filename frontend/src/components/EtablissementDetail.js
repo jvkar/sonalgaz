@@ -172,7 +172,7 @@ const EtablissementDetails = ({ etablissement }) => {
       {error && <div className="error">{error}</div>}
       {message && <div className="message">{message}</div>}
 
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow sx={{ "& > *": { borderBottom: "unset" } }} style={{backgroundColor:(etablissement?.timesInBlackList==3 ? "red" : "white")}}>
         {userType === "CadreAgence" ? (
           <TableCell>
             <IconButton
@@ -186,28 +186,26 @@ const EtablissementDetails = ({ etablissement }) => {
         ) : (
           <></>
         )}
-        <TableCell align="center">
+        <TableCell align="center" style={{color:(etablissement?.timesInBlackList==3 ? "white" : "black")}}>
           {etablissement?.NumeroEtablissement}
         </TableCell>
-        <TableCell align="center">{etablissement?.Nom} </TableCell>
-        <TableCell align="center">{etablissement?.Adresse}</TableCell>
-        {userType == "CadreAgence" ? (
-          <TableCell align="center">
+        <TableCell align="center" style={{color:(etablissement?.timesInBlackList==3 ? "white" : "black")}}>{etablissement?.Nom} </TableCell>
+        <TableCell align="center" style={{color:(etablissement?.timesInBlackList==3 ? "white" : "black")}}>{etablissement?.Adresse}</TableCell>
+          <TableCell align="center" style={{color:(etablissement?.timesInBlackList==3 ? "white" : "black")}}>
             {etablissement?.timesInBlackList}
           </TableCell>
-        ) : (
-          <></>
-        )}
+        
 
-        <TableCell align="center">
+        <TableCell align="center" style={{color:(etablissement?.timesInBlackList==3 ? "white" : "black")}}>
           {etablissement?.affectationCoupure}
         </TableCell>
-        <TableCell align="center">
+        <TableCell align="center" style={{color:(etablissement?.timesInBlackList==3 ? "white" : "black")}}>
           {etablissement?.affectationRetablissement}
         </TableCell>
 
         {userType === "CadreAgence" ? (
           <TableCell align="center">
+            {etablissement?.timesInBlackList!==3 &&
             <div style={{ paddingRight: "10px" }}>
               <Button
                 style={{ margin: "2px" }}
@@ -229,11 +227,12 @@ const EtablissementDetails = ({ etablissement }) => {
               >
                 {affect2 ? "affecting..." : "retablissement"}
               </Button>
-              <Button style={{ margin: "2px" }} onClick={addToBlackList}>
+              <Button style={{ margin: "2px"  }} onClick={addToBlackList}>
                 {" "}
-                <SnackBar />{" "}
+                <SnackBar blackList={etablissement.timesInBlackList} />{" "}
               </Button>
             </div>
+            }
           </TableCell>
         ) : (
           <TableCell align="center">

@@ -165,7 +165,7 @@ const Profile = () => {
             {loading ? (
               <MenuItem>Loading...</MenuItem>
             ) : (
-              <div style={{ width: "400px" }}>
+              <div style={{ width: "auto" }}>
                 <div
                   style={{
                     display: "flex",

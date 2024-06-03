@@ -13,6 +13,7 @@ const {
     ,getNotfications
     ,deleteTechnicianNotification
     ,deleteAllTechnicianNotifications
+    ,archiverClient
 }= require('../controllers/technicienController')
 const requireAuth = require('../middleware/requireAuth')
 router.use(requireAuth)
@@ -28,5 +29,6 @@ router.delete('/delTechnicien',deleteTechnicien)
 router.get('/getNotifications/:id',getNotfications)
 router.delete('/:technicianId/notifications/:notificationId', deleteTechnicianNotification);
 router.delete('/:technicianId/notifications', deleteAllTechnicianNotifications);
+router.patch('/archiveClients/:id', archiverClient);
 
 module.exports=router

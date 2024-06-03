@@ -2,6 +2,7 @@ const { default: mongoose } = require('mongoose');
 const Etablissement =require('../models/etablissementModel')
 const Technicien = require('../models/technicienModel')
 const Client = require ('../models/clientModel')
+const ListIntervention = require('../models/ListeInterventionModel')
 const jwt = require('jsonwebtoken')
 const createToken = (_id) => {
   return jwt.sign({_id}, process.env.SECRET, { expiresIn: '3d' })
@@ -277,7 +278,49 @@ const deleteAllTechnicianNotifications = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
+const archiverClient = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const technicien = await Technicien.findOne({_id:id})
+    console.log( technicien )
+    const listInterventions = await ListIntervention.find({ entrepriseId: technicien.entrepriseId });
 
+    if (!listInterventions || listInterventions.length === 0) {
+      return res.status(404).json({ error: "No interventions found for the given entrepriseId" });
+    }
+    
+    for (const intervention of listInterventions) {
+      const interventionId = intervention._id;
+    
+
+      const updateInterventionResult = await ListIntervention.updateOne(
+        { _id: interventionId, archive: "Non Archiver" },
+        { archive: "archiver" }
+      );
+
+      if (updateInterventionResult.nModified === 0) {
+        continue;
+      }
+    
+
+      const updateClientsResult = await Client.updateMany(
+        { listId: interventionId, archived: "Non Archiver" },
+        { archived: "archiver" }
+      );
+    
+
+      if (!updateClientsResult) {
+        return res.status(500).json({ error: "There's no client to archive" });
+      }
+    }
+    
+    return res.status(200).json({ success: true });
+    
+
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
 
 
   module.exports={
@@ -293,4 +336,5 @@ const deleteAllTechnicianNotifications = async (req, res) => {
     ,getNotfications
     ,deleteTechnicianNotification
     ,deleteAllTechnicianNotifications
+    ,archiverClient
   }

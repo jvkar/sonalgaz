@@ -30,7 +30,7 @@ import ModelUpdateTechnicien from "./models/modelUpdateTechnicien";
 import { useNavigate } from "react-router-dom";
 import Archiver from "../components/buttons/archiveButton";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import ModelArchiveClientTechnicien from "./models/modelArchiveClientTechnicien"
 const TechnicienDetails = ({ technicien }) => {
   const { user } = useAuthContext();
   const userType = user.userType;
@@ -210,7 +210,9 @@ const TechnicienDetails = ({ technicien }) => {
 
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+
           <Collapse in={open} timeout="auto" unmountOnExit>
+        <ModelArchiveClientTechnicien technicienId={technicien._id} />
             <Box sx={{ margin: 1 }}>
               <Accordion style={{ backgroundColor: "#EEEEEE" }}>
                 <AccordionSummary

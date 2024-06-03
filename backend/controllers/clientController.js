@@ -218,7 +218,6 @@ const getClientByFacture=async(req,res)=>{
 //get all clients
 const getAllClient = async (req,res)=>{
    try{ const clients= await Client.find({})
-
         res.json(clients);
         
  

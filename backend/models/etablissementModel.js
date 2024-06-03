@@ -9,7 +9,7 @@ const EtablissementSchema = new Schema(
     NumeroEtablissement: {
       type: Number,
       required: true,
-      unique: true,
+
     },
     Adresse: {
       type: String,
